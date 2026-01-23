@@ -1,0 +1,2 @@
+.arrow-top::after {content: ''; width: 0;height: 0;border-style: solid;border-right: 10px solid transparent;border-left: 10px solid transparent;border-bottom: 12px solid rgb(255 255 255 / 0.85);border-top: 0; position: absolute; top:-7px; left:50%;box-shadow: 0, 2px, 4px, rgba(0,0,0,0.2);transform: translate(-50%, -50%);}
+.arrow-top {position: relative;}
