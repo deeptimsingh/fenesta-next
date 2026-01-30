@@ -72,8 +72,7 @@ useLayoutEffect(() => {
         },
       }
     );
-
-    
+ 
 
     // master timeline drives wrapper + inner image motion together
     const tl = gsap.timeline({
@@ -389,17 +388,17 @@ useLayoutEffect(() => {
   };
 
   return (
-    <section ref={sectionRef} className="relative w-full h-screen bg-black overflow-hidden z-20 heroslider-main">
+    <section ref={sectionRef} className="relative w-full h-[75vh] md:h-[85vh] lg:h-screen bg-black overflow-hidden z-20 heroslider-main">
 
       {/* CONTROLS */}
-      <div className="absolute bottom-12 left-8 right-8 z-50 pointer-events-none">
+      <div className="absolute bottom-4 md:bottom-12 left-0 md:left-8 right-0 md:right-8 z-50 pointer-events-none">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6 w-full pointer-events-auto">
-            <button className="hero-prev text-white text-4xl cursor-pointer">
+            <button className="hero-prev text-white text-2xl md:text-4xl cursor-pointer">
               <Image src="/images/slider-arrow-prev-white.svg" alt="" width={12} height={25} />
             </button>
 
-            <button className="hero-next text-white text-4xl cursor-pointer">
+            <button className="hero-next text-white text-2xl md:text-4xl cursor-pointer">
               <Image src="/images/slider-arrow-next-white.svg" alt="" width={12} height={25} />
             </button>
 
@@ -409,8 +408,8 @@ useLayoutEffect(() => {
           </div>
 
           {/* ODOMETER */}
-          <div className="flex items-center ml-6 text-white text-4xl font-bold pointer-events-auto w-64">
-            <div className="overflow-hidden h-[48px] mr-2">
+          <div className="flex items-center ml-6 text-white text-2xl md:text-4xl font-bold pointer-events-auto w-64">
+            <div className="overflow-hidden h-[32px] md:h-[48px] mr-2">
               <div ref={paginationRef} className="odometer-container" />
             </div>
             <span className="text-white/40">
@@ -447,19 +446,18 @@ useLayoutEffect(() => {
 
           <div className="overlay absolute inset-0 w-full h-full z-10 bg-[linear-gradient(-90deg,rgba(0,0,0,0)_33%,#000_96%)] opacity-45"></div>
 
-          <div className="absolute inset-x-0 bottom-1/5 flex items-center justify-center z-20   ">
+          <div className="absolute inset-x-0 bottom-1/6 md:bottom-1/5 flex items-center justify-center z-20   ">
             <div className="container">
-              <div className="slide-caption text-white max-w-2xl">
+              <div className="slide-caption text-white max-w-2xl items-center md:items-start md:text-left">
                 <h1 className="caption-title text-pageh1  mb-4 mask-reveal leading-none">     
                   Let Life in <span className="font-subFont text-corinthiaHeading text-white">Beautifully</span>      
-                </h1>
-                
+                </h1>               
 
                 {/* <p className="caption-desc text-xl mb-6 max-w-xl mask-reveal">
                   <span>From personal spaces to ambitious builds, discover windows and doors that elevate every environment</span>
                 </p> */}
 
-                <div className="caption-btn mt-6">
+                <div className="caption-btn mt-4 md:mt-6">
                   <FenestaButton>FIND THE PERFECT FIT</FenestaButton>
                 </div>
               </div>

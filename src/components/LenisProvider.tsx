@@ -14,6 +14,9 @@ export default function LenisProvider({
       smoothWheel: true,
     });
 
+    // Expose Lenis on window for external access
+    (window as any).lenis = lenis;
+
     const raf = (time: number) => {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -23,6 +26,7 @@ export default function LenisProvider({
 
     return () => {
       lenis.destroy();
+      delete (window as any).lenis;
     };
   }, []);
 

@@ -93,7 +93,7 @@ export default function ParallaxSection() {
   }, []);
 
   return (
-    <section className="flex flex-col md:flex-row w-full h-auto xl:h-screen bg-[white] overflow-hidden">
+    <section className="visitquick flex flex-col md:flex-row w-full h-auto xl:h-screen bg-[white] overflow-hidden">
       {/* LEFT SECTION */}
       <div
         ref={leftSection}
@@ -114,8 +114,8 @@ export default function ParallaxSection() {
                   <h2 className="font-mainFont text-pageh2 leading-none text-cream flex justify-center flex-wrap mx-auto">Visit Our <span className="font-subFont text-corinthiaHeading text-cream flex w-full justify-center leading-0">Signature Studio</span></h2>
                 </div>
 
-                <div className="headingSubTitle flex flex-col justify-center w-full">  
-                  <p className="mt-3  max-w-3xl">A curated collection of ideas and stories for homes that value design and style</p>
+                <div className="headingSubTitle flex flex-col justify-center w-full sm:max-w-md mx-auto">  
+                  <p className="mt-3  max-w-3xl ">Explore finishes, test movement, and feel the  quiet difference for yourself</p>
                 </div>
               </div>     
             </div>
@@ -129,14 +129,14 @@ export default function ParallaxSection() {
       {/* RIGHT SECTION */}
       <div
         ref={rightSection}
-        className="relative flex-1 flex items-center justify-center overflow-hidden min-h-141.25 md:min-h-auto bg-[#EDE8D0]"
+        className="relative flex-1 flex items-center justify-center overflow-hidden min-h-141.25 md:min-h-auto gradient-background"
       >
         <div
           ref={rightBg}
           className="absolute inset-0 bg-[url('/images/home/GetaQuickEstimate-bg.webp')] bg-center bg-cover will-change-transform scale-110"
         ></div>
 
-        <div ref={rightCaption} className="title-section relative z-10 text-center text-white px-6 xl:px-8 py-6  xl:py-8 bg-[linear-gradient(180deg,_#EDE8D0_-29.94%,_#442917_246.06%)]        backdrop-blur-sm rounded-xl mx-6 md:mx-0 w-[100%] xl:w-[60%]  flex items-center flex-wrap content-center h-[350px] max-w-[552px]">          
+        <div ref={rightCaption} className="title-section relative z-10 text-center text-white px-6 xl:px-8 py-6  xl:py-8 trustedpartners-gradient-background backdrop-blur-sm rounded-xl mx-6 md:mx-0 w-[100%] xl:w-[60%]  flex items-center flex-wrap content-center h-[350px] max-w-[552px]">          
             {/* Heading */}
             <div ref={rightSectionRef}  className="headingOuter w-full">
               <div className="headingTitle mb-6 xl:mb-6 px-6 md:px-0 ">
@@ -144,8 +144,8 @@ export default function ParallaxSection() {
                   <h2 className="font-mainFont text-pageh2 leading-none text-brown flex justify-center flex-wrap mx-auto">Get a Quick <span className="font-subFont text-corinthiaHeading text-brown flex w-full justify-center ">Estimate</span></h2>
                 </div>
 
-                <div className="headingSubTitle flex flex-col justify-center w-full">  
-                  <p className="mt-3  max-w-3xl">Answer a few quick questions and get a ballpark estimate</p>
+                <div className="headingSubTitle flex flex-col justify-center w-full sm:max-w-md mx-auto">  
+                  <p className="mt-3  max-w-3xl text-black">Answer a few quick questions  and get a ballpark estimate</p>
                 </div>
               </div>     
             </div>  

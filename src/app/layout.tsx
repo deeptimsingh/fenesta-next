@@ -4,6 +4,7 @@ import { Corinthia } from "next/font/google";
 
 import Providers from "@/components/Providers";
 import Footer from "@/components/base/footer";
+import Header from "@/components/base/header";
 
 import "./globals.css";
 
@@ -43,12 +44,13 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="en"
+      lang="en" 
       className={`${helvetica.variable} ${corinthia.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-white text-black dark:bg-[#0b0b0b] dark:text-white">
+      <body className="text-black dark:text-white transition-colors duration-200 ">
         <Providers>
+          <Header />
           {children}
           <Footer />
         </Providers>

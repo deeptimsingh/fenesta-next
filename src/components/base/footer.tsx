@@ -2,42 +2,110 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function FooterImage() {
- const imageRef = useRef<HTMLImageElement | null>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const footerRef = useRef<HTMLElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const element = imageRef.current;
-    if (!element) return;
+    if (!footerRef.current || !contentRef.current) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          element.classList.add("animate-fade-in-right");
-          element.classList.remove("animate-fade-out-right");
-        } else {
-          element.classList.remove("animate-fade-in-right");
-          element.classList.add("animate-fade-out-right");
+    const footer = footerRef.current;
+    const content = contentRef.current;
+
+    // Find the main element to use as trigger
+    const mainElement = document.querySelector("main");
+    if (!mainElement) return;
+
+    // Get footer height for calculations
+    const footerHeight = footer.offsetHeight || 400;
+
+    // Set initial state - footer positioned below viewport
+    gsap.set(footer, {
+      y: footerHeight,
+      opacity: 0,
+    });
+
+    gsap.set(content, {
+      opacity: 0,
+      y: 50,
+    });
+
+    // Set initial state for background image
+    if (imageRef.current) {
+      gsap.set(imageRef.current, {
+        opacity: 0,
+        x: 50,
+      });
+    }
+
+    // Create ScrollTrigger to detect when main content ends
+    ScrollTrigger.create({
+      trigger: mainElement,
+      start: "bottom bottom",
+      end: "bottom top",
+      onEnter: () => {
+        // Footer slides up into view
+        gsap.to(footer, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: "power3.out",
+        });
+
+        // Content fades up
+        gsap.to(content, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          delay: 0.2,
+        });
+
+        // Background image slides in
+        if (imageRef.current) {
+          gsap.to(imageRef.current, {
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            ease: "power3.out",
+            delay: 0.3,
+          });
         }
       },
-      { threshold: 0.3 }
-    );
-
-    observer.observe(element);
+      onLeaveBack: () => {
+        // Hide footer when scrolling back up
+        gsap.to(footer, {
+          y: footerHeight,
+          opacity: 0,
+          duration: 0.5,
+          ease: "power2.in",
+        });
+      },
+    });
 
     return () => {
-      observer.disconnect();
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.vars.trigger === mainElement || st.vars.trigger === footer) {
+          st.kill();
+        }
+      });
     };
   }, []);
 
 
   return (
-    <footer className="bg-[#1a1a1a] text-gray-300 pt-10 pb-6 relative overflow-hidden"> 
+    <footer ref={footerRef} className="bg-[#1a1a1a] text-gray-300 pt-10 pb-6 relative overflow-hidden dark:bg-[#0b0b0b] transition-colors duration-200"> 
        <div className="absolute top-1/2 -right-[5vw] -translate-y-1/2">
         <Image
             ref={imageRef}
             src="/images/footer-bg.svg"
-            className="w-[20vw] h-[90%] opacity-0"
+            className="w-[20vw] h-[90%]"
             alt="Footer Background"
             width={637}
             height={637}
@@ -45,7 +113,7 @@ export default function FooterImage() {
         </div>
 
 
-      <div className="container mx-auto">
+      <div ref={contentRef} className="container mx-auto">
         <div className="footer-tp flex justify-between items-baseline mb-8 pb-3  border-b border-[#5E5E5E]">
             <div className="footer-bg-image">
                 <Image src="/images/logo-white.svg" className="footer-logo" alt=""  width={230} height={70} />

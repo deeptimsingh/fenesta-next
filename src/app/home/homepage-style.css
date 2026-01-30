@@ -4,5 +4,451 @@
 .icon-item.active-icon::after {opacity: 1;}
 
 
+@layer utilities {
+/* ---------------------------------------------------
+heroslider
+--------------------------------------------------- */
+.heroslider-main { overflow: hidden;}
+.heroslider-main .swiper-slide.slide-active .mask-reveal::after { animation: barSlide 0.7s ease forwards;}
+.heroslider-main .swiper-slide.slide-active .mask-reveal span { animation: textSlideUp 0.7s ease forwards; animation-delay: .15s;}
+
+/* ---------------------------------------------------
+   CAPTION ANIMATION
+--------------------------------------------------- */
+.heroslider-main .slide-caption {
+  opacity: 0;
+  transform: translateY(80px);
+  transition: opacity .6s ease, transform .6s ease;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.heroslider-main .swiper-slide.slide-active .slide-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+.heroslider-main .caption-title { transition-delay: .12s; }
+.heroslider-main .caption-desc  { transition-delay: .24s; }
+.heroslider-main .caption-btn   { transition-delay: .36s; }
+
+@keyframes blurIn {
+  0%   { opacity: 0; filter: blur(16px) brightness(.6); transform: scale(1.04); }
+  100% { opacity: 1; filter: blur(0)  brightness(1);   transform: scale(1); }
+}
+
+.heroslider-main .swiper-slide.swiper-slide-active img,
+.heroslider-main .swiper-slide.swiper-slide-active video {
+  animation: blurIn .9s ease-out both;
+}
+
+.heroslider-main .swiper-wrapper {
+  transition-timing-function: cubic-bezier(.25,1,.5,1) !important;
+}
+/* .heroslider-main{ border-radius: 0px; transition: border-radius 0.4s;}
+.heroslider-main.is-scaling{ border-radius:30px;} */
+.heroslider-main.is-scaling  .hero-img-wrap{ height:100%;}
+/* .heroslider-main .hero-img-wrap{transform: scale(1); transition: transform 0.4s ease; height:100%;}
+.heroslider-main.is-scaling .hero-img-wrap{ transform: scale(1.25);} */
 
 
+
+/* ---------------------------------------------------
+   ODOMETER STYLES
+--------------------------------------------------- */
+.odometer-container{display:flex; flex-direction:column; }
+.odometer-digit{
+  height:48px;
+  line-height:48px;
+  font-weight:700;
+  font-size:40px;
+  color:white;
+}
+.hero-prev.disabled,
+.hero-next.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.slider-prev.disabled,
+.slider-next.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+/* 
+
+/* -------- Slide Zoom -------- */
+@keyframes zoomfade {
+  0% { opacity: 0.4; transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* -------- Flip Number Animation -------- */
+.flip-container {
+  perspective: 900px;
+  width: 40px;
+  height: 30px;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.flip-card {
+  width: 100%;
+  height: 100%;
+  animation: flipIn 0.45s ease forwards;
+  transform-origin: bottom;
+  text-align: right;
+}
+
+@keyframes flipIn {
+  0% {
+    opacity: 0;
+    transform: rotateX(90deg) translateY(10px);
+  }
+  60% {
+    opacity: 1;
+    transform: rotateX(-10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0);
+  }
+}
+@keyframes blurIn {
+  0%   { opacity: 0; filter: blur(16px) brightness(.6); transform: scale(1.04); }
+  100% { opacity: 1; filter: blur(0)  brightness(1);   transform: scale(1); }
+}
+
+
+
+
+/**---------------------------------------------------
+panoramaSwiper
+---------------------------------------------------**/
+.PanoramaSwiper-slider.swiper {
+    position: relative;
+    overflow: visible;
+    z-index: 1;
+    perspective: 1200px;
+    perspective-origin: center center;
+  }
+  
+  .PanoramaSwiper-slider.swiper::before {content: "";position: absolute;top: -70px;left: -10%;width: 120%;height: 100px;background:#f4f4f5;border-radius: 100%;z-index: 5;}
+  .PanoramaSwiper-slider.swiper::after {content: "";position: absolute;bottom: -60px;left: -10%;width: 120%;height: 100px;background:#e3e4e5;border-radius: 100%;z-index: 5;}
+  .PanoramaSwiper-slider.swiper .swiper-slide img,
+  .PanoramaSwiper-slider.swiper .swiper-slide video {
+    width: 130%;
+    height: 25vw;
+    max-width: inherit;
+    object-fit: contain;
+    will-change: transform;
+    object-position: center center;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform .3s ease-out;
+    display: block;
+    position: relative;
+  }
+  .PanoramaSwiper-slider.swiper .swiper-slide video{ object-fit: cover !important;}
+
+  .PanoramaSwiper-slider .swiper-slide {overflow: hidden; height: 25vw;}
+  .PanoramaSwiper-slider .parallax-img, .PanoramaSwiper-slider .parallax-video {
+    width: 130%;
+    height: 100%;
+    will-change: transform;
+    transform-origin: center center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -15%;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* 3D Card Slider Animation */
+  .PanoramaSwiper-slider .swiper-slide {
+    transform-style: preserve-3d;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Initial Load - All slides stacked behind center */
+  .PanoramaSwiper-slider .swiper-slide.slide-hidden {
+    opacity: 0;
+    transform: translateZ(-500px);
+    pointer-events: none;
+  }
+  
+  .PanoramaSwiper-slider .swiper-slide.slide-ready {
+    opacity: 1;
+    transform: translateZ(0) rotateY(0deg);
+  }
+  
+  /* Initial state - all slides centered (stacked at center) */
+  .PanoramaSwiper-slider:not(.slides-animated) .swiper-slide {
+    transform: translateX(0) !important;
+    transition: none !important;
+  }
+  
+  .PanoramaSwiper-slider:not(.slides-animated) .swiper-slide:not(.swiper-slide-active) {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .PanoramaSwiper-slider:not(.slides-animated) .swiper-slide.swiper-slide-active {
+    opacity: 1;
+    z-index: 10;
+  }
+  
+  /* When animated, slides spread to their natural positions */
+  .PanoramaSwiper-slider.slides-animated .swiper-slide {
+    transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  
+  /* Active Slide - Center Front */
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-active {
+    transform: translateZ(0px) rotateY(0deg) scale(1);
+    opacity: 1;
+    z-index: 10;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-active.slide-active-anim {
+    animation: card3DActiveIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-active.slide-from-right {
+    animation: card3DFromRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-active.slide-from-left {
+    animation: card3DFromLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  /* Prev Slide - Rotate Left and Move Back */
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-prev {
+    transform: translateZ(-150px) rotateY(25deg) translateX(-100px) scale(0.85);
+    opacity: 0.5;
+    z-index: 1;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Next Slide - Rotate Right and Move Back */
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-next {
+    transform: translateZ(-150px) rotateY(-25deg) translateX(100px) scale(0.85);
+    opacity: 0.5;
+    z-index: 1;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Other Slides - Further Back */
+  .PanoramaSwiper-slider .swiper-slide:not(.swiper-slide-active):not(.swiper-slide-prev):not(.swiper-slide-next) {
+    transform: translateZ(-300px) rotateY(0deg) scale(0.7);
+    opacity: 0.3;
+    z-index: 0;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* 3D Keyframe Animations */
+  @keyframes card3DActiveIn {
+    0% {
+      opacity: 0;
+      transform: translateZ(-200px) rotateY(45deg) scale(0.8);
+    }
+    50% {
+      transform: translateZ(20px) rotateY(-5deg) scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: translateZ(0px) rotateY(0deg) scale(1);
+    }
+  }
+  
+  @keyframes card3DFromRight {
+    0% {
+      opacity: 0;
+      transform: translateZ(-200px) rotateY(-60deg) translateX(200px) scale(0.8);
+    }
+    50% {
+      transform: translateZ(20px) rotateY(5deg) translateX(-10px) scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: translateZ(0px) rotateY(0deg) translateX(0px) scale(1);
+    }
+  }
+  
+  @keyframes card3DFromLeft {
+    0% {
+      opacity: 0;
+      transform: translateZ(-200px) rotateY(60deg) translateX(-200px) scale(0.8);
+    }
+    50% {
+      transform: translateZ(20px) rotateY(-5deg) translateX(10px) scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: translateZ(0px) rotateY(0deg) translateX(0px) scale(1);
+    }
+  }
+
+  .dark .PanoramaSwiper-slider.swiper:before{background:var(--bg-gray);}
+  .dark .PanoramaSwiper-slider.swiper:after{background:var(--bg-gray);}
+
+
+    
+  
+.logo-marquee-container::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #121212; opacity: 0.2;
+}
+  .logo-marquee-container::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #121212; opacity: 0.2;
+  }
+  .logo-item-desktop::before {
+    content: '';
+    position: absolute;
+    top: 0.25rem;
+    left: -.45rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-image: url('/images/plus-icon.webp');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .logo-item-desktop::after {
+    content: '';
+    position: absolute;
+    bottom: 0.30rem;
+    right: -0.35rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-image: url('/images/plus-icon.webp');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .logo-item-mobile::before {
+    content: '';
+    position: absolute;
+    top: -0.5rem;
+    left: -0.5rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-image: url('/images/plus-icon.webp');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .logo-item-mobile::after {
+    content: '';
+    position: absolute;
+    bottom: -0.4375rem;
+    right: -0.375rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-image: url('/images/plus-icon.webp');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .dark .logo-marquee img{filter: brightness(0) invert(1);}
+  /* .dark .logo-marquee img:hover{filter: brightness(1) invert(0);} */
+  
+  .dark .logo-item{border-color: #e3e4e5;}
+  .dark .logo-marquee-container::before {  background-color: #e3e4e5 !important;}
+  .dark .logo-marquee-container::after {  background-color: #e3e4e5 !important;}
+
+
+
+  
+/**==================================
+Begin your journey with Fenesta
+==================================**/
+.diamond {
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); 
+    transform:rotate(15deg);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  .diamond img{transform:rotate(-15deg)}
+  .diamond-outline {
+    border: 2px solid #2bb3ff;
+  }
+  .diamond-hover {
+    transition: transform 0.3s ease, filter 0.3s ease, opacity 0.3s ease;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+  /* .diamond-hover:hover {
+    transform: rotate(15deg) scale(1.05);
+  } */
+  .diamond-border {
+    opacity: 0;
+    transform: rotate(15deg) scale(1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 10;
+    transform-origin: center center;
+  }
+  
+  .group:hover .diamond-border {
+    opacity: 1;
+    transform: rotate(15deg) scale(1.05);
+  }
+  
+  
+/**==================================
+Begin your journey with Fenesta END
+==================================**/
+
+
+/**==================================
+Fenesta Edit
+==================================**/
+.FenestaEdit.gradient-background::before{transform: rotate(180deg); right: inherit; left:-25vw; top:-10vw}
+.visitquick.gradient-background::before{ transform: rotate(180deg); right: inherit; left:-30vw; top:-20vw}
+
+.circular-slider-section.gradient-background::before{z-index: -1 !important;}
+
+}
+
+
+@media all and (max-width: 768px) {
+  .common-padding{ padding:60px 0; }
+/** ================================================
+Hero Slider
+================================================ **/
+.heroslider-main .slide-caption{ align-items: center; }
+.odometer-digit{ font-size: 30px; line-height: 30px; }
+
+
+
+.PanoramaSwiper-slider.swiper .swiper-slide img, .PanoramaSwiper-slider.swiper .swiper-slide video{ height:100vw; object-fit: cover;}
+}

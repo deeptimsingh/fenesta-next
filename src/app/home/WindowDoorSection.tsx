@@ -224,12 +224,12 @@ export default function PanoramaTabsSingle() {
   }, [sliderReady]);
 
   return (
-    <section ref={swiperSectionRef} className="common-padding w-full flex flex-col items-center bg-white">
+    <section ref={swiperSectionRef} className="common-padding w-full flex flex-col items-center  window-door-section white-gradient-background text-black">
       {/* Heading */}
       <div className="container-fluid m-auto px-6 md:px-0">
         <div ref={sectionRef} className="w-full">
           <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-3xl mx-auto">
-            <h2 className="font-mainFont text-pageh2 leading-none">
+            <h2 className="font-mainFont text-pageh2 leading-none  text-black">
             Browse to find what <br/> feels right for <span className="font-subFont text-corinthiaHeading text-brown">your home</span>
             </h2>
           </div>
@@ -244,8 +244,8 @@ export default function PanoramaTabsSingle() {
             onClick={() => setActiveTab(index)}
             className={`pb-2 text-lg transition-all ${
               activeTab === index
-                ? "text-red-600 border-b-2 border-red-600"
-                : "text-gray-600"
+                ? "darktextwhite border-b-2 border-white"
+                : "darktextblue  border-textblueLight"
             }`}
           >
             {tab}

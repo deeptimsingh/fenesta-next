@@ -198,7 +198,7 @@ useHeadingAnimation({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-screen overflow-hidden bg-black text-white"
+      className="relative w-full h-screen overflow-hidden bg-white text-black"
     >
       {/* MAIN SWIPER */}
       <Swiper

@@ -237,13 +237,16 @@ export default function ClientStories() {
         <div className="absolute inset-0 bg-[url('/images/home/designstories-bg.webp')] bg-center bg-cover z-19" />
 
         <div ref={sectionRef} className="w-full">
-          <div ref={headingRef}  className="relative md:absolute left-1/2 -translate-x-1/2 max-w-full md:max-w-3xl inset-0 flex flex-col justify-center items-center z-40 px-6 md:px-0">
+          <div ref={headingRef}  className="relative md:absolute left-1/2 -translate-x-1/2 max-w-full md:max-w-3xl inset-0 flex flex-col justify-center items-center z-40 px-6 md:px-0 title-section">
             <h2 className="font-mainFont text-pageh2 leading-none text-white">
               Explore Our <span className="font-subFont text-corinthiaHeading text-white">Design stories</span>
             </h2>
-            <p className="my-6 max-w-md mx-auto text-white">
-              Discover how Fenesta brings peace, privacy and comfort into every space
-            </p>
+            
+            <div className="headingSubTitle flex flex-col justify-center w-full my-4  sm:max-w-lg">              
+              <p className="  max-w-full mx-auto  text-white">
+                Discover how Fenesta brings peace, privacy and comfort into every space
+              </p>
+            </div>
             <FenestaButton>Hear from our customers</FenestaButton>
           </div>
         </div>

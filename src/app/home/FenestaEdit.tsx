@@ -93,18 +93,18 @@ useEffect(() => {
 
 
   return (
-    <section className="FenestaEdit bg-white common-padding w-full mx-auto dark:bg-darkmodegray">
-      <div className="container p-0">
+    <section className="FenestaEdit common-padding w-full mx-auto gradient-background overflow-hidden relative ">
+      <div className="container p-0 relative z-10">
         <div className="max-w-full mx-auto">
             {/* Heading */}
             <div ref={sectionRef}  className="headingOuter w-full">
-              <div className="headingTitle mb-6 xl:mb-6 px-6 md:px-0 ">
-                <div ref={headingRef} className="title-section  flex flex-col  w-full">
-                  <h2 className="font-mainFont text-pageh2 leading-none">The Fenesta <span className="font-subFont text-corinthiaHeading text-brown leading-0">Edit</span></h2>
+              <div className="headingTitle mb-6 xl:mb-6 px-6 md:px-0 title-section ">
+                <div ref={headingRef} className="  flex flex-col  w-full">
+                  <h2 className="font-mainFont text-pageh2  leading-none">The Fenesta <span className="font-subFont text-corinthiaHeading text-brown leading-0">Edit</span></h2>
                 </div>
 
                 <div className="headingSubTitle flex flex-col justify-center w-full">  
-                  <p className="mt-3  max-w-3xl">A curated collection of ideas and stories for homes that value design and style</p>
+                  <p className="mt-3  max-w-3xl text-textblack">A curated collection of ideas and stories for homes that value design and style</p>
                 </div>
               </div>     
             </div>  
@@ -134,7 +134,7 @@ useEffect(() => {
                 {/* Overlay Text */}
                 <div className="absolute inset-x-0 bottom-0 bg-[#00000080] text-white px-4 py-4 pr-14 backdrop-blur-sm">
                   <p className="text-sm opacity-80">{post.date}</p>
-                  <h4 className="font-pageh4 mt-1">{post.title}</h4>
+                  <p className=" mt-1">{post.title}</p>
 
                   {/* HOVER BUTTON */}
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#0288D1] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(.22,.61,.36,1)] scale-75 group-hover:scale-100">
