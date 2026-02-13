@@ -270,9 +270,9 @@ export default function BeginJourney() {
     }, []);
 
   return (
-    <section ref={sectionRefForBg} className="BeginJourney gradient-background bg-white w-full common-padding flex items-center justify-center overflow-hidden relative">     
+    <section ref={sectionRefForBg} className="BeginJourney bg-darkbase w-full common-pt flex items-center justify-center overflow-hidden relative">     
       {/* Background Image */}
-      <div ref={backgroundImageRef} className="backgroundImageRefimg absolute w-full h-full z-2 right-0 left-auto h-[50%] max-w-[800px] -translate-y-1/2 top-1/2">
+      <div ref={backgroundImageRef} className="backgroundImageRefimg absolute w-full z-2 right-0 left-auto h-[80%] max-w-[20vw] md:max-w-[40vw] mt-[-5%] -translate-y-1/2 top-1/2">
         <Image
           src="/images/home/profession/professionbg.svg"
           alt="Background"
@@ -287,7 +287,7 @@ export default function BeginJourney() {
         {/* Heading */}      
         <div ref={sectionRef} className="w-full max-w-lg title-section">          
           <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full">
-            <h2 className="font-mainFont text-pageh2 leading-none "><span className="font-subFont text-corinthiaHeading text-brown leading-0">Begin </span> your journey  with Fenesta</h2>
+            <h2 className="font-mainFont text-h2 leading-none "><span className="font-subFont text-corinthiaHeading text-brown leading-0">Begin </span> your journey  with Fenesta</h2>
             <div className="headingSubTitle flex flex-col justify-center w-full">  
               <p className="mt-3  max-w-full"> Tell us who you are, we’ll guide you from there</p>     
             </div>         
@@ -296,14 +296,14 @@ export default function BeginJourney() {
         
 
         {/* Cards */}
-        <div ref={cardsContainerRef} className="cardsContainer relative mt-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12 mr-4 md:mr-8 lg:mr-10 xl:mr-12 2xl:mr-30 text-center">
+        <div ref={cardsContainerRef} className="cardsContainer relative mt-10 mx-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-12 mr-0 sm:mr-[5vw] md:mr-[120px] xl:mr-[120px] mr-range-110 text-center">
           {/* Architect */}
           <Link 
             href="/architect"
             ref={(el) => { cardsRef.current[0] = el; }}
-            className="group cardItem relative flex flex-col items-center cursor-pointer hover:scale-105"
+            className="group cardItem relative flex flex-col items-center cursor-pointer  hover:scale-105"
           >
-            <div className="relative h-[45vw] w-[45vw] md:h-[23vw] md:w-[23vw] xl:h-[260px] xl:w-[260px] 2xl:w-[260px] 2xl:h-[260px] diamond diamond-hover grayscale hover:grayscale-0 overflow-hidden transition-all duration-300">
+            <div className="relative h-[45vw] w-[45vw] sm:h-[18vw] sm:w-[18vw] md:h-[18vw] md:w-[18vw] xl:h-[18vw] xl:w-[18vw]  diamond diamond-hover grayscale opacity-40 hover:opacity-100   hover:grayscale-0 overflow-hidden transition-all duration-300">
               <div ref={(el) => { imagesRef.current[0] = el; }}
                 className="absolute inset-0 w-full h-full">
                 <Image src="/images/home/profession/architect.webp" alt="Architect" fill className="object-cover transition-transform duration-300 group-hover:scale-110"  />
@@ -311,12 +311,12 @@ export default function BeginJourney() {
             </div>            
 
             {/* Hover outline */}
-            <svg className="absolute top-0 left-1/2 -translate-x-1/2 h-[45vw] w-[45vw] md:h-[23vw] md:w-[23vw] xl:h-[260px] xl:w-[260px] diamond-border pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            <svg className="absolute top-0 left-1/2 -translate-x-1/2 h-[45vw] w-[45vw] sm:h-[18vw] sm:w-[18vw] md:h-[18vw] md:w-[18vw] xl:h-[18vw] xl:w-[18vw]   diamond-border pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               viewBox="0 0 260 260" >
-              <path d="M130 0 L260 130 L130 260 L0 130 Z" fill="none" stroke="#45bbff"  strokeWidth="5" />
+              <path d="M130 4 L256 130 L130 256 L4 130 Z" fill="none" stroke="#45bbff" strokeWidth="3" strokeLinejoin="miter" />
             </svg>
 
-            <h4 className="mt-6 font-text-pageh4 text-[var(--color-textgrayLight)]  group-hover:text-[var(--color-brown)] transition-colors">I’m an architect</h4>
+            <h4 className="mt-6 text-22 transition-colors text-theme opacity-40 font-bold group-hover:opacity-100">I’m an architect</h4>
           </Link>
 
           {/* Homeowner */}
@@ -325,24 +325,18 @@ export default function BeginJourney() {
             ref={(el) => { cardsRef.current[1] = el; }}
             className="group cardItem relative flex flex-col items-center cursor-pointer hover:scale-105"
           >
-            <div className="relative h-[45vw] w-[45vw] md:h-[23vw] md:w-[23vw] xl:h-[260px] xl:w-[260px] diamond diamond-hover grayscale hover:grayscale-0 overflow-hidden transition-all duration-300">
-             <div 
-                ref={(el) => { imagesRef.current[1] = el; }}
-                className="absolute inset-0 w-full h-full"
-              >
+            <div className="relative h-[45vw] w-[45vw] sm:h-[18vw] sm:w-[18vw] md:h-[20vw] md:w-[20vw] xl:h-[18vw] xl:w-[18vw]  diamond diamond-hover grayscale opacity-40 hover:opacity-100   hover:grayscale-0 overflow-hidden transition-all duration-300">
+             <div ref={(el) => { imagesRef.current[1] = el; }} className="absolute inset-0 w-full h-full" >
                 <Image src="/images/home/profession/homeowner.webp" alt="homeowner" fill className="object-cover transition-transform duration-300 group-hover:scale-110"  />
               </div>
             </div>            
 
             {/* Hover outline */}
-            <svg className="absolute top-0 left-1/2 -translate-x-1/2 h-[45vw] w-[45vw] md:h-[23vw] md:w-[23vw] xl:h-[260px] xl:w-[260px]  diamond-border pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            <svg className="absolute top-0 left-1/2 -translate-x-1/2 h-[45vw] w-[45vw] sm:h-[18vw] sm:w-[18vw] md:h-[20vw] md:w-[20vw] xl:h-[18vw] xl:w-[18vw]   diamond-border pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               viewBox="0 0 260 260" >
-              <path d="M130 0 L260 130 L130 260 L0 130 Z" fill="none" stroke="#45bbff"  strokeWidth="5" />
+              <path d="M130 4 L256 130 L130 256 L4 130 Z" fill="none" stroke="#45bbff" strokeWidth="3" strokeLinejoin="miter" />
             </svg>
-
-            <h4 className="mt-6 font-text-pageh4 text-[var(--color-textgrayLight)]  group-hover:text-[var(--color-brown)] transition-colors">I’m an homeowner</h4>
-
-           
+            <h4 className="mt-6 text-22 transition-colors text-theme opacity-40 font-bold group-hover:opacity-100">I’m an homeowner</h4>           
           </Link>       
 
           
@@ -353,7 +347,7 @@ export default function BeginJourney() {
             ref={(el) => { cardsRef.current[2] = el; }}
             className="group cardItem relative flex flex-col items-center cursor-pointer hover:scale-105"
           >
-           <div className="relative h-[45vw] w-[45vw] md:h-[23vw] md:w-[23vw] xl:h-[260px] xl:w-[260px]  diamond diamond-hover grayscale hover:grayscale-0 overflow-hidden transition-all duration-300">
+           <div className="relative h-[45vw] w-[45vw] sm:h-[18vw] sm:w-[18vw] md:h-[20vw] md:w-[20vw] xl:h-[18vw] xl:w-[18vw] diamond diamond-hover grayscale opacity-40 hover:opacity-100   hover:grayscale-0 overflow-hidden transition-all duration-300">
            <div 
                 ref={(el) => { imagesRef.current[2] = el; }}
                 className="absolute inset-0 w-full h-full"
@@ -363,11 +357,11 @@ export default function BeginJourney() {
             </div>            
 
             {/* Hover outline */}
-            <svg className="absolute top-0 left-1/2 -translate-x-1/2 h-[45vw] w-[45vw] md:h-[23vw] md:w-[23vw] xl:h-[260px] xl:w-[260px]  diamond-border pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            <svg className="absolute top-0 left-1/2 -translate-x-1/2 h-[45vw] w-[45vw] sm:h-[18vw] sm:w-[18vw] md:h-[20vw] md:w-[20vw] xl:h-[18vw] xl:w-[18vw]   diamond-border pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               viewBox="0 0 260 260" >
-              <path d="M130 0 L260 130 L130 260 L0 130 Z" fill="none" stroke="#45bbff"  strokeWidth="5" />
+              <path d="M130 4 L256 130 L130 256 L4 130 Z" fill="none" stroke="#45bbff" strokeWidth="3" strokeLinejoin="miter" />
             </svg>
-            <h4 className="mt-6 font-text-pageh4 text-[var(--color-textgrayLight)]  group-hover:text-[var(--color-brown)] transition-colors">I’m an builder</h4>
+            <h4 className="mt-6 text-22 transition-colors text-theme opacity-40 font-bold group-hover:opacity-100">I’m an builder</h4>
           </Link>      
 
 
@@ -379,7 +373,7 @@ export default function BeginJourney() {
             className="group cardItem relative flex flex-col items-center cursor-pointer hover:scale-105"
           >
             
-            <div className="relative h-[45vw] w-[45vw] md:h-[23vw] md:w-[23vw] xl:h-[260px] xl:w-[260px]  diamond diamond-hover grayscale hover:grayscale-0 overflow-hidden transition-all duration-300">
+            <div className="relative h-[45vw] w-[45vw] sm:h-[18vw] sm:w-[18vw] md:h-[20vw] md:w-[20vw] xl:h-[18vw] xl:w-[18vw]  diamond diamond-hover grayscale opacity-40 hover:opacity-100   hover:grayscale-0 overflow-hidden transition-all duration-300">
                 <div 
                 ref={(el) => { imagesRef.current[3] = el; }}
                 className="absolute inset-0 w-full h-full"
@@ -389,12 +383,12 @@ export default function BeginJourney() {
             </div>            
 
             {/* Hover outline */}
-            <svg className="absolute top-0 left-1/2 -translate-x-1/2 h-[45vw] w-[45vw] md:h-[23vw] md:w-[23vw] xl:h-[260px] xl:w-[260px]  diamond-border pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            <svg className="absolute top-0 left-1/2 -translate-x-1/2 h-[45vw] w-[45vw] sm:h-[18vw] sm:w-[18vw] md:h-[20vw] md:w-[20vw] xl:h-[18vw] xl:w-[18vw]  diamond-border pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               viewBox="0 0 260 260" >
-              <path d="M130 0 L260 130 L130 260 L0 130 Z" fill="none" stroke="#45bbff"  strokeWidth="5" />
+              <path d="M130 4 L256 130 L130 256 L4 130 Z" fill="none" stroke="#45bbff" strokeWidth="3" strokeLinejoin="miter" />
             </svg>
 
-            <h4 className="mt-6 font-text-pageh4 text-[var(--color-textgrayLight)]  group-hover:text-[var(--color-brown)] transition-colors">I’m an exploring</h4>
+            <h4 className="mt-6 text-22 transition-colors text-theme opacity-40 font-bold group-hover:opacity-100">I’m an exploring</h4>
           </Link>             
         </div>
       </div>

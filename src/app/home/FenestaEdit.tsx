@@ -93,18 +93,18 @@ useEffect(() => {
 
 
   return (
-    <section className="FenestaEdit common-padding w-full mx-auto gradient-background overflow-hidden relative ">
+    <section className="FenestaEdit common-padding w-full mx-auto overflow-hidden relative bg-darkbase ">
       <div className="container p-0 relative z-10">
         <div className="max-w-full mx-auto">
             {/* Heading */}
             <div ref={sectionRef}  className="headingOuter w-full">
               <div className="headingTitle mb-6 xl:mb-6 px-6 md:px-0 title-section ">
                 <div ref={headingRef} className="  flex flex-col  w-full">
-                  <h2 className="font-mainFont text-pageh2  leading-none">The Fenesta <span className="font-subFont text-corinthiaHeading text-brown leading-0">Edit</span></h2>
+                  <h2 className="font-mainFont text-h2  leading-none">The Fenesta <span className="font-subFont text-corinthiaHeading text-brown leading-0">Edit</span></h2>
                 </div>
 
                 <div className="headingSubTitle flex flex-col justify-center w-full">  
-                  <p className="mt-3  max-w-3xl text-textblack">A curated collection of ideas and stories for homes that value design and style</p>
+                  <p className="mt-3  max-w-3xl text-base">A curated collection of ideas and stories for homes that value design and style</p>
                 </div>
               </div>     
             </div>  
@@ -127,17 +127,17 @@ useEffect(() => {
                     src={post.img}
                     alt={post.title}
                     fill
-                    className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"
+                    className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
                   />
                 </div>
 
                 {/* Overlay Text */}
-                <div className="absolute inset-x-0 bottom-0 bg-[#00000080] text-white px-4 py-4 pr-14 backdrop-blur-sm">
-                  <p className="text-sm opacity-80">{post.date}</p>
-                  <p className=" mt-1">{post.title}</p>
+                <div className="absolute inset-x-0 bottom-0 bg-[#12121250] group-hover:bg-[#0288D1] text-white px-4 py-4 pr-14 backdrop-blur-sm">
+                  <p className="text-sm opacity-80 leading-none">{post.date}</p>
+                  <p className=" mt-2 leading-tight">{post.title}</p>
 
                   {/* HOVER BUTTON */}
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#0288D1] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(.22,.61,.36,1)] scale-75 group-hover:scale-100">
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#12121250] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(.22,.61,.36,1)] scale-75 group-hover:scale-100">
                     <Image src="/images/arrow-right.svg" alt="" width="14" height="14" className="object-cover transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:-rotate-45 relative top-[2px] -left-[2px]" />
                   </div>
                 </div>
@@ -146,7 +146,7 @@ useEffect(() => {
           </div>
 
           {/* Mobile Swiper */}
-          <div className="md:hidden">
+          <div className="md:hidden -mx-6 ">
             <Swiper
               modules={[Autoplay]}
               spaceBetween={16}

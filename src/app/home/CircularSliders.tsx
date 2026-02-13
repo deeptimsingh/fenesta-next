@@ -36,6 +36,8 @@ export default function FirstVisittoFinalFit() {
     { number: "04", title: "Precision Manufacturing", description: "ISO-certified facilities ensure accuracy.", image: "/images/home/fromfirstvisit/img1.webp", iconImage: "/images/home/fromfirstvisit/icon4.svg" },
     { number: "05", title: "Site Survey & Measurements", description: "Perfect fit ensured through precision measurement.", image: "/images/home/fromfirstvisit/img1.webp", iconImage: "/images/home/fromfirstvisit/icon5.svg" },
     { number: "06", title: "Installation", description: "Long-term durability guaranteed.", image: "/images/home/fromfirstvisit/img1.webp", iconImage: "/images/home/fromfirstvisit/icon6.svg" },
+    { number: "07", title: "Installation", description: "Long-term durability guaranteed.", image: "/images/home/fromfirstvisit/img1.webp", iconImage: "/images/home/fromfirstvisit/icon6.svg" },
+    { number: "08", title: "Installation", description: "Long-term durability guaranteed.", image: "/images/home/fromfirstvisit/img1.webp", iconImage: "/images/home/fromfirstvisit/icon6.svg" },
   ];
 
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -55,10 +57,18 @@ export default function FirstVisittoFinalFit() {
   const clickTimestampRef = useRef<number>(0); // Track when click happened
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const check = () => setIsMobile(typeof window !== "undefined" && window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   // ⭐ Responsive radius calculation - only after mount
@@ -76,18 +86,21 @@ export default function FirstVisittoFinalFit() {
       }
       
       // Responsive circle radii based on viewport width
-      // Base calculation: outer radius scales with container size
-      const containerSize = vw >= 1024 ? vw * 0.50 : vw >= 640 ? vw * 0.60 : vw * 0.80;
+      // Mobile: bigger circle (95vw); desktop: same as before
+      const containerSize = vw >= 1024 ? vw * 0.50 : vw >= 640 ? vw * 0.60 : vw * 0.95;
       const baseRadius = containerSize / 2;
       setOuterRadius(baseRadius);
       setInnerRadius(baseRadius * 0.83); // Inner radius is ~83% of outer (287/346 ≈ 0.83)
       
-      // Align icon radius with outer circle radius (icons should be on the outer circle)
-      // Account for icon size so icons sit properly on the circle edge
-      // Icon sizes: active = 90px (45px radius), inactive = 60px (30px radius)
-      // Use average to position icons nicely on the circle
-      const iconSizeOffset = vw >= 640 ? 85 : 50; // Offset to position icons slightly inside circle edge
-      setIconRadius(baseRadius - iconSizeOffset); // Position icons slightly inside the outer circle edge
+      // Mobile: icons a little inside the circle stroke; desktop: icons slightly inside circle edge
+      const isMobileView = vw < 768;
+      const mobileInsideOffset = 20; // px inside the outer stroke
+      if (isMobileView) {
+        setIconRadius(baseRadius - mobileInsideOffset);
+      } else {
+        const iconSizeOffset = vw >= 640 ? 85 : 50;
+        setIconRadius(baseRadius - iconSizeOffset);
+      }
     }
 
     updateRadius();
@@ -95,19 +108,20 @@ export default function FirstVisittoFinalFit() {
     return () => window.removeEventListener("resize", updateRadius);
   }, [isMounted]);
 
-  // ⭐ Semi-circle position for icons - use consistent radius until mounted
-  // Start from right center (0 degrees) - the circle rotation will position it correctly
+  // ⭐ Icon position: full circle on mobile (even spacing), semicircle on desktop
   const computeSemiCircle = (index: number) => {
-    // Start at 0 degrees (right center, 3 o'clock) and span semicircle
-    // Since SVG is rotated -90, we need to offset by 90 to get right center visually
-    // But actually, we calculate in SVG's coordinate system, then rotate the container
-    // So 0 degrees = right center in our calc, and we rotate container to position it
-    const start = 0; // Right center (3 o'clock position)
-    const end = 180; // Left center (9 o'clock position) - creates semicircle from right to left
-    const angle = start + (index / (slides.length - 1)) * (end - start);
+    let angle: number;
+    if (isMobile) {
+      // Full circle on mobile - even spacing (360 / n)
+      angle = index * (360 / slides.length);
+    } else {
+      // Semicircle on desktop - right center (0°) to left center (180°)
+      const start = 0;
+      const end = 180;
+      angle = start + (index / (slides.length - 1)) * (end - start);
+    }
     const rad = (angle * Math.PI) / 180;
-    
-    // Use consistent radius on server, responsive radius after mount
+
     const radius = isMounted ? iconRadius : 300;
 
     return {
@@ -135,16 +149,20 @@ export default function FirstVisittoFinalFit() {
         const circleCenterX = circleRect.left + circleRect.width / 2;
         const circleCenterY = circleRect.top + circleRect.height / 2;
         
-        // Position arrow at right center of circle (0 degrees = right center)
-        // Active icon is 90px wide, so right edge is at 45px from center
-        const fixedX = circleCenterX + (isMounted ? iconRadius : 300) + 45 + 8; // Circle radius + half icon width + spacing
-        const fixedY = circleCenterY; // Center vertically
+        const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
+        const iconHalf = isMobileView ? 28 : 45;
+        const radius = isMounted ? iconRadius : 300;
+        // Mobile: arrow at bottom center (active icon at 6 o'clock); desktop: right center
+        const fixedX = isMobileView ? circleCenterX : circleCenterX + radius + iconHalf + 8;
+        const fixedY = isMobileView ? circleCenterY + radius + iconHalf + 8 : circleCenterY;
+        const arrowRotation = isMobileView ? -90 : 0;
+        const transformOrigin = isMobileView ? "50% 0%" : "0% 50%";
         
         gsap.set(arrow, {
           left: fixedX,
           top: fixedY,
-          rotation: 0, // Always point right (no rotation needed)
-          transformOrigin: "0% 50%",
+          rotation: arrowRotation,
+          transformOrigin,
           opacity: 1,
           visibility: "visible",
         });
@@ -172,10 +190,32 @@ export default function FirstVisittoFinalFit() {
     return () => window.removeEventListener("resize", handleResize);
   }, [isMounted, iconRadius]);
 
-  // ⭐ GSAP ScrollTrigger (WITH LENIS SCROLLER FIX)
+  // ⭐ Mobile only: set initial circle/icon rotation so active icon is at bottom center (6 o'clock = 90°)
+  useEffect(() => {
+    if (!isMobile || !circleRef.current || !isMounted) return;
+    const circle = circleRef.current;
+    const { angle } = computeSemiCircle(activeIndex);
+    const circleRotation = 90 - angle; // 90° = bottom center in standard coords
+    const iconCounterRotation = angle - 90;
+    // Run after layout so rotation applies correctly (active icon at 6 o'clock)
+    const id = requestAnimationFrame(() => {
+      if (!circleRef.current) return;
+      gsap.set(circleRef.current, { rotation: circleRotation, transformOrigin: "50% 50%" });
+      circleRef.current.querySelectorAll<HTMLElement>(".icon-item").forEach((icon) => {
+        if (icon) gsap.set(icon, { rotation: iconCounterRotation, transformOrigin: "50% 50%" });
+      });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [isMobile, isMounted, iconRadius]);
+
+  // ⭐ GSAP ScrollTrigger (WITH LENIS SCROLLER FIX) - desktop only; on mobile use click only
   useLayoutEffect(() => {
     if (!sectionRef.current || !rightRef.current || !spacerRef.current || !isMounted) return;
     if (!circleRef.current || !centerImgRef.current || !arrowRef.current) return;
+    if (isMobile) {
+      spacerRef.current.style.height = "0px";
+      return;
+    }
 
     try {
       // Calculate scroll distance based on viewport height (not content height)
@@ -288,7 +328,8 @@ export default function FirstVisittoFinalFit() {
                   const circleCenterY = circleRect.top + circleRect.height / 2;
                   
                   // Position arrow at right center of circle (0 degrees = right center)
-                  const fixedX = circleCenterX + iconRadius + 45 + 8; // Circle radius + half icon width + spacing
+                  const iconHalf = typeof window !== "undefined" && window.innerWidth < 768 ? 28 : 45;
+                  const fixedX = circleCenterX + iconRadius + iconHalf + 8; // Circle radius + half icon width + spacing
                   const fixedY = circleCenterY; // Center vertically
                   
                   // Use fixed positioning - arrow always at right center
@@ -344,7 +385,7 @@ export default function FirstVisittoFinalFit() {
     } catch (error) {
       console.debug('GSAP ScrollTrigger error:', error);
     }
-  }, [iconRadius, isMounted, slides.length]);
+  }, [iconRadius, isMounted, isMobile, slides.length]);
 
   // ⭐ Helper to get Lenis instance
   const getLenis = () => {
@@ -370,12 +411,17 @@ export default function FirstVisittoFinalFit() {
     setActiveIndex(i);
 
     const { angle } = computeSemiCircle(i);
-    
+    const isMobileView = typeof window !== "undefined" && window.innerWidth < 768;
+    // On mobile: active icon at bottom center (6 o'clock = 90°); on desktop: at right center (0°)
+    const circleRotation = isMobileView ? 90 - angle : -angle;
+    const iconCounterRotation = isMobileView ? angle - 90 : angle;
+
     const circle = circleRef.current;
     if (circle && circle.parentElement) {
       try {
         gsap.to(circle, {
-          rotation: -angle,
+          rotation: circleRotation,
+          transformOrigin: "50% 50%",
           duration: 0.6,
           ease: "power3.out",
         });
@@ -389,9 +435,8 @@ export default function FirstVisittoFinalFit() {
       const icons = circleRef.current.querySelectorAll<HTMLElement>(".icon-item");
       icons?.forEach((icon, idx) => {
         if (icon) {
-          // All icons counter-rotate by angle to stay straight
           gsap.to(icon, {
-            rotation: angle, // Counter-rotate to keep icons straight
+            rotation: iconCounterRotation,
             transformOrigin: "50% 50%",
             duration: 0.6,
             ease: "power3.out",
@@ -399,26 +444,25 @@ export default function FirstVisittoFinalFit() {
         }
       });
 
-      // Position arrow at right center of circle (fixed position)
+      // Position arrow: mobile = bottom center, desktop = right center
+      const iconHalf = isMobileView ? 28 : 45;
       if (arrowRef.current && circleRef.current) {
         requestAnimationFrame(() => {
           if (!arrowRef.current || !circleRef.current) return;
           
-          // Get the circle container's position relative to viewport
           const circleRect = circleRef.current.getBoundingClientRect();
           const circleCenterX = circleRect.left + circleRect.width / 2;
           const circleCenterY = circleRect.top + circleRect.height / 2;
           
-          // Position arrow at right center of circle (0 degrees = right center)
-          const fixedX = circleCenterX + iconRadius + 45 + 8; // Circle radius + half icon width + spacing
-          const fixedY = circleCenterY; // Center vertically
+          const fixedX = isMobileView ? circleCenterX : circleCenterX + iconRadius + iconHalf + 8;
+          const fixedY = isMobileView ? circleCenterY + iconRadius + iconHalf + 8 : circleCenterY;
+          const arrowRotation = isMobileView ? -90 : 0; // Point down on mobile, right on desktop
           
-          // Use fixed positioning - arrow always at right center
           gsap.to(arrowRef.current, {
             left: fixedX,
             top: fixedY,
-            rotation: 0, // Always point right
-            transformOrigin: "0% 50%",
+            rotation: arrowRotation,
+            transformOrigin: isMobileView ? "50% 0%" : "0% 50%",
             opacity: 1,
             visibility: "visible",
             duration: 0.6,
@@ -428,7 +472,15 @@ export default function FirstVisittoFinalFit() {
       }
     }
 
-    // Sync ScrollTrigger progress with clicked slide
+    // On mobile: no scroll sync, only click updates; done after visual updates
+    if (isMobile) {
+      setTimeout(() => {
+        isClickingRef.current = false;
+      }, 100);
+      return;
+    }
+
+    // Sync ScrollTrigger progress with clicked slide (desktop only)
     try {
       const st = scrollTriggerRef.current;
       if (!st || !sectionRef.current) {
@@ -679,25 +731,32 @@ export default function FirstVisittoFinalFit() {
             e.stopPropagation();
           }
         }}
-        className="circular-slider-section  gradient-background h-screen w-full bg-white flex items-center justify-center overflow-hidden before:absolute before:content-[''] before:w-[80vw] before:h-[70%] before:rounded-[30vw] before:opacity-100 before:blur-[100px] relative before:-z-1 before:-right-[10vw] transition-colors duration-200">
-        <div className="w-full mx-auto flex flex-col md:flex-row items-center gap-20 relative z-0">
-          {/* LEFT SIDE */}
-          <div className="w-full md:w-[40vw] xl:w-[40vw] flex justify-center items-center">
-            <div className="relative w-[45vw] h-[45vw] flex items-center justify-center -left-20">
+        className="circular-slider-section gradient-background bg-lightdarkbase h-screen w-full flex items-center justify-center overflow-hidden before:absolute before:content-[''] before:w-[80vw] before:h-[70%] before:rounded-[30vw] before:opacity-100 before:blur-[100px] relative before:-z-1 before:-right-[10vw] transition-colors duration-200">
+        <div className="w-full mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-20 relative z-0 px-3 md:px-0">
+          {/* Mobile: centered title on top */}
+          <div className="w-full order-1 text-center px-2 md:hidden">
+            <h2 className="font-mainFont text-pageh2 leading-none text-[var(--color-gray)] transition-colors duration-200">From <span className="font-subFont text-corinthiaHeading text-brown dark:text-[#d4a574] transition-colors duration-200">First Visit</span> to Final Fit — we handle it all</h2>
+          </div>
+          
+          {/* Row: circle (left) + content (right) on mobile and desktop */}
+          <div className="w-full order-2 flex md:flex-row flex-col items-center justify-center gap-3 md:gap-20 flex-1 min-h-0 flex-wrap">
+            {/* Desktop: left column 40vw with 45vw circle inside (previous layout) */}
+            <div className="w-[90vw] md:w-[40vw] xl:w-[40vw] flex justify-start md:justify-center items-center flex-shrink-0 ms-0 sm:ms-[-10vw] ">
+            <div className="relative w-[95vw] h-[95vw] md:w-[45vw] md:h-[45vw] flex  items-center justify-center -left-0 md:-left-20" style={{ minWidth: 0 }}>
             {/* ROTATING RING center image */}
             {mounted && (
                 <div
                   ref={centerImgRef}
-                  className="absolute w-[30vw] h-[30vw] rounded-full overflow-hidden shadow-xl dark:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5)] z-50 pointer-events-none transition-shadow duration-200"
+                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[55vw] h-[55vw] md:w-[28vw] md:h-[28vw] rounded-full overflow-hidden shadow-xl dark:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5)] z-50 pointer-events-none transition-shadow duration-200"
                 >
                   <Image src={slides[activeIndex].image} alt="" fill className="object-cover" />
                 </div>
             )}
 
             {/* ROTATING RING */}
-            <div ref={circleRef} className="absolute inset-0 flex items-center justify-center z-0">
+            <div ref={circleRef} className="absolute inset-0 flex items-center justify-center z-0 rotating-ring">
                 <svg 
-                  className="absolute inset-0 w-full h-full -rotate-90 max-w-[80vw] max-h-[80vw] sm:max-w-[60vw] sm:max-h-[60vw] md:max-w-[50vw] md:max-h-[50vw] circle-svg" 
+                  className="absolute inset-0 w-full h-full -rotate-90 max-w-[95vw] max-h-[95vw] sm:max-w-[60vw] sm:max-h-[60vw] md:max-w-[50vw] md:max-h-[50vw] circle-svg" 
                   viewBox={`0 0 ${outerRadius * 2} ${outerRadius * 2}`}
                   preserveAspectRatio="xMidYMid meet"
                 >
@@ -708,6 +767,7 @@ export default function FirstVisittoFinalFit() {
                     fill="none" 
                     stroke="var(--circle-stroke)" 
                     strokeWidth={strokeWidth}
+                    className="circle-stroke"
                   />
                   <circle 
                     cx={outerRadius} 
@@ -716,6 +776,7 @@ export default function FirstVisittoFinalFit() {
                     fill="none" 
                     stroke="var(--circle-stroke)" 
                     strokeWidth={strokeWidth}
+                    className="circle-stroke"
                   />
                 </svg>
 
@@ -741,14 +802,15 @@ export default function FirstVisittoFinalFit() {
                     >
                       <div
                         className={`icon-item ${
-                          isActive ? "active-icon w-[90px] h-[90px]" : "w-[60px] h-[60px] "
-                        } rounded-full shadow-md dark:shadow-[0_4px_6px_rgba(0,0,0,0.5)] flex items-center justify-center relative transition-colors duration-200 bg-[var(--icon-bg)]`}
+                          isActive ? "active-icon w-16 h-16 md:w-[90px] md:h-[90px]" : "w-12 h-12 md:w-[70px] md:h-[70px]"
+                        } rounded-full shadow-md dark:shadow-[0_4px_6px_rgba(0,0,0,0.5)] flex items-center justify-center relative transition-colors duration-200`}
                       >
                         <Image
                           src={slide.iconImage}
                           alt=""
                           width={isActive ? 60 : 40}
-                          height={isActive ? 60 : 40} className="dark:invert"
+                          height={isActive ? 60 : 40}
+                          className="dark:invert w-full h-full object-contain"
                         />
                       </div>
                     </div>
@@ -762,40 +824,38 @@ export default function FirstVisittoFinalFit() {
               )}
             </div>
           </div>
-
-          {/* RIGHT SIDE CONTENT */}
-          <div ref={rightRef} className="w-full md:w-[60vw] xl:w-[60vw] max-w-3xl right-content ">
-            {/* Heading */}           
-            <div ref={headingSectionRef} className="w-full">
+          {/* RIGHT SIDE CONTENT - caption; desktop also has heading above */}
+          <div ref={rightRef} className="w-full flex-1 min-w-[200px] md:w-[60vw] xl:w-[60vw] md:max-w-3xl right-content flex flex-col justify-center mt-10 md:mt-0">
+            {/* Heading - desktop only (mobile uses centered title above) */}
+            <div ref={headingSectionRef} className="w-full hidden md:block">
                 <div ref={headingRef} className="title-section text-start flex flex-col justify-center w-full mx-auto">
-                  <h2 className="font-mainFont text-pageh2 leading-none text-[var(--color-gray)] transition-colors duration-200">From <span className="font-subFont text-corinthiaHeading text-brown dark:text-[#d4a574] transition-colors duration-200">First Visit</span> to Final Fit — we handle it all</h2>
+                  <h2 className="font-mainFont text-h2 leading-none transition-colors duration-200">From <span className="font-subFont text-corinthiaHeading text-brown  transition-colors duration-200">First Visit</span> to Final Fit — we handle it all</h2>
                 </div>
             </div>
-           
 
-            <div className="mt-[2vw] relative  max-w-lg overflow-hidden ">
+            <div className="mt-0 md:mt-[2vw] relative flex flex-row md:flex-col items-center md:items-start gap-5 md:gap-0 mx-auto md:mx-0 max-w-full md:max-w-lg overflow-hidden min-h-[100px]">
               <span 
                 ref={captionNumberRef}
-                className="text-[155px] leading-[0.65] font-extrabold text-[#fff] dark:text-gray-800 relative left-0 top-2 flex mb-[2vw] icon-img"
+                className="text-[80px] sm:text-[120px] md:text-[155px] leading-[0.55] font-extrabold text-[#fff] dark:text-gray-800 relative left-0 top-0 md:top-2 flex mb-1 md:mb-[2vw] icon-img"
               >
                 {slides[activeIndex].number}
               </span>
-              
               <div className="overflow-hidden relative">
                 <h3 
                   ref={captionTitleRef}
-                  className="font-text-pageh3 text-brown  mb-2 font-medium"
+                  className="text-brown mb-1 md:mb-2 font-medium"
                 >
                   {slides[activeIndex].title}
                 </h3>
                 <p 
                   ref={captionDescRef}
-                  className="text-black dark:text-white   transition-colors duration-200"
+                  className="text-black dark:text-white text-sm md:text-base transition-colors duration-200"
                 >
                   {slides[activeIndex].description}
                 </p>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </section>

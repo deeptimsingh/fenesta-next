@@ -106,12 +106,12 @@ export default function ParallaxSection() {
 
         <div  
           ref={leftCaption}
-          className="title-section relative z-10 text-center text-white px-4 xl:px-6 py-4  xl:py-6 bg-[#00000080] backdrop-blur-sm rounded-xl mx-6 md:mx-0 w-[100%] xl:w-[60%] flex items-center flex-wrap content-center h-[350px] max-w-[552px]">      
+          className="title-section relative z-10 text-center text-white px-4 xl:px-6 py-4  xl:py-6 bg-[#00000080] backdrop-blur-sm rounded-xl mx-6 md:mx-0 w-full xl:w-[65%] flex items-center flex-wrap content-center h-[350px] max-w-[552px]">      
              {/* Heading */}
              <div ref={leftSectionRef}  className="headingOuter w-full">
-              <div className="headingTitle mb-6 xl:mb-6 px-6 md:px-0 ">
+              <div className="headingTitle mb-6 xl:mb-6 px-0 md:px-0 ">
                 <div ref={leftHeadingRef} className="title-section  flex flex-col  w-full">
-                  <h2 className="font-mainFont text-pageh2 leading-none text-cream flex justify-center flex-wrap mx-auto">Visit Our <span className="font-subFont text-corinthiaHeading text-cream flex w-full justify-center leading-0">Signature Studio</span></h2>
+                  <h2 className="font-mainFont text-h2 leading-none text-white flex justify-center flex-wrap mx-auto">Visit Our <span className="font-subFont text-corinthiaHeading text-cream flex w-full justify-center leading-none">Signature Studio</span></h2>
                 </div>
 
                 <div className="headingSubTitle flex flex-col justify-center w-full sm:max-w-md mx-auto">  
@@ -129,19 +129,19 @@ export default function ParallaxSection() {
       {/* RIGHT SECTION */}
       <div
         ref={rightSection}
-        className="relative flex-1 flex items-center justify-center overflow-hidden min-h-141.25 md:min-h-auto gradient-background"
+        className="relative flex-1 flex items-center justify-center overflow-hidden min-h-141.25 md:min-h-auto bg-cream bg-lightdarkbase"
       >
-        <div
+        {/* <div
           ref={rightBg}
           className="absolute inset-0 bg-[url('/images/home/GetaQuickEstimate-bg.webp')] bg-center bg-cover will-change-transform scale-110"
-        ></div>
+        ></div> */}
 
-        <div ref={rightCaption} className="title-section relative z-10 text-center text-white px-6 xl:px-8 py-6  xl:py-8 trustedpartners-gradient-background backdrop-blur-sm rounded-xl mx-6 md:mx-0 w-[100%] xl:w-[60%]  flex items-center flex-wrap content-center h-[350px] max-w-[552px]">          
+        <div ref={rightCaption} className="title-section relative z-10 text-center text-white px-6 xl:px-8 py-6  xl:py-8 trustedpartners-gradient-background backdrop-blur-sm rounded-xl mx-6 md:mx-0 w-full xl:w-[65%]  flex items-center flex-wrap content-center h-[350px] max-w-[552px]">          
             {/* Heading */}
             <div ref={rightSectionRef}  className="headingOuter w-full">
               <div className="headingTitle mb-6 xl:mb-6 px-6 md:px-0 ">
                 <div ref={rightHeadingRef} className="title-section  flex flex-col  w-full">
-                  <h2 className="font-mainFont text-pageh2 leading-none text-brown flex justify-center flex-wrap mx-auto">Get a Quick <span className="font-subFont text-corinthiaHeading text-brown flex w-full justify-center ">Estimate</span></h2>
+                  <h2 className="font-mainFont text-h2 leading-none text-brown flex justify-center flex-wrap mx-auto">Get a Quick <span className="font-subFont text-corinthiaHeading text-brown flex w-full justify-center ">Estimate</span></h2>
                 </div>
 
                 <div className="headingSubTitle flex flex-col justify-center w-full sm:max-w-md mx-auto">  

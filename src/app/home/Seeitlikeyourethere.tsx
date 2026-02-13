@@ -32,28 +32,31 @@ export default function Seeitlikeyourethere() {
 
   return (
     <>
-      <section className="flex flex-col md:flex-row  px-6 md:px-0  relative bg-[#E3E4E6] text-center overflow-hidden w-full common-padding max-h-[100vh] md:h-[100vh] md:max-h-[768px] ">    
+      <section className="flex flex-col md:flex-row  px-6 md:px-0  relative bg-[#E3E4E6] text-center overflow-hidden w-full common-padding max-h-screen  min-h-[600px] md:h-screen md:max-h-[768px] ">    
             {/* Background */}
-          <div className="absolute inset-0 bg-[url('/images/home/Seeitlikeyourethere-bg-mobile.webp')] md:bg-[url('/images/home/Seeitlikeyourethere-bg.webp')]  md:bg-center bg-cover md:bg-cover z-19 bg-no-repeat transform flip-x md:transform-none"></div>
+          <div className="absolute inset-0">
+              <img src="/images/home/Seeitlikeyourethere-bg-mobile.webp" alt="See it Like you're there" className="w-full h-full object-cover md:hidden" />
+              <img src="/images/home/Seeitlikeyourethere-bg.webp" alt="See it Like you're there" className="w-full h-full object-cover hidden md:block" />
+          </div>
           
           <div className="container px-6 md:px-0 relative h-full">
-                <div className="max-w-full mx-auto flex items-start md:items-center  h-full">
-                    {/* LEFT SIDE TEXT */}
-                
-
+              <div className="max-w-full mx-auto flex items-start md:items-center  h-full">
+                    {/* LEFT SIDE TEXT */}          
                     {/* Heading */}
-            <div ref={sectionRef}  className="headingOuter w-full md:w-80 flex flex-col  z-20 relative text-center md:text-left">
-              <div className="headingTitle mb-6 xl:mb-6 px-6 md:px-0 ">
-                <div ref={headingRef} className="title-section  flex flex-col  w-full">
-                <h2 className="font-mainFont text-pageh2 leading-none">See it <span className="font-subFont text-corinthiaHeading text-brown leading-0">Like</span> <br className="hidden md:flex" /> you’re there</h2>
-                </div>
+                    <div ref={sectionRef}  className="headingOuter w-full md:w-80 flex flex-col  z-20 relative text-center md:text-left">
+                      <div className="headingTitle mb-6 xl:mb-6  md:px-0 ">
+                        <div ref={headingRef} className="title-section  flex flex-col  w-full">
+                          <h2 className="font-mainFont text-h2 leading-none">See it <span className="font-subFont text-corinthiaHeading text-brown leading-0">Like</span> <br className="hidden md:flex" /> you’re there</h2>
+                        </div>
 
-                <div className="headingSubTitle flex flex-col justify-center w-full">  
-                  <p className="mt-3  max-w-3xl mb-6 leading-normal">Browse our Virtual Studio to experience our products to help you choose with confidence.</p>
-                  <FenestaButton className="max-w-min">ENTER STUDIO</FenestaButton>
-                </div>
-              </div>     
-            </div> 
+                        <div className="headingSubTitle flex flex-col justify-center w-full ">  
+                          <p className="mt-3  max-w-3xl mb-6 leading-normal">Browse our Virtual Studio to experience our products to help you choose with confidence.</p>
+                          <div className="md:mx-0 mx-auto absolute -bottom-[100%] left-0 right-0 sm:relative">
+                          <FenestaButton className="max-w-min">ENTER STUDIO</FenestaButton>
+                          </div>
+                        </div>
+                      </div>     
+                    </div> 
 
                     {/* Arrow Button */}
                     <div
@@ -69,7 +72,7 @@ export default function Seeitlikeyourethere() {
                         className=" w-[70px] h-[30px]"
                         />
                     </div>
-                </div>
+              </div>
           </div>  
       </section>
     </>   

@@ -229,7 +229,7 @@ export default function PanoramaTabsSingle() {
       <div className="container-fluid m-auto px-6 md:px-0">
         <div ref={sectionRef} className="w-full">
           <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-3xl mx-auto">
-            <h2 className="font-mainFont text-pageh2 leading-none  text-black">
+            <h2 className="text-h2 leading-none">
             Browse to find what <br/> feels right for <span className="font-subFont text-corinthiaHeading text-brown">your home</span>
             </h2>
           </div>
@@ -242,10 +242,10 @@ export default function PanoramaTabsSingle() {
           <button
             key={index}
             onClick={() => setActiveTab(index)}
-            className={`pb-2 text-lg transition-all ${
+            className={`pb-2 text-lg transition-all border-b-2 ${
               activeTab === index
-                ? "darktextwhite border-b-2 border-white"
-                : "darktextblue  border-textblueLight"
+                ? "text-brown border-[var(--color-brown)] font-bold"
+                : "text-theme border-transparent font-medium"
             }`}
           >
             {tab}

@@ -68,14 +68,14 @@ export default function TrustedPartners() {
   };
 
   return (
-    <section className="trustedpartners gradient-background  w-full bg-white overflow-hidden  transition-colors duration-200 common-padding relative">
+    <section className="trustedpartners  w-full h-screen bg-white overflow-hidden  transition-colors duration-200 common-padding relative bg-darkbase">
        <div className="w-full mx-auto relative z-2  ">
         <div className="container-fluid m-auto px-6 md:px-0">      
 
           <div ref={sectionRef} className="w-full">
               <div className="container" >
                 <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full">
-                  <h2 className="font-mainFont text-pageh2 leading-none"><span className="font-subFont text-corinthiaHeading text-brown leading-0">Trusted </span>
+                  <h2 className="font-mainFont text-h2 leading-none"><span className="font-subFont text-corinthiaHeading text-brown leading-0">Trusted </span>
                   by India’s leading <br /> builders and architects </h2>
                   <div className="headingSubTitle flex flex-col justify-center w-full my-4  sm:max-w-3xl mx-auto">              
                      <p className="max-w-full mx-auto">Explore finishes, test movement, and feel the quiet difference for yourself.</p>   
@@ -106,7 +106,7 @@ export default function TrustedPartners() {
               ].map((img, i) => (
                 <div
                   key={i}
-                  className="logo-item logo-item-desktop relative border-r-1 border-[#121212]/20 w-[330px] h-[265px] flex items-center justify-center"
+                  className="logo-item logo-item-desktop relative border-r-1 border-[#0094DA]/20 w-[20vw] h-[16vw] flex items-center justify-center"
                   onMouseEnter={handleMarqueeHover}
                   onMouseLeave={handleMarqueeLeave}
                 >
@@ -121,32 +121,33 @@ export default function TrustedPartners() {
               ))}
             </div>
           </div>
+        </div>  
 
-          {/* MOBILE STATIC GRID */}
-          <div className="md:hidden grid grid-cols-3 justify-items-center w-full px-0 mt-10">
-            {[
-             "logo1.png",
-                "logo2.png",
-                "logo3.png",
-                "logo4.png",
-                "logo5.png",
-                "logo6.png",
-            ].map((img, i) => (
-              <div
-                key={i}
-                className="logo-item logo-item-mobile relative border-1 w-full h-[130px] flex items-center justify-center px-2 justify-center"
-              >
-                <Image
-                  src={`/images/home/logos/${img}`}
-                  alt={img}
-                  width={228}
-                  height={116}
-                  className="w-auto h-auto max-h-[130px] grayscale opacity-70 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-500 ease-in-out"
-                />
-              </div>
-            ))}
-          </div>
+        {/* MOBILE STATIC GRID */}
+        <div className="md:hidden grid grid-cols-3 justify-items-center w-full px-0 mt-10 mb-10">
+          {[
+            "logo1.png",
+              "logo2.png",
+              "logo3.png",
+              "logo4.png",
+              "logo5.png",
+              "logo6.png",
+          ].map((img, i) => (
+            <div
+              key={i}
+              className="logo-item logo-item-mobile relative border-1 border-[#0094DA]/20 w-full h-[130px] flex items-center px-2 justify-center"
+            >
+              <Image
+                src={`/images/home/logos/${img}`}
+                alt={img}
+                width={228}
+                height={116}
+                className="w-auto h-auto max-h-[130px] grayscale opacity-70 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-500 ease-in-out"
+              />
+            </div>
+          ))}
         </div>
+        
 
         <div className="flex flex-col justify-center items-center flex-wrap">
           <FenestaButton>See who builds with us</FenestaButton>

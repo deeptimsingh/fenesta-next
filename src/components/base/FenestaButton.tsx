@@ -68,6 +68,7 @@ export default function CommonButton({
     return () => {
       btn.removeEventListener("mouseenter", hoverIn);
       btn.removeEventListener("mouseleave", hoverOut);
+      gsap.killTweensOf([leftArrow, rightArrow]);
     };
   }, []);
 

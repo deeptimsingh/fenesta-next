@@ -5,7 +5,7 @@ import { Corinthia } from "next/font/google";
 import Providers from "@/components/Providers";
 import Footer from "@/components/base/footer";
 import Header from "@/components/base/header";
-
+import RightStickyBar from "@/components/base/RightStickyBar";
 import "./globals.css";
 
 const corinthia = Corinthia({
@@ -52,6 +52,7 @@ export default function RootLayout({
         <Providers>
           <Header />
           {children}
+          <RightStickyBar />
           <Footer />
         </Providers>
       </body>

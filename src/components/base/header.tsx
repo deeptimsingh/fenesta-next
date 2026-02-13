@@ -142,6 +142,21 @@ export default function Header() {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const prevMenuRef = useRef<MenuKey | null>(null);
   const accordionRefs = useRef<{ [key: string]: HTMLUListElement | null }>({});
+  const searchButtonRef = useRef<HTMLButtonElement | null>(null);
+  const searchBackdropRef = useRef<HTMLDivElement | null>(null);
+  const searchPanelRef = useRef<HTMLDivElement | null>(null);
+
+  const [searchOrigin, setSearchOrigin] = useState<DOMRect | null>(null);
+  const [searchBgImage, setSearchBgImage] = useState<string>("");
+
+  // Random images for search overlay background (windows/doors/interiors)
+  const SEARCH_BG_IMAGES = [
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80",
+    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80",
+    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80",
+    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1920&q=80",
+    "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=1920&q=80",
+  ];
 
   useEffect(() => {
     setMounted(true);
@@ -170,7 +185,8 @@ export default function Header() {
           duration: 0.2,
           ease: "power2.inOut",
           onComplete: () => {
-            // Fade in new content smoothly
+            // Guard: refs may be null if component unmounted during tween
+            if (!imageRef.current || !contentRef.current) return;
             gsap.fromTo(
               [imageRef.current, contentRef.current],
               { opacity: 0, y: 15 },
@@ -198,6 +214,7 @@ export default function Header() {
       }
 
       // Show dropdown with smooth slide down
+      if (!dropdownRef.current) return;
       gsap.fromTo(
         dropdownRef.current,
         { opacity: 0, y: -20, scale: 0.95 },
@@ -211,15 +228,16 @@ export default function Header() {
         }
       );
     } else {
-      // Hide dropdown smoothly
-      gsap.to(dropdownRef.current, {
-        opacity: 0,
-        y: -15,
-        scale: 0.95,
-        duration: 0.25,
-        ease: "power2.in",
-        pointerEvents: "none",
-      });
+      if (dropdownRef.current) {
+        gsap.to(dropdownRef.current, {
+          opacity: 0,
+          y: -15,
+          scale: 0.95,
+          duration: 0.25,
+          ease: "power2.in",
+          pointerEvents: "none",
+        });
+      }
     }
 
     prevMenuRef.current = activeMenu;
@@ -276,6 +294,82 @@ export default function Header() {
     });
   }, [mobileOpen, mounted]);
 
+  // Search overlay: open from button origin, close with smooth animation
+  useEffect(() => {
+    if (!mounted) return;
+
+    if (searchOpen && searchOrigin && searchBackdropRef.current && searchPanelRef.current) {
+      const { x, y, width, height } = searchOrigin;
+      const cx = x + width / 2;
+      const cy = y + height / 2;
+
+      gsap.set(searchBackdropRef.current, {
+        transformOrigin: `${cx}px ${cy}px`,
+        scale: 0,
+        opacity: 1,
+      });
+      gsap.set(searchPanelRef.current, {
+        left: x,
+        top: y,
+        width: width,
+        height: height,
+        x: 0,
+        y: 0,
+        opacity: 0,
+      });
+
+      gsap.to(searchBackdropRef.current, {
+        scale: 1,
+        duration: 0.5,
+        ease: "power3.out",
+      });
+      gsap.to(searchPanelRef.current, {
+        left: "50%",
+        top: "50%",
+        x: "-50%",
+        y: "-50%",
+        width: "min(28rem, calc(100vw - 2rem))",
+        height: "auto",
+        opacity: 1,
+        duration: 0.45,
+        ease: "power3.out",
+        delay: 0.08,
+      });
+    }
+  }, [searchOpen, searchOrigin, mounted]);
+
+  const handleSearchClose = () => {
+    if (!searchBackdropRef.current || !searchPanelRef.current) {
+      setSearchOpen(false);
+      return;
+    }
+    const { x, y, width, height } = searchOrigin || { x: 0, y: 0, width: 40, height: 40 };
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+
+    gsap.to(searchPanelRef.current, {
+      left: x,
+      top: y,
+      x: 0,
+      y: 0,
+      width: width,
+      height: height,
+      opacity: 0,
+      duration: 0.3,
+      ease: "power2.in",
+    });
+    gsap.to(searchBackdropRef.current, {
+      scale: 0,
+      transformOrigin: `${cx}px ${cy}px`,
+      duration: 0.35,
+      ease: "power2.in",
+      onComplete: () => {
+        setSearchOpen(false);
+        setSearchOrigin(null);
+      },
+    });
+  };
+
 
   const currentMenu = menuData.find((m) => m.key === activeMenu);
 
@@ -283,10 +377,10 @@ export default function Header() {
     <>
       {/* HEADER */}
       <header className="fixed top-0 left-0 w-full z-100 bg-[#12121280] shadow  py-5">
-        <div className="container mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="container mx-auto  h-16 flex items-center justify-between">
           {/* LOGO - LEFT */}
           <Link href="/" className="font-bold text-lg dark:text-white z-10">
-              <Image src="/images/logo-white.svg" className="header-logo" alt=""  width={230} height={70} />
+              <Image src="/images/logo-white.svg" className="header-logo max-w-[12vw] md:max-w-[12vw]" alt=""  width={230} height={70} />
           </Link>
 
           {/* CENTER MENU - DESKTOP */}
@@ -329,9 +423,21 @@ export default function Header() {
           <div className="flex items-center gap-4 z-10">
             {/* Theme Toggle */}
             <ThemeToggle />
-            {/* Search Button */}
+            {/* Search Button - origin for open animation */}
             <button
-              onClick={() => setSearchOpen(!searchOpen)}
+              ref={searchButtonRef}
+              onClick={() => {
+                if (searchOpen) {
+                  handleSearchClose();
+                } else {
+                  const rect = searchButtonRef.current?.getBoundingClientRect();
+                  if (rect) setSearchOrigin(rect);
+                  setSearchBgImage(
+                    SEARCH_BG_IMAGES[Math.floor(Math.random() * SEARCH_BG_IMAGES.length)]
+                  );
+                  setSearchOpen(true);
+                }
+              }}
               className="w-10 h-10 rounded-full border border-gray-300 dark:border-gray-700 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label="Search"
             >
@@ -554,22 +660,87 @@ export default function Header() {
         </div>
       </div>
 
-      {/* SEARCH OVERLAY */}
-      {searchOpen && (
+      {/* SEARCH OVERLAY - opens from search button, random bg, huge SEARCH marquee, form */}
+      {searchOpen && searchOrigin && (
         <div
-          className="fixed inset-0 bg-black/50 z-[200] flex items-start justify-center pt-32"
-          onClick={() => setSearchOpen(false)}
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-darkBase backdrop-blur-md"
+          onClick={handleSearchClose}
+          onKeyDown={(e) => e.key === "Escape" && handleSearchClose()}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Search"
         >
+
+          
+          {/* Random background image */}
+          {/* <div className="absolute inset-0 z-0">
+            <Image
+              src={searchBgImage}
+              alt=""
+              fill
+              className="object-cover"
+              sizes="100vw"
+              priority
+            />
+          </div> */}
+          {/* Dark overlay - expands from button origin */}
           <div
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl mx-4 p-6"
+            ref={searchBackdropRef}
+            className="absolute inset-0 z-[1] bg-black/60"
+            aria-hidden
+          />
+
+           {/* Close button - top right of modal */}
+           <button
+              type="button"
+              onClick={handleSearchClose}
+              className="fixed top-3 right-3 z-10 w-10 h-10 flex items-center justify-center rounded-full text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+              aria-label="Close search"
+            >
+              <span className="text-2xl leading-none" aria-hidden>×</span>
+            </button>
+
+          {/* Huge background marquee - "SEARCH" (pointer-events-none), 2 copies for seamless loop */}
+          <div className="absolute inset-0 z-[1] flex items-center overflow-hidden pointer-events-none">
+            <div className="flex shrink-0 animate-marquee whitespace-nowrap text-[clamp(80px,15vw,180px)] font-extrabold text-white/10 uppercase select-none">
+              <span className="shrink-0">SEARCH &nbsp; SEARCH &nbsp; SEARCH &nbsp; SEARCH &nbsp; SEARCH &nbsp;</span>
+              <span className="shrink-0">SEARCH &nbsp; SEARCH &nbsp; SEARCH &nbsp; SEARCH &nbsp; SEARCH &nbsp;</span>
+            </div>
+          </div>
+          {/* Search panel - grows from button to center */}
+          <div
+            ref={searchPanelRef}
+            className="fixed z-[2] rounded-2xl bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-2xl border border-white/20 dark:border-gray-600/50 overflow-hidden"
+            style={{
+              left: searchOrigin.x,
+              top: searchOrigin.y,
+              width: searchOrigin.width,
+              height: searchOrigin.height,
+            }}
             onClick={(e) => e.stopPropagation()}
           >
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full px-4 py-3 text-lg border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-black dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              autoFocus
-            />
+           
+            <div className="w-full max-w-3xl px-6 py-8 h-full min-h-[200px] flex flex-col justify-center">
+              {/* Search form - border-b style, large input, submit */}
+              <form
+                className="flex items-center border-b-2 border-gray-800 dark:border-white pb-4"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                <input
+                  type="text"
+                  placeholder="Type and hit enter..."
+                  className="w-full bg-transparent text-gray-900 dark:text-white text-2xl md:text-4xl outline-none placeholder-gray-500 dark:placeholder-white/60"
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  className="ml-4 text-gray-800 dark:text-white hover:scale-110 transition-transform flex-shrink-0"
+                  aria-label="Search"
+                >
+                  <SearchIcon />
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}

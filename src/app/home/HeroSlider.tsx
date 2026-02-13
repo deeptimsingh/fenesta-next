@@ -408,7 +408,7 @@ useLayoutEffect(() => {
           </div>
 
           {/* ODOMETER */}
-          <div className="flex items-center ml-6 text-white text-2xl md:text-4xl font-bold pointer-events-auto w-64">
+          <div className="flex items-center ml-6 text-white text-2xl md:text-4xl font-bold pointer-events-auto w-30 md:w-64">
             <div className="overflow-hidden h-[32px] md:h-[48px] mr-2">
               <div ref={paginationRef} className="odometer-container" />
             </div>
@@ -434,22 +434,16 @@ useLayoutEffect(() => {
         {/* SLIDE 1 */}
         <SwiperSlide>
           <div className="hero-img-wrap" >
-             <video
-  className="hero-img absolute top-0 left-0 w-full h-full object-cover"
-  src="/images/home/herobanner/banner-video1.mp4"
-  muted
-  playsInline
-  preload="metadata"
-  disablePictureInPicture
-/>
+             <video className="hero-img absolute top-0 left-0 w-full h-full object-cover" src="/images/home/herobanner/banner-video1.mp4"  muted  playsInline  preload="metadata"
+  disablePictureInPicture/>
           </div>
 
           <div className="overlay absolute inset-0 w-full h-full z-10 bg-[linear-gradient(-90deg,rgba(0,0,0,0)_33%,#000_96%)] opacity-45"></div>
 
-          <div className="absolute inset-x-0 bottom-1/6 md:bottom-1/5 flex items-center justify-center z-20   ">
+          <div className="absolute inset-x-0 bottom-24 md:bottom-1/5 flex items-center justify-center z-20   ">
             <div className="container">
               <div className="slide-caption text-white max-w-2xl items-center md:items-start md:text-left">
-                <h1 className="caption-title text-pageh1  mb-4 mask-reveal leading-none">     
+                <h1 className="caption-title text-h1  mb-4 mask-reveal leading-none">     
                   Let Life in <span className="font-subFont text-corinthiaHeading text-white">Beautifully</span>      
                 </h1>               
 
@@ -482,10 +476,10 @@ useLayoutEffect(() => {
 
           <div className="overlay absolute inset-0 w-full h-full z-10 bg-[linear-gradient(-90deg,rgba(0,0,0,0)_33%,#000_96%)] opacity-45"></div>
 
-          <div className="absolute inset-x-0 bottom-1/5 flex items-center justify-center z-20">
+          <div className="absolute inset-x-0 bottom-24 md:bottom-1/5 flex items-center justify-center z-20   ">
             <div className="container">
               <div className="slide-caption text-white max-w-2xl">
-                <h1 className="caption-title text-pageh1  mb-4 mask-reveal leading-none">     
+                <h1 className="caption-title text-h1  mb-4 mask-reveal leading-none">     
                   Let Life in <span className="font-subFont text-corinthiaHeading text-white">Beautifully</span>      
                 </h1>
                 
@@ -517,10 +511,10 @@ useLayoutEffect(() => {
 
           <div className="overlay absolute inset-0 w-full h-full z-10 bg-[linear-gradient(-90deg,rgba(0,0,0,0)_33%,#000_96%)] opacity-45"></div>
 
-          <div className="absolute inset-0 flex items-center justify-center z-20">
+          <div className="absolute inset-x-0 bottom-24 md:bottom-1/5 flex items-center justify-center z-20   ">
             <div className="container">
               <div className="slide-caption text-white max-w-2xl">
-                <h1 className="caption-title text-pageh1  mb-4 mask-reveal leading-none">     
+                <h1 className="caption-title text-h1  mb-4 mask-reveal leading-none">     
                   Let Life in <span className="font-subFont text-corinthiaHeading text-white">Beautifully</span>      
                 </h1>
                 
@@ -551,10 +545,10 @@ useLayoutEffect(() => {
 
           <div className="overlay absolute inset-0 w-full h-full z-10 bg-[linear-gradient(-90deg,rgba(0,0,0,0)_33%,#000_96%)] opacity-45"></div>
 
-          <div className="absolute inset-0 flex items-center justify-center z-20">
+          <div className="absolute inset-x-0 bottom-24 md:bottom-1/5 flex items-center justify-center z-20   ">
             <div className="container">
               <div className="slide-caption text-white max-w-2xl">
-                <h1 className="caption-title text-pageh1  mb-4 mask-reveal leading-none">     
+                <h1 className="caption-title text-h1  mb-4 mask-reveal leading-none">     
                   Let Life in <span className="font-subFont text-corinthiaHeading text-white">Beautifully</span>      
                 </h1>               
 

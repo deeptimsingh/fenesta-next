@@ -84,8 +84,10 @@ export function useHeadingAnimation({
         from: "start"
       },
       onComplete: () => {
-        // Remove will-change after animation for performance
-        gsap.set(items, { willChange: "auto" });
+        // Guard: avoid _gsap on null if section unmounted during animation
+        if (items.length && items[0]?.isConnected) {
+          gsap.set(items, { willChange: "auto" });
+        }
       }
     });
 
@@ -103,8 +105,9 @@ export function useHeadingAnimation({
         from: "end" // Reverse stagger for exit
       },
       onComplete: () => {
-        // Remove will-change after animation
-        gsap.set(items, { willChange: "auto" });
+        if (items.length && items[0]?.isConnected) {
+          gsap.set(items, { willChange: "auto" });
+        }
       }
     });
 
@@ -137,9 +140,9 @@ export function useHeadingAnimation({
       if (sectionRef.current) {
         observer.unobserve(sectionRef.current);
       }
-      // Cleanup animations
       tlIn.kill();
       tlOut.kill();
+      gsap.killTweensOf(items);
     };
   }, [headingRef, sectionRef, selector, threshold, rootMargin, enterDuration, exitDuration, stagger, initialRotateX, initialY]);
 
