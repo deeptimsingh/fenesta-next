@@ -74,13 +74,13 @@ useEffect(() => {
 
     // 🔥 Smooth parallax (editorial style)
     gsap.to(img, {
-      yPercent: 10, // 👈 subtle downward movement
+      yPercent: 15, // 👈 subtle downward movement
       ease: "none",
       scrollTrigger: {
         trigger: el,
         start: "top bottom",
         end: "bottom top",
-        scrub: 1.2, // 👈 smoother than 0.8
+        scrub: 1.6, // 👈 smoother than 0.8
         invalidateOnRefresh: true,
       },
     });
@@ -133,8 +133,8 @@ useEffect(() => {
 
                 {/* Overlay Text */}
                 <div className="absolute inset-x-0 bottom-0 bg-[#12121250] group-hover:bg-[#0288D1] text-white px-4 py-4 pr-14 backdrop-blur-sm">
-                  <p className="text-sm opacity-80 leading-none">{post.date}</p>
-                  <p className=" mt-2 leading-tight">{post.title}</p>
+                  <p className="text-sm opacity-80 leading-none ">{post.date}</p>
+                  <p className=" mt-2 leading-tight text-p">{post.title}</p>
 
                   {/* HOVER BUTTON */}
                   <div className="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#12121250] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(.22,.61,.36,1)] scale-75 group-hover:scale-100">

@@ -270,9 +270,9 @@ export default function BeginJourney() {
     }, []);
 
   return (
-    <section ref={sectionRefForBg} className="BeginJourney bg-darkbase w-full common-pt flex items-center justify-center overflow-hidden relative">     
+    <section ref={sectionRefForBg} className="BeginJourney bg-darkbase w-full common-padding flex items-center justify-center overflow-hidden relative">     
       {/* Background Image */}
-      <div ref={backgroundImageRef} className="backgroundImageRefimg absolute w-full z-2 right-0 left-auto h-[80%] max-w-[20vw] md:max-w-[40vw] mt-[-5%] -translate-y-1/2 top-1/2">
+      <div ref={backgroundImageRef} className="backgroundImageRefimg absolute w-full z-2 right-0 left-auto h-[95%] max-w-[60vw] sm:max-w-[60vw] md:max-w-[55vw] mt-[-3%] -translate-y-1/2 top-1/2">
         <Image
           src="/images/home/profession/professionbg.svg"
           alt="Background"
@@ -296,7 +296,7 @@ export default function BeginJourney() {
         
 
         {/* Cards */}
-        <div ref={cardsContainerRef} className="cardsContainer relative mt-10 mx-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-12 mr-0 sm:mr-[5vw] md:mr-[120px] xl:mr-[120px] mr-range-110 text-center">
+        <div ref={cardsContainerRef} className="cardsContainer relative mt-10 mx-0 sm:mx-10 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 sm:gap-12 mr-0 sm:mr-[5vw] md:mr-[120px] xl:mr-[120px] mr-range-110 text-center">
           {/* Architect */}
           <Link 
             href="/architect"

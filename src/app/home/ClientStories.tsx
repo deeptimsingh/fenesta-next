@@ -366,7 +366,7 @@ export default function ClientStories() {
         </div>
           <div
             ref={modalRef}
-            className="custommodal-in fixed inset-0 z-[9999] text-gray h-screen overflow-y-auto overscroll-contain scroll-smooth"
+            className="custommodal-in fixed inset-0 z-[9999] text-gray h-screen overflow-y-auto overscroll-contain scroll-smooth" data-lenis-prevent
             onWheel={(e) => e.stopPropagation()}
           >
             <div className="container-fluid min-h-screen">

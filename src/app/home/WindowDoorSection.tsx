@@ -228,7 +228,7 @@ export default function PanoramaTabsSingle() {
       {/* Heading */}
       <div className="container-fluid m-auto px-6 md:px-0">
         <div ref={sectionRef} className="w-full">
-          <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-3xl mx-auto">
+          <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-3xl mx-auto ">
             <h2 className="text-h2 leading-none">
             Browse to find what <br/> feels right for <span className="font-subFont text-corinthiaHeading text-brown">your home</span>
             </h2>
@@ -237,15 +237,16 @@ export default function PanoramaTabsSingle() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-6 mb-6 mt-10">
+     
+      <div className="flex gap-6 mb-6 mt-10 tabs-outer-container dark:bg-gray-900 dark:text-white">
         {tabs.map((tab, index) => (
           <button
             key={index}
             onClick={() => setActiveTab(index)}
             className={`pb-2 text-lg transition-all border-b-2 ${
               activeTab === index
-                ? "text-brown border-[var(--color-brown)] font-bold"
-                : "text-theme border-transparent font-medium"
+                ? "text-brown border-[var(--color-brown)] font-bold dark:text-white dark:border-white"
+                : "text-theme border-transparent font-medium dark:text-white dark:border-white"
             }`}
           >
             {tab}
@@ -443,7 +444,7 @@ export default function PanoramaTabsSingle() {
         )}
       </div>
 
-      <div className="-mt-10 z-[1]">
+      <div className="mt-5 sm:-mt-10  z-[1]">
         <FenestaButton>Explore our range</FenestaButton>
       </div>
     </section>

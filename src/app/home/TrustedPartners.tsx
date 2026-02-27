@@ -68,7 +68,7 @@ export default function TrustedPartners() {
   };
 
   return (
-    <section className="trustedpartners  w-full h-screen bg-white overflow-hidden  transition-colors duration-200 common-padding relative bg-darkbase">
+    <section className="trustedpartners  w-full h-auto sm:h-screen lg:max-h-[826px] bg-white overflow-hidden  transition-colors duration-200 common-padding relative bg-darkbase">
        <div className="w-full mx-auto relative z-2  ">
         <div className="container-fluid m-auto px-6 md:px-0">      
 
@@ -94,7 +94,7 @@ export default function TrustedPartners() {
             onMouseEnter={handleMarqueeHover}
             onMouseLeave={handleMarqueeLeave}
           >
-            <div className="logo-marquee inline-flex marquee__group flex-shrink-0 items-center justify-center">
+            <div className="logo-marquee inline-flex marquee__group shrink-0 items-center justify-center">
               {/* All logos */}
               {[
                 "logo1.png",
@@ -106,7 +106,7 @@ export default function TrustedPartners() {
               ].map((img, i) => (
                 <div
                   key={i}
-                  className="logo-item logo-item-desktop relative border-r-1 border-[#0094DA]/20 w-[20vw] h-[16vw] flex items-center justify-center"
+                  className="logo-item logo-item-desktop group relative border-r-[0.5px] border-[#0094DA]/50 w-[20vw] h-[16vw] flex items-center justify-center"
                   onMouseEnter={handleMarqueeHover}
                   onMouseLeave={handleMarqueeLeave}
                 >
@@ -115,7 +115,7 @@ export default function TrustedPartners() {
                     alt={img}
                     width={228}
                     height={116}
-                    className="w-auto h-auto max-h-full grayscale opacity-70 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-500 ease-in-out"
+                    className="w-auto h-auto max-h-full grayscale group-hover:grayscale-0 hover:scale-105 transition-all duration-500 ease-in-out"
                   />
                 </div>
               ))}
@@ -135,14 +135,13 @@ export default function TrustedPartners() {
           ].map((img, i) => (
             <div
               key={i}
-              className="logo-item logo-item-mobile relative border-1 border-[#0094DA]/20 w-full h-[130px] flex items-center px-2 justify-center"
-            >
+              className="logo-item logo-item-mobile relative border border-[#0094DA]/20 w-full h-[130px] flex items-center px-2 justify-center grayscale brightness-50 hover:grayscale-0 hover:brightness-100">
               <Image
                 src={`/images/home/logos/${img}`}
                 alt={img}
                 width={228}
                 height={116}
-                className="w-auto h-auto max-h-[130px] grayscale opacity-70 hover:grayscale-0 hover:opacity-100 hover:scale-105 transition-all duration-500 ease-in-out"
+                className="w-auto h-auto max-h-[130px]  hover:scale-105 transition-all duration-500 ease-in-out"
               />
             </div>
           ))}

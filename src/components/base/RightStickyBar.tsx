@@ -38,7 +38,7 @@ export default function RightStickyBar() {
   if (!mounted) {
     return (
       <div 
-        className="fixed right-0 z-50 bg-[#1212127D] rightsidebar top-0 bottom-0 h-screen opacity-0 pointer-events-none"
+        className="fixed right-0 z-50  rightsidebar top-0 bottom-0 h-screen opacity-0 pointer-events-none"
         suppressHydrationWarning
       >
         <div className="relative flex flex-col overflow-hidden backdrop-blur-md text-white rounded-l-xl w-[90px] h-full" />
@@ -63,20 +63,20 @@ export default function RightStickyBar() {
             </div>
         )}
 
-      {/* Mobile FAB - only show when mobile and closed */}
+      {/* Right arrow - 40×40px, opens second screen on click (mobile) or hover (desktop) */}
       {isMobile && !isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed top-1/2 -translate-y-1/2 right-0 z-50 max-h-[55px] h-[55px] max-w-[55px] w-[55px] md:hidden bg-[#1212127D]  hover:bg-[#121212] backdrop-blur-md rounded-[10px_0px_0px_10px]  shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center"
+          className="fixed top-1/2 -translate-y-1/2 right-0 z-50 h-14 w-14 md:hidden bg-[#1212127D] hover:bg-[#121212] backdrop-blur-md rounded-[10px_0px_0px_10px] shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center"
           aria-label="Open menu"
           suppressHydrationWarning
         >
           <Image
             src="/images/slider-arrow-next-white.svg"
             alt="Open"
-            width={24}
-            height={24}
-            className="-rotate-90 w-8 h-8"
+            width={20}
+            height={20}
+            
           />
         </button>
       )}
@@ -84,33 +84,30 @@ export default function RightStickyBar() {
       {isMobile && isOpen && (
         <button
           onClick={() => setIsOpen(false)}
-          className="fixed top-1/2 -translate-y-1/2 right-0 z-50 p-2 rounded-[10px_0px_0px_10px] max-h-[55px] h-[55px] max-w-[55px] w-[55px] bg-[#1212127D] hover:bg-[#121212] transition-colors flex items-center justify-center "
-          aria-label="Close menu"
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-white">
+          className="fixed top-1/2 -translate-y-1/2 right-[80px] z-50  rounded-[10px_0px_0px_10px] h-14 w-14 bg-[#1212127D] hover:bg-theme transition-colors flex items-center justify-center backdrop-blur-lg"  aria-label="Close menu" >
+          <svg width="30" height="24" viewBox="0 0 30 24" fill="none" className="text-white">
             <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
       )}
       <div 
-        className={`group fixed right-0 z-50 bg-[#1212127D] rightsidebar transition-all duration-500 ease-in-out 
+        className={`group fixed right-0 z-100 rightsidebar transition-all duration-500 ease-in-out top-1/2 -translate-y-1/2 
           ${isMobile ? " top-1/2 -translate-y-1/2 h-auto w-full max-w-[90px]" : ""}
           ${!isMobile && scrolled ? "h-auto top-1/2 -translate-y-1/2 group-hover:h-auto group-hover:top-1/2 group-hover:-translate-y-1/2" : ""}
-          ${!isMobile && !scrolled ? "top-0 bottom-0 h-screen" : ""}
+          ${!isMobile && !scrolled ? "top-1/2 -translate-y-1/2 h-auto" : ""}
           ${isMobile && isOpen ? "translate-x-0" : isMobile ? "translate-x-full" : ""}
         `}
         suppressHydrationWarning
-      >
+      >     
       
-      
-      <div className={`relative flex flex-col overflow-hidden backdrop-blur-md text-white transition-all duration-500 ease-in-out rounded-l-xl 
+      <div className={`relative flex flex-col overflow-hidden  text-white transition-all duration-500 ease-in-out rounded-l-xl 
         ${isMobile ? "w-full h-auto rounded-t-xl" : ""}
         ${!isMobile && scrolled ? "w-14 h-auto group-hover:w-[90px] group-hover:h-auto group-hover:items-center group-hover:justify-center" : ""}
-        ${!isMobile && !scrolled ? "w-[90px] h-full" : ""}
+        ${!isMobile && !scrolled ? "w-[90px] h-auto" : ""}
       `}>
         {/* ARROW - Hide on hover when scrolled (desktop only), show when not hovered - Vertically centered with auto height */}
         {!isMobile && (
-          <div className={`absolute left-0 top-1/2 -translate-y-1/2 flex w-14 items-center justify-center transition-all duration-300 z-10 ${scrolled ? "opacity-100 h-auto group-hover:opacity-0 group-hover:pointer-events-none" : "opacity-0 pointer-events-none"}`}>
+          <div className={`absolute left-0 top-1/2 -translate-y-1/2 flex w-14 h-14 0 bg-[#1212127D]  items-center justify-center transition-all duration-300 z-10 ${scrolled ? "opacity-100 group-hover:opacity-0 group-hover:pointer-events-none" : "opacity-0 pointer-events-none"}`}>
             <Image
               src="/images/slider-arrow-next-white.svg"
               alt="Open"
@@ -122,9 +119,9 @@ export default function RightStickyBar() {
         )}
 
         {/* LINKS - Hide when scrolled, show on hover (desktop) or always visible (mobile) */}
-        <div className={`rightsidebar-links flex flex-col divide-y divide-white/20 transition-all duration-500 ease-in-out w-full 
+        <div className={`rightsidebar-links bg-[#1212127D] backdrop-blur-md flex flex-col divide-y divide-white/20 transition-all duration-500 ease-in-out w-full 
           ${isMobile ? "opacity-100 pointer-events-auto" : ""}
-          ${!isMobile && scrolled ? "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto h-auto items-center justify-center" : ""}
+          ${!isMobile && scrolled ? "-left-14  opacity-0 pointer-events-none group-hover:left-0 group-hover:opacity-100 group-hover:pointer-events-auto h-auto items-center justify-center" : ""}
           ${!isMobile && !scrolled ? "opacity-100 h-full justify-center" : ""}
         `}>
           <StickyItem
@@ -143,7 +140,7 @@ export default function RightStickyBar() {
 
        
       </div>
-    </div>
+      </div>
 
    
     </>

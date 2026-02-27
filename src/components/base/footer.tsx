@@ -105,7 +105,7 @@ export default function FooterImage() {
         <Image
             ref={imageRef}
             src="/images/footer-bg.svg"
-            className="w-[20vw] h-[90%]"
+            className="w-[70vw] md:w-[20vw] h-[90%] opacity-30"
             alt="Footer Background"
             width={637}
             height={637}

@@ -34,7 +34,7 @@ export default function ThemeToggle() {
   if (!mounted) {
     return (
       <button
-        className="w-10 h-10 rounded-full border border-gray-300 dark:border-gray-700 flex items-center justify-center"
+        className="w-10 h-10 rounded-full border border-gray-300 bg-cream/20 hover:bg-white/80 text-white  flex items-center justify-center"
         aria-label="Toggle theme"
       >
         <span className="w-5 h-5">🌓</span>
@@ -45,18 +45,11 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={handleToggle}
-      className="w-10 h-10 rounded-full border border-gray-300 dark:border-gray-700 
-                 bg-white dark:bg-gray-800 
-                 flex items-center justify-center
-                 transition-colors duration-200
-                 hover:bg-gray-100 dark:hover:bg-gray-700
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-      aria-label="Toggle theme"
-    >
+      className="w-10 h-10 rounded-full bg-cream/30 hover:bg-cream/80 text-white flex items-center justify-center transition-colors duration-200"  aria-label="Toggle theme">
       {theme === "dark" ? (
-        <span className="text-xl">☀️</span>
+        <span className="text-xl filter contrast-100">☀️</span>
       ) : (
-        <span className="text-xl">🌙</span>
+        <span className="text-xl filter  brightness-0 invert grayscale-50">🌙</span>
       )}
     </button>
   );

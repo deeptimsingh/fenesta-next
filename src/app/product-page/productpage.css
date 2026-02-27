@@ -1,0 +1,10 @@
+/* Product card gradient overlay - visible on hover, darker for better text contrast */
+.product-card .gradient-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.6) 40%,
+    rgba(0, 0, 0, 0.2) 70%,
+    transparent 100%
+  );
+}

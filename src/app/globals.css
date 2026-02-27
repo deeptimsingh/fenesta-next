@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&display=swap');
 @import "tailwindcss";
 
+/* Tailwind v4: dark mode via .dark class (next-themes) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Primary font: helvetica_ce_55_romanregular (so it shows by name in dev tools) */
 @font-face {
   font-family: "helvetica_ce_55_romanregular";
@@ -25,14 +28,13 @@
   --color-cream: #EDE8D0;
   --color-grayLight: #555;
   --color-blueLight: #9CDCF9;
-  --color-blueLight: #9CDCF9;
+
 
   --bg-white: #ffffff;
   --bg-black: #121212;
   --bg-blue: #0094D9;
   --bg-blueLight: #9CDCF9;
-
-  --bg-darkBase: #121212;  
+  --bg-darkBase: #131313;  
   --bg-lightdarkbase: #555;
 
   --circle-stroke: #EDE8D0E8;
@@ -47,17 +49,44 @@
   --fs-h5: clamp(1rem, 1vw + 0.5rem, 1.25rem);          /* 16px - 20px */
   --fs-h6: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);    /* 14px - 18px */
  
-  --fs-22: clamp(1.125rem, 0.25vw + 0.9rem, 1.375rem);          /* 18px - 22px */
+  --fs-22: clamp(1.125rem, 0.35vw + 0.95rem, 1.375rem); 
+  /* --fs-22: clamp(1.125rem, 0.25vw + 0.9rem, 1.375rem);         18px - 22px */
   --fs-18: clamp(1rem, 0.5vw + 0.875rem, 1.125rem);        /* 16px - 18px */
-  --fs-p:  clamp(1rem, 0.5vw + 0.9rem, 1.125rem);        /* 16px - 20px */
-  --fs-base: clamp(1rem, 0.25vw + 0.8rem, 1.125rem);   /* 16px @ 1280px (150%), up to 18px */
-  
+  --fs-p:  clamp(1rem,  0.5vw + 0.875rem, 1.125rem);        /* 16px - 20px */
+ 
+  --fs-base: clamp(1rem, 0.25vw + 0.55rem, 1rem); /* 14px @ 1280px (150%), up to 16px */  
+  --fs-14:  clamp(0.75rem, 1vw, 0.875rem);; /* 14px @ 1280px (150%), up to 16px */  
 }
+
+@media (min-width: 1280px) {
+  .text-base {  font-size: 1rem !important; /* 16px */ }
+}
+
+
+.dark body{ background: var(--bg-darkBase);}
+
+/* Prevent scroll restoration on refresh - body fixed until Lenis ready */
+.scroll-lock {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Mobile drawer: spring overshoot on open, snappy close (iOS/Material) */
+.mobile-drawer {
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 1, 1);
+}
+.mobile-drawer.mobile-drawer-open {
+  transform: translateX(0);
+  transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 
 .dark {
   --color-brown: #442917;
   --color-black: #121212;
-  --color-white: #ffffff; 
+  --color-white: #ffffff;  
   --color-grayLight: #555;
 
   /* --bg-white: #131313;
@@ -65,30 +94,20 @@
   --bg-darkBase: #212121; 
   --bg-lightBase: #555; 
   --bg-blue: #0094D9;
-  --bg-blueLight: #9CDCF9;
+  --bg-white: #ffffff;
 
   --circle-stroke: #4a4a5c;
   --icon-bg: #4a4a5c;  
   --section-bg: #ffffff;
   
   /* Common element colors - Dark mode */
-/*   
-  --card-bg: #1a1a1a;
-  --card-border: #2d2d2d;
-  --section-bg: #0b0b0b;
-  --text-primary: #ededed;
-  --text-secondary: #9ca3af;
-  --accent-color: #d4a574;
-  --accent-light: #d4a574;
-  --shadow-color: rgba(0, 0, 0, 0.3);
-  --shadow-lg: rgba(0, 0, 0, 0.5); */
   
   /* Gradient colors for dark mode */
   --gradient-from: #555555;
   --gradient-to: #212121;  
 
   --bg-darkBase: #212121;  
-  --bg-lightdarkbase: #2e2e2e;  
+  --bg-lightdarkbase: #454545;  
 }
 
 /* -----------------------------------------------
@@ -98,28 +117,6 @@
   .container { margin-left: auto;  margin-right: auto; width: 100%; padding-left: 1.25rem; padding-right: 1.25rem;}
 
   .container-fluid{padding-left: 1.25rem; padding-right: 1.25rem;}
-/* 
-  @media (min-width: 640px) { 
-    .container { max-width: 90vw; } 
-  }
-  @media (min-width: 768px) { 
-    .container { max-width: 90vw; } 
-  }
-  @media (min-width: 1024px) { 
-    .container { max-width: 90vw; } 
-  }
-  @media (min-width: 1280px) { 
-    .container { max-width: 90vw; } 
-  }
-  @media (min-width: 1440px) { 
-    .container { max-width: 1320px; } 
-  }
-  @media (min-width: 1524px) { 
-    .container { max-width: 80vw; } 
-  }
-  @media (min-width: 1920px) { 
-    .container { max-width: 1320px; } 
-  } */
 
 
 /* sm ≥576px */
@@ -166,7 +163,6 @@
 .animate-marquee {
   animation: search-marquee 18s linear infinite;
 }
-
 /* Tailwind v4: range breakpoints (config screens not read) - use these classes */
 
 @media (min-width: 1440px) and (max-width: 1659px) {
@@ -182,6 +178,7 @@
   --color-cream: #ede8d0;
   --color-grayLight: #0094DA;
   --color-blue: #0094DA;
+  --color-white: #ffffff;
   
   /* Fonts */
   --font-mainFont: "helvetica_ce_55_romanregular", sans-serif;
@@ -203,14 +200,16 @@
   --text-base: var(--fs-base);
   --text-22: var(--fs-22);
   --text-18: var(--fs-18);
+  --text-14: var(--fs-14);
 }
 
 
 @layer base{
   html { font-family: "helvetica_ce_55_romanregular", sans-serif; background: var(--color-background); color: var(--color-foreground); }
   body {margin: 0;}
+  body{ background: var(--bg-white);}
   button, input, textarea, select {font-family: inherit;}
-  p {font-size:  var(--fs-base)}
+  p {font-size:  var(--fs-p)}
   .text-22{font-size: var(--text-22);}  
 }
 
@@ -237,6 +236,7 @@
 /* Footer spacing - footer appears when main ends */
 main {padding-bottom: 0;}
 .text-corinthiaHeading{ line-height: 0.65;}
+
 
 @layer utilities {
 .custommodal-in h3, 
@@ -268,12 +268,14 @@ h1, h2,h3,h4, h5, h6{font-weight: 400;}
 .animate-fade-in-right { animation: fadeInRight 1s ease-out forwards;}
 .animate-fade-out-right {animation: fadeOutRight 1s ease-out forwards;}
 
-.common-padding{ padding:100px 0;}
-.common-padding-md{ padding:80px 0;}
-.common-padding-sm{ padding:60px 0;}
+.common-padding{ padding:80px 0 ;}
+.common-padding-md{ padding:60px 0;}
+.common-padding-sm{ padding:40px 0;}
 
 .common-pt{ padding:100px 0 0;}
 .common-pb{ padding:0 0 100px;}
+
+
 
 
 /**CURSOR**/
@@ -301,12 +303,12 @@ h1, h2,h3,h4, h5, h6{font-weight: 400;}
   transition: background 0.3s ease; 
   }
 
-  .white-gradient-background{background: linear-gradient(180deg, #e3e4e530, #e3e4e5ff); position: relative; }
+  .white-gradient-background{background: linear-gradient(0deg, #EDE8D0, #ffffff); position: relative; }
 
   .bg-blue{background: var(--bg-blue);}
   .bg-blueLight{background: var(--bg-blueLight);}
   .bg-white{background: var(--bg-white);}
-  .bg-black{background: var(--bg-black);}
+  .bg-black{background: var(--bg-darkBase);}
   .bg-grayLight{background: var(--bg-grayLight);}
 
 
@@ -315,10 +317,25 @@ h1, h2,h3,h4, h5, h6{font-weight: 400;}
   .text-white{color: var(--color-white);}
   .text-cream{color: var(--color-cream);}
   .text-grayLight{color: var(--color-grayLight);}
+  .text-blue{color: var(--color-blue);}
+
+
+
+
+/**Intro Section**/
+.intro-heightlight {
+  padding: 3vw; padding-bottom:0 ;
+}
+.intro-heightlight .first-intro-line {
+  font-size: var(--text-22);
+  line-height: 1.5;
+}
+
+
 
   .dark .bg-brown{background: var(--color-brown);}
   .dark .bg-black{background: var(--color-black);}
-  .dark .bg-white{background: var(--color-white);}
+  .dark .bg-white{background: var(--bg-darkBase);}
   .dark .bg-grayLight{background: var(--color-grayLight);}
   .dark .bg-blueLight{background: var(--color-blueLight);}
 
@@ -334,8 +351,12 @@ h1, h2,h3,h4, h5, h6{font-weight: 400;}
   .dark .bg-lightdarkbase .text-brown{color: var(--color-cream);}
 
   .dark .circle-svg .circle-stroke{stroke: var(--color-cream); opacity: 0.5 !important;}
- 
+  .dark .white-gradient-background{background: linear-gradient(0deg, #121212, #212121); }
+  .dark .window-door-section .title-section h2{color: var(--color-white);}
+  .dark .window-door-section .title-section .text-brown{color: var(--color-cream);}
 
+
+  .dark .first-intro-line{color: var(--color-white);}
 
   /**======================================
 DARK MODE STYLES
@@ -346,15 +367,8 @@ DARK MODE STYLES
 
 .dark .gradient-background{ background: var(--bg-lightdarkbase); color: var(--color-background);}
 .dark .gradient-background::before{ background: linear-gradient(to left, var(--gradient-from), var(--gradient-to)); transition: background 0.3s ease;}
-/* .dark .gradient-background .title-section h2,
-.dark .gradient-background .title-section p,
-.dark .darklightBckground .title-section h2,
-.dark .darklightBckground .title-section p,
-.dark .white-gradient-background .title-section h2,
-.dark .white-gradient-background .title-section p{color: var(--color-cream);} */
 
 
-/* .dark .BeginJourney .backgroundImageRefimg{ opacity: 0.08;} */
 .dark .circular-slider-section .icon-item img{ filter:invert(1) grayscale(1) brightness(0) invert(1);}
 .dark .active-icon-arrow {border-left-color: #d4a574; filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.1));}
 }
@@ -365,5 +379,14 @@ DARK MODE STYLES
   .common-padding{ padding:80px 0;}
 .common-padding-md{ padding:60px 0;}
 .common-padding-sm{ padding:40px 0;}
+}
 
+
+@media all and (max-width: 768px) {
+  .intro-heightlight {
+    padding: 20px;
+  }
+  .intro-heightlight .first-intro-line {
+    font-size: 18px;
+  }
 }

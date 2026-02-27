@@ -14,6 +14,7 @@ export default function ProjectsSlider() {
   const [thumbs, setThumbs] = useState<string[]>([]);
   const [active, setActive] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [hasEnteredViewport, setHasEnteredViewport] = useState(false);
 
   const swiperRef = useRef<any>(null);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -39,7 +40,7 @@ useHeadingAnimation({
   stagger: 0.25
 })
 
-  // Observer for visibility
+  // Observer for visibility + lazy init (only mount Swiper when section enters viewport)
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -47,10 +48,14 @@ useHeadingAnimation({
     const obs = new IntersectionObserver(
       (entries) => {
         const e = entries[0];
-        if (e.isIntersecting) setIsVisible(true);
-        else setIsVisible(false);
+        if (e.isIntersecting) {
+          setIsVisible(true);
+          setHasEnteredViewport(true); // init slider only once when first in view
+        } else {
+          setIsVisible(false);
+        }
       },
-      { threshold: 0.6 }
+      { threshold: 0.2 }
     );
 
     obs.observe(el);
@@ -204,7 +209,7 @@ useHeadingAnimation({
       setTimeout(() => {
         syncVideoPlayback(swiper);
         if (isVisible) onTransitionEnd(swiper);
-      }, 400);
+      }, 1000);
     };
     setTimeout(runAfterReady, 150);
   };
@@ -228,6 +233,24 @@ useHeadingAnimation({
     runSyncAfterTransition(swiper);
   };
 
+  /** Trigger zoom-out animation on active slide's image/video (runs on every slide change) */
+  const triggerSlideZoomAnimation = (swiper: any) => {
+    const wrapper = swiper?.el as HTMLElement | undefined;
+    if (!wrapper) return;
+    const activeSlide = wrapper.querySelector(".swiper-slide-active");
+    if (!activeSlide) return;
+    const media = activeSlide.querySelector("img, video") as HTMLElement | null;
+    if (!media) return;
+    media.classList.remove("slide-zoom-out");
+    void media.offsetHeight; // force reflow so animation restarts
+    media.classList.add("slide-zoom-out");
+    const removeAfter = () => {
+      media.classList.remove("slide-zoom-out");
+      media.removeEventListener("animationend", removeAfter);
+    };
+    media.addEventListener("animationend", removeAfter, { once: true });
+  };
+
   const onTransitionEnd = (swiper: any) => {
     if (slideAdvanceTimerRef.current) {
       clearTimeout(slideAdvanceTimerRef.current);
@@ -235,6 +258,7 @@ useHeadingAnimation({
     }
 
     syncVideoPlayback(swiper);
+    triggerSlideZoomAnimation(swiper);
 
     const wrapper = swiper?.el as HTMLElement | undefined;
     const activeSlide = wrapper?.querySelector(".swiper-slide-active");
@@ -289,8 +313,9 @@ useHeadingAnimation({
 
 
   return (
-    <div ref={containerRef} className="product-wrap relative w-full h-screen overflow-hidden bg-white text-black ">
-      {/* MAIN SWIPER */}
+    <div ref={containerRef} className="product-wrap relative w-full h-[160vw]  md:h-screen overflow-hidden bg-white text-black ">
+      {/* MAIN SWIPER - only mount when section enters viewport (starts at slide 1) */}
+      {hasEnteredViewport ? (
       <Swiper
         modules={[EffectFade, Autoplay]}
         effect="fade"
@@ -320,15 +345,17 @@ useHeadingAnimation({
               ref={(el) => {
                 captionRefs.current[0] = el!;
               }}
-              className="absolute inset-0 pl-6 md:pl-12 lg:pl-16 xl:pl-36 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30 transition-all duration-700 opacity-0 translate-y-10">
-                <div className="container h-full  flex flex-col justify-between items-start">
-                    <div ref={sectionRef} className="max-w-full sm:max-w-[350px] w-full">
-                      <div className="title-section text-start text-ThemeTextColor flex flex-col w-full productSlider-figcaption">
-                        <h2 className="text-h2 leading-none text-white"> Our <span className="font-subFont text-corinthiaHeading text-cream">bespoke</span> Project
-                        </h2>
-                        <p className="mt-3 leading-tight text-white">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>
+              className="absolute inset-0 pl-0 md:pl-12 lg:pl-0 xl:pl-0 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30 transition-all duration-700 opacity-0 translate-y-10 caption-container">
+               <div className="container h-full  flex flex-col justify-start lg:justify-between items-start px-0 sm:px-auto">
+                    <div ref={sectionRef} className="max-w-full sm:max-w-md w-full">
+                      <div  className="title-section text-left flex flex-col justify-start w-full text-white">
+                        <h2 className="font-mainFont text-h2 leading-none">Our <span className="font-subFont text-corinthiaHeading text-cream leading-0">bespoke </span>
+                        Projects</h2>
+                        <div className="headingSubTitle flex flex-col justify-center w-full my-4  sm:max-w-3xl mx-auto">              
+                          <p className="max-w-full mx-auto">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>   
+                        </div>  
                       </div>
-                    </div>
+                    </div>                   
                     
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
@@ -351,24 +378,30 @@ useHeadingAnimation({
               height={945}
               className="w-full h-full object-cover"
             />
+            
             <div
               ref={(el) => {
                 captionRefs.current[1] = el!;
               }}
-              className="absolute inset-0 flex flex-col justify-between items-start pl-6 md:pl-12 lg:pl-16 xl:pl-24 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30 transition-all duration-700 opacity-0 translate-y-10"
-            >
-              <div className="w-full max-w-[350px]">
-                <div className="title-section text-start text-ThemeTextColor flex flex-col w-full productSlider-figcaption">
-                  <h2 className="leading-none text-white text-h2">Our <span className="font-subFont text-corinthiaHeading text-white">bespoke</span> Project</h2>
-                  <p className="mt-3 text-base leading-tight text-white">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>
-                </div>
-              </div>
-              <div className="bottom-figcaption w-full max-w-[350px]">
-                <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
-                <div className="mt-8">
-                  <FenestaButton>Get inspired</FenestaButton>
-                </div>
-              </div>
+              className="absolute inset-0 pl-0 md:pl-12 lg:pl-0 xl:pl-0 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30 transition-all duration-700 opacity-0 translate-y-10 caption-container">
+                <div className="container h-full  flex flex-col justify-start lg:justify-between items-start  px-0 sm:px-auto">
+                    <div ref={sectionRef} className="max-w-full sm:max-w-md w-full">
+                      <div  className="title-section text-left flex flex-col justify-start w-full text-white">
+                        <h2 className="font-mainFont text-h2 leading-none">Our <span className="font-subFont text-corinthiaHeading text-cream leading-0">bespoke </span>
+                        Projects</h2>
+                        <div className="headingSubTitle flex flex-col justify-center w-full my-4  sm:max-w-3xl mx-auto">              
+                          <p className="max-w-full mx-auto">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>   
+                        </div>  
+                      </div>
+                    </div>                   
+                    
+                    <div className="bottom-figcaption w-full max-w-[350px]">
+                      <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
+                      <div className="mt-8">
+                        <FenestaButton>Get inspired</FenestaButton>
+                      </div>
+                    </div>  
+                </div>                
             </div>
           </div>
         </SwiperSlide>
@@ -387,24 +420,29 @@ useHeadingAnimation({
               preload="auto"
               className="w-full h-full object-cover"
             />
-            <div
+           <div
               ref={(el) => {
                 captionRefs.current[2] = el!;
               }}
-              className="absolute inset-0 flex flex-col justify-between items-start pl-6 md:pl-12 lg:pl-16 xl:pl-24 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30 transition-all duration-700 opacity-0 translate-y-10"
-            >
-              <div className="w-full max-w-[350px]">
-                <div className="title-section text-start text-ThemeTextColor flex flex-col w-full productSlider-figcaption">
-                  <h2 className="leading-none text-white text-h2">Our <span className="font-subFont text-corinthiaHeading text-white">bespoke</span> Project</h2>
-                  <p className="mt-3 text-base leading-tight text-white">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>
-                </div>
-              </div>
-              <div className="bottom-figcaption w-full max-w-[350px]">
-                <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
-                <div className="mt-8">
-                  <FenestaButton>Get inspired</FenestaButton>
-                </div>
-              </div>
+              className="absolute inset-0 pl-0 md:pl-12 lg:pl-0 xl:pl-0 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30 transition-all duration-700 opacity-0 translate-y-10 caption-container">
+              <div className="container h-full  flex flex-col justify-start lg:justify-between items-start  px-0 sm:px-auto">
+                    <div ref={sectionRef} className="max-w-full sm:max-w-md w-full">
+                      <div  className="title-section text-left flex flex-col justify-start w-full text-white">
+                        <h2 className="font-mainFont text-h2 leading-none">Our <span className="font-subFont text-corinthiaHeading text-cream leading-0">bespoke </span>
+                        Projects</h2>
+                        <div className="headingSubTitle flex flex-col justify-center w-full my-4  sm:max-w-3xl mx-auto">              
+                          <p className="max-w-full mx-auto">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>   
+                        </div>  
+                      </div>
+                    </div>                   
+                    
+                    <div className="bottom-figcaption w-full max-w-[350px]">
+                      <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
+                      <div className="mt-8">
+                        <FenestaButton>Get inspired</FenestaButton>
+                      </div>
+                    </div>  
+                </div>             
             </div>
           </div>
         </SwiperSlide>
@@ -423,20 +461,25 @@ useHeadingAnimation({
               ref={(el) => {
                 captionRefs.current[3] = el!;
               }}
-              className="absolute inset-0 flex flex-col justify-between items-start pl-6 md:pl-12 lg:pl-16 xl:pl-24 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30 transition-all duration-700 opacity-0 translate-y-10"
-            >
-              <div className="w-full max-w-[350px]">
-                <div className="title-section text-start text-ThemeTextColor flex flex-col w-full productSlider-figcaption">
-                  <h2 className="leading-none text-white text-h2">Our <span className="font-subFont text-corinthiaHeading text-white">bespoke</span> Project</h2>
-                  <p className="mt-3 text-base leading-tight text-white">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>
-                </div>
-              </div>
-              <div className="bottom-figcaption w-full max-w-[350px]">
-                <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
-                <div className="mt-8">
-                  <FenestaButton>Get inspired</FenestaButton>
-                </div>
-              </div>
+              className="absolute inset-0 pl-0 md:pl-12 lg:pl-0 xl:pl-0 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30 transition-all duration-700 opacity-0 translate-y-10 caption-container">
+                <div className="container h-full  flex flex-col justify-start lg:justify-between items-start  px-0 sm:px-auto">
+                    <div ref={sectionRef} className="max-w-full sm:max-w-md w-full">
+                      <div  className="title-section text-left flex flex-col justify-start w-full text-white">
+                        <h2 className="font-mainFont text-h2 leading-none">Our <span className="font-subFont text-corinthiaHeading text-cream leading-0">bespoke </span>
+                        Projects</h2>
+                        <div className="headingSubTitle flex flex-col justify-center w-full my-4  sm:max-w-3xl mx-auto">              
+                          <p className="max-w-full mx-auto">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>   
+                        </div>  
+                      </div>
+                    </div>                   
+                    
+                    <div className="bottom-figcaption w-full max-w-[350px]">
+                      <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
+                      <div className="mt-8">
+                        <FenestaButton>Get inspired</FenestaButton>
+                      </div>
+                    </div>  
+                </div>          
             </div>
           </div>
         </SwiperSlide>
@@ -451,39 +494,78 @@ useHeadingAnimation({
               height={945}
               className="w-full h-full object-cover"
             />
-            <div
+           <div
               ref={(el) => {
                 captionRefs.current[4] = el!;
               }}
-              className="absolute inset-0 flex flex-col justify-between items-start pl-6 md:pl-12 lg:pl-16 xl:pl-24 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30 transition-all duration-700 opacity-0 translate-y-10"
-            >
-              <div className="w-full max-w-[350px]">
-                <div className="title-section text-start text-ThemeTextColor flex flex-col w-full productSlider-figcaption">
-                  <h2 className="leading-none text-white">Our <span className="font-subFont text-corinthiaHeading text-white">bespoke</span> Project</h2>
-                  <p className="mt-3 text-base leading-tight text-white">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>
-                </div>
-              </div>
-              <div className="bottom-figcaption w-full max-w-[350px]">
-                <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
-                <div className="mt-8">
-                  <FenestaButton>Get inspired</FenestaButton>
-                </div>
-              </div>
+              className="absolute inset-0 pl-0 md:pl-12 lg:pl-0 xl:pl-0 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30 transition-all duration-700 opacity-0 translate-y-10 caption-container">
+                <div className="container h-full  flex flex-col justify-start lg:justify-between items-start  px-0 sm:px-auto">
+                    <div ref={sectionRef} className="max-w-full sm:max-w-md w-full">
+                      <div  className="title-section text-left flex flex-col justify-start w-full text-white">
+                        <h2 className="font-mainFont text-h2 leading-none">Our <span className="font-subFont text-corinthiaHeading text-cream leading-0">bespoke </span>
+                        Projects</h2>
+                        <div className="headingSubTitle flex flex-col justify-center w-full my-4  sm:max-w-3xl mx-auto">              
+                          <p className="max-w-full mx-auto">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>   
+                        </div>  
+                      </div>
+                    </div>                   
+                    
+                    <div className="bottom-figcaption w-full max-w-[350px]">
+                      <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
+                      <div className="mt-8">
+                        <FenestaButton>Get inspired</FenestaButton>
+                      </div>
+                    </div>  
+                </div>              
             </div>
           </div>
         </SwiperSlide>
       </Swiper>
+      ) : (
+        /* Placeholder before viewport - first slide only, no autoplay */
+        <div className="w-full h-full relative">
+          <Image
+            src="/images/home/projectSlider/p1.jpg"
+            alt=""
+            width={1920}
+            height={945}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 pl-0 md:pl-12 lg:pl-0 xl:pl-0 pt-6 md:pt-12 lg:pt-16 xl:pt-24 pb-38 z-30">
+          <div className="container h-full  flex flex-col justify-start lg:justify-between items-start  px-0 sm:px-auto">
+                    <div ref={sectionRef} className="max-w-full sm:max-w-md w-full sm:w-1/2">
+                      <div  className="title-section text-left flex flex-col justify-start w-full text-white">
+                        <h2 className="font-mainFont text-h2 leading-none">Our <span className="font-subFont text-corinthiaHeading text-cream leading-0">bespoke </span>
+                        Projects</h2>
+                        <div className="headingSubTitle flex flex-col justify-center w-full my-4  sm:max-w-3xl mx-auto">              
+                          <p className="max-w-full mx-auto">From luxury residences to iconic builds, explore how our customers are bringing their vision to life</p>   
+                        </div>  
+                      </div>
+                    </div>                   
+                    
+                    <div className="bottom-figcaption w-full max-w-[350px]">
+                      <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
+                      <div className="mt-8">
+                        <FenestaButton>Get inspired</FenestaButton>
+                      </div>
+                    </div>  
+                </div>    
+          </div>
+        </div>
+      )}
 
-      {/* THUMBNAILS */}
-      <div className="absolute bottom-38 right-0 z-40">
-        <div className="flex gap-5">
+      {/* THUMBNAILS + PROGRESS (bottom right, stacked) - only when slider is initialized */}
+      {hasEnteredViewport && (
+      <div className="absolute bottom-6 md:bottom-8 right-6 md:right-12 lg:right-16 xl:right-24 z-40 flex flex-col items-end gap-6 md:gap-8 thumbnails-container">
+        {/* THUMBNAILS */}
+        <div className="flex gap-5 thumbnails-wrapper relative ">
           {rotatedThumbs.map((src, idx) => {
             const realIndex = (active + idx + 1) % totalSlides;
             return (
               <div
                 key={`thumb-${realIndex}-${idx}`}
                 onClick={() => onThumbnailClick(realIndex)}
-                className={`cursor-pointer w-32 h-32 md:w-52 md:h-32 max-w-[203px] max-h-[144px] rounded-xl overflow-hidden shadow-lg transition-all
+                className={`cursor-pointer w-32 h-32  md:w-[20vw] md:h-[10vw] max-w-[206px] max-h-[144px] rounded-xl overflow-hidden shadow-lg transition-all
                 ${idx === highlightIndex ? "ring-2 ring-blue-500 scale-100" : "scale-100 opacity-100"}`}
                 data-cursor
               >
@@ -492,11 +574,9 @@ useHeadingAnimation({
             );
           })}
         </div>
-      </div>
 
-      {/* PROGRESS + ARROWS */}
-      <div className="container relative">
-        <div className="outer-wrapper-bottom absolute bottom-16 right-[-5vw] flex gap-6 items-center">
+        {/* PROGRESS + ARROWS */}
+        <div className="outer-wrapper-bottom flex gap-6 items-center">
           <div className="relative flex items-center gap-4 z-40">
             <div className="flex gap-2">
               <button
@@ -526,7 +606,7 @@ useHeadingAnimation({
               </button>
             </div>
 
-            <div className="w-[30vw] max-w-[465px] h-[4px] bg-cream/25 rounded-full">
+            <div className="w-[30vw] h-[4px] bg-cream/25 rounded-full">
               <div
                 ref={progressRef}
                 className="h-full w-0 bg-cream rounded-full"
@@ -546,6 +626,7 @@ useHeadingAnimation({
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

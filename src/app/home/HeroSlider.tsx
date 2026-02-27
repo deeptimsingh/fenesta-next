@@ -100,32 +100,8 @@ useLayoutEffect(() => {
     },
     });
 
-    tl.to({}, { duration: 1 }); // dummy timeline to keep ScrollTrigger alive
-    // 1) Wrapper big upward parallax (subtle)
-    // tl.fromTo(
-    //   wrapper,
-    //   { y: 0 },
-    //   { y: -140, ease: "none" },
-    //   0 // align to timeline start
-    // );
-
-    // 2) Each image: Y movement + gentle scale up as user scrolls down
-    // imgs.forEach((img) => {
-    //   // ensure GPU-accelerated transform
-    //   gsap.set(img, { transformOrigin: "center center", force3D: true });
-
-    //   tl.fromTo(
-    //     img,
-    //     { yPercent: -10, scale: 1 },
-    //     {
-    //       yPercent: 10,
-    //       scale: 1.06,           // scale up slightly on scroll down
-    //       ease: "none",         // timeline scrub controls easing
-    //     },
-    //     0
-    //   );
-    // });
-
+    tl.to({}, { duration: 1 }); 
+   
     // 3) Optional: caption scroll-out (if you keep caption)
     tl.to(
       ".hero-caption",

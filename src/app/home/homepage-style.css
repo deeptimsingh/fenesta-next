@@ -1,12 +1,17 @@
 /* ProjectsSlider */
+/* icon-wrapper: consistent padding outside icon at all resolutions */
+/* .icon-wrapper { padding: 12px; } */
+
 .icon-item.active-icon {position: relative; background-color: var(--color-blue);}
 .icon-item.active-icon::after {content: ''; position: absolute; top:35px; right:-40px;width: 0px;height: 0px;border-style: solid;border-width: 0 10.5px 18.2px 10.5px;border-color: transparent transparent #715e4c transparent;transform: rotate(90deg); opacity: 0;transition: all 0.35s ease;}
 .icon-item.active-icon::after {opacity: 1;}
-.icon-item{ display: flex; align-items: center; justify-content: center;}
-.icon-item  img{ width:70%; height: 70%; object-fit: contain;}
+.icon-item{ display: flex; align-items: center; justify-content: center; background-color:var(--color-cream);}
+.icon-item img{ width:70%; height: 70%; object-fit: contain;}
+.icon-item.active-icon img{object-fit: contain; filter: brightness(0) invert(1);}
 
 .dark .icon-item{ background-color: var(--color-foreground);}
 .dark .icon-item.active-icon{ background-color: var(--color-blue);}
+.dark .icon-item img{ filter: brightness(0) invert(1);}
 
 @media all and (max-width: 768px) {
  .icon-item.active-icon:after {border-bottom: 18.2px solid #715e4c; top: 65px; right: 15px; transform: rotate(60deg);}
@@ -134,8 +139,8 @@ panoramaSwiper
     perspective-origin: center center;
   }
   
-  .PanoramaSwiper-slider.swiper::before {content: "";position: absolute;top: -70px;left: -10%;width: 120%;height: 100px;background:#f4f4f5;border-radius: 100%;z-index: 5;}
-  .PanoramaSwiper-slider.swiper::after {content: "";position: absolute;bottom: -60px;left: -10%;width: 120%;height: 100px;background:#e3e4e5;border-radius: 100%;z-index: 5;}
+  .PanoramaSwiper-slider.swiper::before {content: "";position: absolute;top: -70px;left: -10%;width: 120%;height: 100px;background:#faf8f1;border-radius: 100%;z-index: 5;}
+  .PanoramaSwiper-slider.swiper::after {content: "";position: absolute;bottom: -60px;left: -10%;width: 120%;height: 100px;background:#efead5;border-radius: 100%;z-index: 5;}
   .PanoramaSwiper-slider.swiper .swiper-slide img,
   .PanoramaSwiper-slider.swiper .swiper-slide video {
     width: 130%;
@@ -297,11 +302,19 @@ panoramaSwiper
     }
   }
 
-  .dark .PanoramaSwiper-slider.swiper:before{background:var(--bg-gray);}
-  .dark .PanoramaSwiper-slider.swiper:after{background:var(--bg-gray);}
+  .dark .PanoramaSwiper-slider.swiper:before{background:#1d1d1d;}
+  .dark .PanoramaSwiper-slider.swiper:after{background:#141414;}
+  .dark  .tabs-outer-container .text-brown{color: var(--color-cream); border-bottom-color: var(--color-cream);}
+  .dark  .tabs-outer-container .text-theme{color: var(--color-white);}
 
 
 
+  @media all and (max-width:1180px){
+    .PanoramaSwiper-slider.swiper .swiper-slide img, .PanoramaSwiper-slider.swiper .swiper-slide video {      height: 50vw;}
+    }
+
+
+  .dark .cardItem  .text-theme{color: var(--color-white);}
 
   
 /* Marquee animation styles */
@@ -403,14 +416,19 @@ Projects Slider
   .dark .logo-marquee-container::before {  background-color: #e3e4e5 !important;}
   .dark .logo-marquee-container::after {  background-color: #e3e4e5 !important;}
 
-  .logo-item-desktop:before,
+  /* .logo-item-desktop:before,
   .logo-item-desktop:after,
   .logo-item-mobile:before,
-  .logo-item-mobile:after{ filter: brightness(0) invert(1) !important;}
+  .logo-item-mobile:after{ filter: brightness(0) invert(1) !important;} */
 
 
   .product-wrap .swiper-slide{ position: relative;}
-  .product-wrap .swiper-slide::before{ content: ''; position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index: 10; background:rgba(0, 0, 0, 0.5) !important;} 
+  .product-wrap .swiper-slide::before{ content: ''; position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index: 10; background:rgba(0, 0, 0, 0.5) !important;}
+  /* Zoom-out animation on every slide change (triggered via JS class) */
+  .product-wrap .swiper-slide > div { overflow: hidden; }
+  .product-wrap .slide-zoom-out {
+    animation: zoomfade 0.9s ease-out both;
+  } 
 
 /**==================================
 Begin your journey with Fenesta
@@ -462,6 +480,56 @@ Begin your journey with Fenesta
 Begin your journey with Fenesta END
 ==================================**/
 
+/**==================================
+From First Visit to Final Fit
+==================================**/
+.circular-slider-section.gradient-background p{color: var(--color-theme);}
+.dark .circular-slider-section .icon-img{color: var(--color-cream);}
+.dark .circular-slider-section.gradient-background p{color: var(--color-white);}
+
+
+/**==================================
+Projects Slider
+==================================**/
+/* 1920x1080 – 100% scale (1920px width) */
+@media screen and (min-width: 1900px) and (max-width: 2000px) {
+  .thumbnails-wrapper {
+    right: -6vw;
+  }
+}
+
+/* 1920x1080 – 110% scale (~1745px effective width) */
+@media screen and (min-width: 1720px) and (max-width: 1799px) {
+  .thumbnails-wrapper {
+    right: -10vw;
+  }
+}
+
+/* 1920x1080 – 125% scale (~1536px effective width) */
+@media screen and (min-width: 1500px) and (max-width: 1599px) {
+  .thumbnails-wrapper {
+    right: -15vw;
+  }
+}
+
+
+
+/* 1920x1080 – 150% scale (~1280px effective width) */
+@media screen and (min-width: 1200px) and (max-width: 1399px) {
+  .thumbnails-wrapper {
+    right: -24vw;
+  }
+}
+
+@media all and (max-width:768px){
+.thumbnails-wrapper{ right: 10px; left:10px; gap:15px;}
+.thumbnails-container{ right: 20px; left: 20px;}
+}
+
+
+/**==================================
+Projects Slider END
+==================================**/
 
 /**==================================
 Fenesta Edit
@@ -488,7 +556,9 @@ Hero Slider
 .swiper-pagination-bullet-active{ background:#442917;}
 
 
-
-
 .PanoramaSwiper-slider.swiper .swiper-slide img, .PanoramaSwiper-slider.swiper .swiper-slide video{ height:100vw; object-fit: cover;}
+
+
+.caption-container{ right: 20px; left: 20px;}
+.bottom-figcaption{ margin-top: 20px;}
 }

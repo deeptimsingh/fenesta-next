@@ -6,6 +6,7 @@ import Providers from "@/components/Providers";
 import Footer from "@/components/base/footer";
 import Header from "@/components/base/header";
 import RightStickyBar from "@/components/base/RightStickyBar";
+import PageIntroWrapper from "@/components/PageIntroWrapper";
 import "./globals.css";
 
 const corinthia = Corinthia({
@@ -48,12 +49,32 @@ export default function RootLayout({
       className={`${helvetica.variable} ${corinthia.variable}`}
       suppressHydrationWarning
     >
-      <body className="text-black dark:text-white transition-colors duration-200 ">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(){
+                if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+                var scrollTop = function(){ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; };
+                scrollTop();
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', scrollTop);
+                  window.addEventListener('load', scrollTop);
+                }
+                window.addEventListener('pageshow', function(e){ if(e.persisted) scrollTop(); });
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="text-theme  transition-colors duration-200 scroll-lock">
         <Providers>
           <Header />
-          {children}
+          <PageIntroWrapper>
+            {children}
+            <Footer />
+          </PageIntroWrapper>
           <RightStickyBar />
-          <Footer />
         </Providers>
       </body>
     </html>

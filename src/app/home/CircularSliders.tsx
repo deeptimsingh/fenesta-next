@@ -85,22 +85,14 @@ export default function FirstVisittoFinalFit() {
         setStrokeWidth(3);
       }
       
-      // Responsive circle radii based on viewport width
-      // Mobile: bigger circle (95vw); desktop: same as before
-      const containerSize = vw >= 1024 ? vw * 0.50 : vw >= 640 ? vw * 0.60 : vw * 0.95;
-      const baseRadius = containerSize / 2;
+      // Responsive circle radii - ~10% smaller so header doesn't cover top of circle
+      const containerSize = vw >= 1024 ? vw * 0.45 : vw >= 640 ? vw * 0.54 : vw * 0.85;
+      const baseRadius = containerSize / 2.2;
       setOuterRadius(baseRadius);
       setInnerRadius(baseRadius * 0.83); // Inner radius is ~83% of outer (287/346 ≈ 0.83)
       
-      // Mobile: icons a little inside the circle stroke; desktop: icons slightly inside circle edge
-      const isMobileView = vw < 768;
-      const mobileInsideOffset = 20; // px inside the outer stroke
-      if (isMobileView) {
-        setIconRadius(baseRadius - mobileInsideOffset);
-      } else {
-        const iconSizeOffset = vw >= 640 ? 85 : 50;
-        setIconRadius(baseRadius - iconSizeOffset);
-      }
+      // Icons half in, half out: center on ring outer edge (baseRadius = outerRadius)
+      setIconRadius(baseRadius);
     }
 
     updateRadius();
@@ -349,17 +341,11 @@ export default function FirstVisittoFinalFit() {
               });
             }
 
-            const progress = self.progress;
-
-            // Smooth zoom OUT based on scroll
+            // Keep center image at fixed size (no scroll-based shrink/zoom)
             const centerImg = centerImgRef.current;
             if (centerImg && centerImg.parentElement) {
               try {
-                gsap.to(centerImg, {
-                  scale: 1 - progress * 0.25,  // 1 → 0.75
-                  opacity: 1 - progress * 0.3, // fade slightly
-                  ease: "none",
-                });
+                gsap.set(centerImg, { scale: 1, opacity: 1 });
               } catch (error) {
                 console.debug('Center image animation error:', error);
               }
@@ -731,131 +717,133 @@ export default function FirstVisittoFinalFit() {
             e.stopPropagation();
           }
         }}
-        className="circular-slider-section gradient-background bg-lightdarkbase h-screen w-full flex items-center justify-center overflow-hidden before:absolute before:content-[''] before:w-[80vw] before:h-[70%] before:rounded-[30vw] before:opacity-100 before:blur-[100px] relative before:-z-1 before:-right-[10vw] transition-colors duration-200">
+        className="circular-slider-section common-padding gradient-background bg-darkbase h-auto sm:h-screen w-full flex items-center justify-center overflow-hidden before:absolute before:content-[''] before:w-[80vw] before:h-[70%] before:rounded-[30vw] before:opacity-100 before:blur-[100px] relative before:-z-1 before:-right-[10vw] transition-colors duration-200">
         <div className="w-full mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-20 relative z-0 px-3 md:px-0">
           {/* Mobile: centered title on top */}
-          <div className="w-full order-1 text-center px-2 md:hidden">
-            <h2 className="font-mainFont text-pageh2 leading-none text-[var(--color-gray)] transition-colors duration-200">From <span className="font-subFont text-corinthiaHeading text-brown dark:text-[#d4a574] transition-colors duration-200">First Visit</span> to Final Fit — we handle it all</h2>
+          <div ref={headingSectionRef} className="w-full hidden md:hidden order-1 text-center px-2">
+            <div ref={headingRef} className="title-section text-start flex flex-col justify-center w-full mx-auto">
+              <h2 className="font-mainFont text-h2 leading-none transition-colors duration-200">From <span className="font-subFont text-corinthiaHeading text-brown  transition-colors duration-200">First Visit</span> to Final Fit — we handle it all</h2>
+            </div>
           </div>
           
           {/* Row: circle (left) + content (right) on mobile and desktop */}
-          <div className="w-full order-2 flex md:flex-row flex-col items-center justify-center gap-3 md:gap-20 flex-1 min-h-0 flex-wrap">
-            {/* Desktop: left column 40vw with 45vw circle inside (previous layout) */}
-            <div className="w-[90vw] md:w-[40vw] xl:w-[40vw] flex justify-start md:justify-center items-center flex-shrink-0 ms-0 sm:ms-[-10vw] ">
-            <div className="relative w-[95vw] h-[95vw] md:w-[45vw] md:h-[45vw] flex  items-center justify-center -left-0 md:-left-20" style={{ minWidth: 0 }}>
-            {/* ROTATING RING center image */}
-            {mounted && (
-                <div
-                  ref={centerImgRef}
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[55vw] h-[55vw] md:w-[28vw] md:h-[28vw] rounded-full overflow-hidden shadow-xl dark:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5)] z-50 pointer-events-none transition-shadow duration-200"
-                >
-                  <Image src={slides[activeIndex].image} alt="" fill className="object-cover" />
-                </div>
-            )}
-
-            {/* ROTATING RING */}
-            <div ref={circleRef} className="absolute inset-0 flex items-center justify-center z-0 rotating-ring">
-                <svg 
-                  className="absolute inset-0 w-full h-full -rotate-90 max-w-[95vw] max-h-[95vw] sm:max-w-[60vw] sm:max-h-[60vw] md:max-w-[50vw] md:max-h-[50vw] circle-svg" 
-                  viewBox={`0 0 ${outerRadius * 2} ${outerRadius * 2}`}
-                  preserveAspectRatio="xMidYMid meet"
-                >
-                  <circle 
-                    cx={outerRadius} 
-                    cy={outerRadius} 
-                    r={outerRadius} 
-                    fill="none" 
-                    stroke="var(--circle-stroke)" 
-                    strokeWidth={strokeWidth}
-                    className="circle-stroke"
-                  />
-                  <circle 
-                    cx={outerRadius} 
-                    cy={outerRadius} 
-                    r={innerRadius} 
-                    fill="none" 
-                    stroke="var(--circle-stroke)" 
-                    strokeWidth={strokeWidth}
-                    className="circle-stroke"
-                  />
-                </svg>
-
-                {slides.map((slide, i) => {
-                  const { x, y } = computeSemiCircle(i);
-                  const isActive = i === activeIndex;
-
-                  return (
-                    <div
-                      key={i}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        jumpToSlide(i);
-                      }}
-                      className="absolute icon-wrapper cursor-pointer"
-                      suppressHydrationWarning
-                      style={{
-                        left: "50%",
-                        top: "50%",
-                        transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
-                      }}
-                    >
-                      <div
-                        className={`icon-item ${
-                          isActive ? "active-icon w-16 h-16 md:w-[90px] md:h-[90px]" : "w-12 h-12 md:w-[70px] md:h-[70px]"
-                        } rounded-full shadow-md dark:shadow-[0_4px_6px_rgba(0,0,0,0.5)] flex items-center justify-center relative transition-colors duration-200`}
-                      >
-                        <Image
-                          src={slide.iconImage}
-                          alt=""
-                          width={isActive ? 60 : 40}
-                          height={isActive ? 60 : 40}
-                          className="dark:invert w-full h-full object-contain"
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              
-              {/* Single arrow element - positioned at right center of circle (independent of rotation) */}
-              {isMounted && (
-                <div ref={arrowRef} className="active-icon-arrow" />
+          <div className="w-full order-2 flex md:flex-row flex-col items-center justify-center gap-3 md:gap-10 flex-1 min-h-0 flex-wrap">
+            {/* Desktop: left 45vw below 1280px, 40vw above; right 55vw below 1280px, 60vw above */}
+            <div className="w-[85vw] md:w-[55vw] xl:w-[55vw] flex justify-start md:justify-center items-center shrink-0 ms-0 sm:ms-[-8vw] scale-[1] sm:scale-[0.90] mt-[5vw]">
+              <div className="relative w-[85vw] h-[85vw] md:w-[40vw] md:h-[45vw] flex items-center justify-center left-0 md:-left-20" style={{ minWidth: 0 }}>
+              {/* ROTATING RING center image */}
+              {mounted && (
+                  <div
+                    ref={centerImgRef}
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] md:w-[25vw] md:h-[25vw] rounded-full overflow-hidden shadow-xl dark:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.5)] z-50 pointer-events-none transition-shadow duration-200"
+                  >
+                    <Image src={slides[activeIndex].image} alt="" fill className="object-cover" />
+                  </div>
               )}
-            </div>
-          </div>
-          {/* RIGHT SIDE CONTENT - caption; desktop also has heading above */}
-          <div ref={rightRef} className="w-full flex-1 min-w-[200px] md:w-[60vw] xl:w-[60vw] md:max-w-3xl right-content flex flex-col justify-center mt-10 md:mt-0">
-            {/* Heading - desktop only (mobile uses centered title above) */}
-            <div ref={headingSectionRef} className="w-full hidden md:block">
-                <div ref={headingRef} className="title-section text-start flex flex-col justify-center w-full mx-auto">
-                  <h2 className="font-mainFont text-h2 leading-none transition-colors duration-200">From <span className="font-subFont text-corinthiaHeading text-brown  transition-colors duration-200">First Visit</span> to Final Fit — we handle it all</h2>
-                </div>
-            </div>
 
-            <div className="mt-0 md:mt-[2vw] relative flex flex-row md:flex-col items-center md:items-start gap-5 md:gap-0 mx-auto md:mx-0 max-w-full md:max-w-lg overflow-hidden min-h-[100px]">
-              <span 
-                ref={captionNumberRef}
-                className="text-[80px] sm:text-[120px] md:text-[155px] leading-[0.55] font-extrabold text-[#fff] dark:text-gray-800 relative left-0 top-0 md:top-2 flex mb-1 md:mb-[2vw] icon-img"
-              >
-                {slides[activeIndex].number}
-              </span>
-              <div className="overflow-hidden relative">
-                <h3 
-                  ref={captionTitleRef}
-                  className="text-brown mb-1 md:mb-2 font-medium"
-                >
-                  {slides[activeIndex].title}
-                </h3>
-                <p 
-                  ref={captionDescRef}
-                  className="text-black dark:text-white text-sm md:text-base transition-colors duration-200"
-                >
-                  {slides[activeIndex].description}
-                </p>
+              {/* ROTATING RING */}
+              <div ref={circleRef} className="absolute inset-0 flex items-center justify-center z-0 rotating-ring ">
+                  <svg 
+                    className="absolute inset-0 w-full h-full -rotate-90 max-w-[85vw] max-h-[85vw] sm:max-w-[54vw] sm:max-h-[54vw] md:max-w-[45vw] md:max-h-[45vw] circle-svg scale-[0.85] sm:scale-[1]" 
+                    viewBox={`0 0 ${outerRadius * 2} ${outerRadius * 2}`}
+                    preserveAspectRatio="xMidYMid meet"
+                  >
+                    <circle 
+                      cx={outerRadius} 
+                      cy={outerRadius} 
+                      r={outerRadius} 
+                      fill="none" 
+                      stroke="var(--circle-stroke)" 
+                      strokeWidth={strokeWidth}
+                      className="circle-stroke"
+                    />
+                    <circle 
+                      cx={outerRadius} 
+                      cy={outerRadius} 
+                      r={innerRadius} 
+                      fill="none" 
+                      stroke="var(--circle-stroke)" 
+                      strokeWidth={strokeWidth}
+                      className="circle-stroke"
+                    />
+                  </svg>
+
+                  {slides.map((slide, i) => {
+                    const { x, y } = computeSemiCircle(i);
+                    const isActive = i === activeIndex;
+
+                    return (
+                      <div
+                        key={i}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          jumpToSlide(i);
+                        }}
+                        className="absolute icon-wrapper cursor-pointer"
+                        suppressHydrationWarning
+                        style={{
+                          left: "50%",
+                          top: "50%",
+                          transform: `translate(-50%, -50%) translate(${x}px, ${y}px)`,
+                        }}
+                      >
+                        <div
+                          className={`icon-item ${
+                            isActive ? "active-icon w-16 h-16 md:w-[5vw] md:h-[5vw]" : "w-12 h-12 md:w-[3.5vw] md:h-[3.5vw]"
+                          } rounded-full shadow-md dark:shadow-[0_4px_6px_rgba(0,0,0,0.5)] flex items-center justify-center relative transition-colors duration-200`}
+                        >
+                          <Image
+                            src={slide.iconImage}
+                            alt=""
+                            width={isActive ? 60 : 40}
+                            height={isActive ? 60 : 40}
+                            className="dark:invert w-full h-full object-contain"
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>                
+                {/* Single arrow element - positioned at right center of circle (independent of rotation) */}
+                {isMounted && (
+                  <div ref={arrowRef} className="active-icon-arrow" />
+                )}
               </div>
             </div>
-          </div>
+
+            {/* RIGHT SIDE CONTENT - caption; desktop also has heading above */}
+            <div ref={rightRef} className="flex-1 w-full md:w-[50vw] xl:w-[50vw] right-content flex flex-col justify-center mt-10 md:mt-0 md:pe-[10vw] xl:pe-[15vw] ml-0 md:ml-[-7%] xl:ml-[-5vw]">
+              {/* Heading - desktop only (mobile uses centered title above) */}
+              <div ref={headingSectionRef} className="w-full hidden md:block">
+                  <div ref={headingRef} className="title-section text-start flex flex-col justify-center w-full mx-auto">
+                    <h2 className="font-mainFont text-h2 leading-none transition-colors duration-200">From <span className="font-subFont text-corinthiaHeading text-brown  transition-colors duration-200">First Visit</span> to Final Fit — we handle it all</h2>
+                  </div>
+              </div>
+
+              <div className="mt-0 md:mt-[2vw] relative flex flex-row md:flex-col items-center md:items-start gap-5 md:gap-0 mx-auto md:mx-0 max-w-full md:max-w-lg overflow-hidden min-h-[100px] ">
+                <span 
+                  ref={captionNumberRef}
+                  className="text-[80px] sm:text-[120px] md:text-[155px] leading-[110px] font-extrabold text-white relative left-0 top-0 md:top-2 flex mb-1 md:mb-[2vw] icon-img"
+                >
+                  {slides[activeIndex].number}
+                </span>
+                <div className="overflow-hidden relative">
+                  <h3 
+                    ref={captionTitleRef}
+                    className="text-brown font-medium text-h3"
+                  >
+                    {slides[activeIndex].title}
+                  </h3>
+                  <p 
+                    ref={captionDescRef}
+                    className="text-black text-p transition-colors duration-200"
+                  >
+                    {slides[activeIndex].description}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

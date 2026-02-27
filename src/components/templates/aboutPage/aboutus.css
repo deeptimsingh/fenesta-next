@@ -1,0 +1,95 @@
+.intro-heightlight{ padding:3rem;}
+.intro-heightlight .first-intro-line{ font-size:22px; line-height: 1.5; }
+
+
+/* components/templates/aboutPage/aboutus.css */
+/* kept minimal — you can merge into your global Tailwind as needed */
+
+
+
+/* Values section adjustments */
+.values-section {
+  position: relative;
+}
+
+/* Hint for animated images to reduce repaints */
+.values-block .letter,
+.intro-heightlight img,
+.missionBox svg,
+.visionBox svg {
+  will-change: transform, opacity;
+}
+
+/* Positioning tweaks */
+.missionBox,
+.visionBox {
+  pointer-events: none;
+}
+
+/* Make svg not scale stroke when transformed (where supported) */
+svg { vector-effect: non-scaling-stroke; }
+
+
+.handSvg svg{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.letters-outer  img{ height: 150px;}
+
+/* Ensure slow devices don't run too many animations simultaneously */
+@media (prefers-reduced-motion: reduce) {
+  .values-block .letter,
+  .missionBox svg,
+  .visionBox svg {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Our Journey section */
+.our-journey-section {
+  background: var(--bg-blue, #0094D9);
+}
+
+.journey-timeline {
+  min-height: 480px;
+}
+
+.journey-year-btn {
+  transform: translateY(-50%);
+}
+
+.journey-year-btn:focus {
+  outline: none;
+}
+
+.journey-diamond {
+  box-shadow: 0 0 0 2px rgba(156, 220, 249, 0.5);
+}
+
+
+@media all and (max-width: 768px) {
+
+
+  .letters-outer img {
+    height: 26vw; max-height:100px;
+}
+
+.handSvg { position: relative; bottom:0; left:0; right:0; top:inherit; width:100%;}
+.handSvg svg { width:100%; height:auto;}
+.year-item.active {
+  transform-origin: 0 50%;
+  z-index: 20;
+}
+
+.year-item.active span {
+  font-weight: 600;         rotate: -49deg;
+}
+
+.year-item.active span:nth-child(1) {font-weight: 600; rotate: -0deg; top:-20px; position: absolute;}
+.year-item.active span:nth-child(2) {font-weight: 600; rotate: -49deg;}
+
+}
+
