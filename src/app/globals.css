@@ -35,7 +35,7 @@
   --bg-blue: #0094D9;
   --bg-blueLight: #9CDCF9;
   --bg-darkBase: #131313;  
-  --bg-lightdarkbase: #555;
+  --bg-lightdarkbase: #555555;
 
   --circle-stroke: #EDE8D0E8;
   --icon-bg: #EDE8D0E8;
@@ -92,7 +92,7 @@
   /* --bg-white: #131313;
   --bg-gray: #131313; */
   --bg-darkBase: #212121; 
-  --bg-lightBase: #555; 
+   --bg-lightdarkbase: #555555;  
   --bg-blue: #0094D9;
   --bg-white: #ffffff;
 
@@ -106,8 +106,7 @@
   --gradient-from: #555555;
   --gradient-to: #212121;  
 
-  --bg-darkBase: #212121;  
-  --bg-lightdarkbase: #454545;  
+ 
 }
 
 /* -----------------------------------------------
@@ -115,7 +114,6 @@
 ------------------------------------------------- */
 @layer componants  {
   .container { margin-left: auto;  margin-right: auto; width: 100%; padding-left: 1.25rem; padding-right: 1.25rem;}
-
   .container-fluid{padding-left: 1.25rem; padding-right: 1.25rem;}
 
 
@@ -238,6 +236,8 @@ main {padding-bottom: 0;}
 .text-corinthiaHeading{ line-height: 0.65;}
 
 
+
+
 @layer utilities {
 .custommodal-in h3, 
 .custommodal-in p{ color: var(--color-white); margin-top: calc(var(--spacing) * 4)}
@@ -274,9 +274,6 @@ h1, h2,h3,h4, h5, h6{font-weight: 400;}
 
 .common-pt{ padding:100px 0 0;}
 .common-pb{ padding:0 0 100px;}
-
-
-
 
 /**CURSOR**/
 #cursor-ring,
@@ -335,7 +332,8 @@ h1, h2,h3,h4, h5, h6{font-weight: 400;}
 
   .dark .bg-brown{background: var(--color-brown);}
   .dark .bg-black{background: var(--color-black);}
-  .dark .bg-white{background: var(--bg-darkBase);}
+  .dark .bg-white{background: var(--bg-lightdarkbase);}
+  .dark .bg-white .text-theme{ color: var(--color-cream);}
   .dark .bg-grayLight{background: var(--color-grayLight);}
   .dark .bg-blueLight{background: var(--color-blueLight);}
 
@@ -363,6 +361,7 @@ DARK MODE STYLES
 ======================================**/
 .dark body{background: var(--bg-darkBase);}
 /* .dark .darkBckground{  color: var(--color-background);} */
+.dark .text-h1{ color: #ffffff;}
 
 
 .dark .gradient-background{ background: var(--bg-lightdarkbase); color: var(--color-background);}
@@ -373,6 +372,13 @@ DARK MODE STYLES
 .dark .active-icon-arrow {border-left-color: #d4a574; filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.1));}
 }
 
+/**INSIDE PAGE INTRO SECTION**/
+.intro-heightlight{ padding:3rem;}
+.intro-heightlight .first-intro-line{ font-size:22px; line-height: 1.5; }
+
+.visionBox svg {
+  will-change: transform, opacity;
+}
 
 
 @media all and (max-width: 1280px) {

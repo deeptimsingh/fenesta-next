@@ -1,0 +1,36 @@
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.35s ease-out;
+}
+
+
+/* Hide scrollbar everywhere */
+.no-scrollbar {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+
+.blog-left-side{}
+
+
+@media all and (max-width:767px) {
+  .left-side,
+  .right-side {
+    max-width: 100% !important; flex: 1 1 100% !important;
+  }
+}
+

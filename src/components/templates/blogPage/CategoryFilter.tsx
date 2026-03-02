@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState, useEffect, CSSProperties } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 import { initCardReveal } from "@/components/base/cardReveal";
 
@@ -119,10 +120,7 @@ export default function CategoryTabs() {
     el.scrollLeft = scrollLeft - walk;
   };
 
-
-
-
-  
+ 
 
   return (
     <div ref={cardsContainerRef} className="w-full">
@@ -130,13 +128,12 @@ export default function CategoryTabs() {
       {/* ====================== DESKTOP TABS ======================= */}
      <div
         ref={tabContainerRef}
-        className=" tab-sticky relative hidden md:flex items-center justify-between gap-3 md:gap-[0.75vw] bg-theme/10 bg-darkBase  p-2
-  rounded-[50px] overflow-x-auto whitespace-nowrap no-scrollbar cursor-grab"
+        className=" tab-sticky relative hidden md:flex items-center justify-between gap-3 md:gap-[0.75vw] bg-theme/10  p-2 rounded-[50px] overflow-x-auto whitespace-nowrap no-scrollbar cursor-grab"
         onMouseDown={startDrag} onMouseMove={onDrag} onMouseUp={stopDrag} onMouseLeave={stopDrag}  onTouchStart={startTouch}
         onTouchMove={onTouchDrag}  onTouchEnd={stopDrag}>
         {/* MOVING HIGHLIGHT BAR */}
         <div
-          className="absolute top-2 bottom-2 bg-theme  rounded-full transition-all duration-300 inset-0"
+          className="absolute top-2 bottom-2 bg-theme bg-white  rounded-full transition-all duration-300 inset-0"
           style={highlightStyle}
         />
 
@@ -145,7 +142,7 @@ export default function CategoryTabs() {
           id="all"
           onClick={() => setActive("all")}
           className={`relative z-10 flex items-center  py-3 rounded-[50px] h-[50px] text-basexs leading-tight
-            ${active === "all" ? "text-white" : "bg-white bg-lightBase text-gray-800"}`}>
+            ${active === "all" ? "text-white" : "bg-white bg-lightdarkbase text-gray-800"}`}>
           <span className="text-left">All</span>
         </button>
 
@@ -222,7 +219,8 @@ export default function CategoryTabs() {
           <div className="tab-content-in">
               <div className="grid md:grid-cols-2 gap-8">
                   {/* ------- CARD 1 ------- */}
-                  <div className="reveal-card bg-white bg-lightdarkbase rounded-2xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-md ">
+                  <Link href="/blog/blog-inside" className="block">
+                  <div className="reveal-card tab-content-item bg-white bg-lightdarkbase rounded-2xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-md ">
                     {/* Image */}
                     <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">                    
                       <Image
@@ -232,14 +230,14 @@ export default function CategoryTabs() {
                         className="object-cover reveal-img card-image"
                       />
                       {/* Tag */}
-                     <span className="absolute top-3 right-3 bg-[#ffffffcc]  text-14 font-semibold px-3 py-1 rounded-full shadow">
+                      <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
                         Windows & doors
                       </span>
                     </div>
 
                     {/* Content */}
                     <div className="p-5">
-                      <div className="flex items-center gap-4 text-14 text-theme/70 justify-between">
+                      <div className="reveal-con flex items-center gap-4 text-14 text-theme/70 justify-between">
                         <div className="flex items-center gap-2">
                         <Image
                             src="/images/blog/calender-icon.svg"
@@ -264,9 +262,11 @@ export default function CategoryTabs() {
                       </p>
                     </div>
                   </div>
+                  </Link>
+
 
                   {/* ------- CARD 2 ------- */}
-                  <div className="reveal-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
+                  <div className="reveal-card tab-content-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
                     {/* Image */}
                     <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">
                       <Image
@@ -277,7 +277,7 @@ export default function CategoryTabs() {
                       />
 
                       {/* Tag */}
-                      <span className="absolute top-3 right-3 bg-[#ffffffcc]  text-14 font-semibold px-3 py-1 rounded-full shadow">
+                      <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
                       Architecture & design
                       </span>
                     </div>
@@ -314,7 +314,7 @@ export default function CategoryTabs() {
 
 
                   {/* ------- CARD 3 ------- */}
-                  <div className="reveal-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
+                  <div className="reveal-card tab-content-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
                     {/* Image */}
                     <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">                    
                       <Image
@@ -324,7 +324,7 @@ export default function CategoryTabs() {
                         className="object-cover reveal-img card-image"
                       />
                       {/* Tag */}
-                     <span className="absolute top-3 right-3 bg-[#ffffffcc]  text-14 font-semibold px-3 py-1 rounded-full shadow tag-item">
+                     <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
                         Windows & doors
                       </span>
                     </div>
@@ -358,7 +358,7 @@ export default function CategoryTabs() {
                   </div>
 
                   {/* ------- CARD 4 ------- */}
-                  <div className="reveal-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
+                  <div className="reveal-card tab-content-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
                     {/* Image */}
                     <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">
                       <Image
@@ -369,7 +369,7 @@ export default function CategoryTabs() {
                       />
 
                       {/* Tag */}                     
-                      <span className="absolute top-3 right-3 bg-[#ffffffcc]  text-14 font-semibold px-3 py-1 rounded-full shadow tag-item">
+                      <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
                         Architecture & design
                       </span>
                     </div>
@@ -406,7 +406,7 @@ export default function CategoryTabs() {
 
 
                   {/* ------- CARD 5 ------- */}
-                  <div className="reveal-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
+                  <div className="reveal-card tab-content-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
                     {/* Image */}
                     <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">                    
                       <Image
@@ -416,7 +416,7 @@ export default function CategoryTabs() {
                         className="object-cover reveal-img card-image"
                       />
                       {/* Tag */}
-                     <span className="absolute top-3 right-3 bg-[#ffffffcc]  text-14 font-semibold px-3 py-1 rounded-full shadow tag-item">
+                     <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
                         Windows & doors
                       </span>
                     </div>
@@ -450,7 +450,7 @@ export default function CategoryTabs() {
                   </div>
 
                   {/* ------- CARD 6 ------- */}
-                  <div className="reveal-card bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md">
+                  <div className="reveal-card tab-content-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md">
                     {/* Image */}
                     <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">
                       <Image
@@ -461,7 +461,7 @@ export default function CategoryTabs() {
                       />
 
                       {/* Tag */}
-                      <span className="absolute top-3 right-3 bg-[#ffffffcc]  text-14 font-semibold px-3 py-1 rounded-full shadow tag-item">
+                      <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
                       Architecture & design
                       </span>
                     </div>

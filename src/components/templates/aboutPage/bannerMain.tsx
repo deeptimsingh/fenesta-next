@@ -63,7 +63,7 @@ export default function BannerMain() {
             ref={titleRef}
             className="absolute  inset-0 top-auto bottom-20 sm:bottom-[14vw] xl:bottom-[8vw]  z-10  px-6 max-w-3xl"
           >
-            <h1 className="text-white text-h1 leading-none text-theme flex justify-start flex-wrap ">About <span className="font-subFont text-corinthiaHeading text-cream leading-none"> Us</span></h1>
+            <h1 className="text-white text-h1 leading-none flex justify-start flex-wrap ">About <span className="font-subFont text-corinthiaHeading text-cream leading-none"> Us</span></h1>
 
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-white/90 text-sm mt-5">

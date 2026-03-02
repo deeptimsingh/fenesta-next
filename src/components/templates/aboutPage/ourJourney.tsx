@@ -190,9 +190,9 @@ export default function JourneySection() {
   };
 
   return (
-    <section className="relative w-full min-h-screen bg-[#0094D9] flex items-center overflow-hidden common-padding">
+    <section className="relative w-full min-h-screen bg-[#0094D9] flex items-center overflow-hidden common-padding our-journey-outer">
       {/* Left Background */}
-      <div className="absolute -left-[20vw] top-[-10vw] bottom-0 w-full h-[130vh] pointer-events-none z-0" aria-hidden >
+      <div className="absolute -left-[20vw] top-[-10vw] bottom-0 w-full h-[130vh] pointer-events-none z-0 our-journey-left" aria-hidden >
         <img
           src={"/images/about/backgroundVectors.svg"}
           className="w-full h-[120vh] object-fill object-left"
@@ -200,123 +200,128 @@ export default function JourneySection() {
       </div>
 
       {/* Main Content */}
-      <div className="flex w-full flex-col lg:flex-row items-center gap-10 relative z-10">
-
-        <div className="headingTitle mb-6 xl:mb-6 px-0 md:px-0 flex         md:hidden">
+      <div className="flex w-full flex-col lg:flex-row items-center gap-10 relative z-10 our-journey-right">
+        <div className="headingTitle mb-6 xl:mb-6 px-0 md:px-0 flex  md:hidden">
               <div className="title-section  md:flex flex-col w-full">
                 <h2 className="font-mainFont text-h2 leading-none text-white flex justify-center flex-wrap mx-auto">Our  <span className="font-subFont text-corinthiaHeading text-cream leading-none">Journey</span></h2>
               </div>
         </div>  
 
+        <div className="flex flex-col lg:flex-row items-center gap-10 w-full">
+          <div className="circle-menu">
+            {/* ===== CIRCLE MENU ===== */}
+            <div className="w-full lg:w-[30vw] flex justify-center lg:justify-start year-circle-wrapper">
+              <div
+                ref={wrapperRef}
+                className="relative w-[85vw] max-w-[80vw] md:max-w-[50vw] aspect-square left-0 md:left-[-10vw]"
+              >
+                {/* Circle Line */}
+                <svg
+                  className="absolute inset-0 w-full h-full md:scale-[1.125]"
+                  viewBox={`0 0 ${circleSize} ${circleSize}`}
+                >
+                  <circle
+                    cx={center}
+                    cy={center}
+                    r={radius}
+                    fill="none"
+                    stroke="white"
+                    strokeWidth="1"
+                    strokeDasharray="5 12"
+                    strokeOpacity="0.5"
+                  />
+                </svg>
 
-        {/* ===== CIRCLE MENU ===== */}
-        <div className="w-full lg:w-[30vw] flex justify-center lg:justify-start year-circle-wrapper">
-          <div
-            ref={wrapperRef}
-            className="relative w-[85vw] max-w-[80vw] md:max-w-[50vw] aspect-square left-0 md:left-[-10vw]"
-          >
-            {/* Circle Line */}
-            <svg
-              className="absolute inset-0 w-full h-full md:scale-[1.125]"
-              viewBox={`0 0 ${circleSize} ${circleSize}`}
-            >
-              <circle
-                cx={center}
-                cy={center}
-                r={radius}
-                fill="none"
-                stroke="white"
-                strokeWidth="1"
-                strokeDasharray="5 12"
-                strokeOpacity="0.5"
-              />
-            </svg>
-
-            {/* Rotating Items */}
-            <div
-              ref={circleRef}
-              className="absolute inset-0 md:scale-[1.25]"
-              style={{ transformOrigin: `${center}px ${center}px` }}
-            >
-              {mounted &&
-                [...Array(TOTAL)].map((_, i) =>
-                  renderYear(i, `${1998 + i}`)
-                )}
+                {/* Rotating Items */}
+                <div
+                  ref={circleRef}
+                  className="absolute inset-0 md:scale-[1.25]"
+                  style={{ transformOrigin: `${center}px ${center}px` }}
+                >
+                  {mounted &&
+                    [...Array(TOTAL)].map((_, i) =>
+                      renderYear(i, `${1998 + i}`)
+                    )}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* ===== CONTENT TEXT ===== */}
-        <div className="text-white w-full lg:w-[35vw] px-6 md:px-0">
-          <div className="headingTitle mb-6 xl:mb-6 px-0 md:px-0 hidden md:flex">
-              <div className="title-section  md:flex flex-col w-full">
-                <h2 className="font-mainFont text-h2 leading-none text-white flex  justify-start flex-wrap mx-auto">Our  <span className="font-subFont text-corinthiaHeading text-cream leading-none">Journey</span></h2>
+           
+          <div className="circle-content flex flex-1 items-center gap-10 lg:gap-10 xl:gap-30 2xl:gap-30">
+            {/* ===== CONTENT TEXT ===== */}
+            <div className="text-white w-full lg:w-[20vw] max-w-[20vw] px-6 md:px-0">
+              <div className="headingTitle mb-6 xl:mb-6 px-0 md:px-0 hidden md:flex">
+                  <div className="title-section  md:flex flex-col w-full">
+                    <h2 className="font-mainFont text-h2 leading-none text-white flex  justify-start flex-wrap">Our  <span className="font-subFont text-corinthiaHeading text-cream leading-none">Journey</span></h2>
+                  </div>
+              </div>  
+
+              <div ref={contentRef} key={activeIndex}>
+                <h3 className="text-h3 mb-2">{activeContent.title}</h3>
+                <p>{activeContent.description}</p>
               </div>
+
+              <div className="flex items-center gap-6 mt-8 text-xs sm:text-sm uppercase tracking-widest">
+                <button
+                  onClick={prevYear}
+                  disabled={activeIndex === 0}
+                  className="hover:opacity-80 disabled:opacity-40"
+                >
+                  ← Prev
+                </button>
+                <span className="w-px h-4 bg-white/50" />
+                <button
+                  onClick={nextYear}
+                  disabled={activeIndex === TOTAL - 1}
+                  className="hover:opacity-80 disabled:opacity-40"
+                >
+                  Next →
+                </button>
+              </div>
+            </div>
+
+            {/* ===== IMAGE / VIDEO ===== */}
+            <div className="relative w-screen md:w-[80vw] max-w-[90vw] md:max-w-[35vw] aspect-square flex items-center justify-center me-20">
+              <div
+                className="absolute inset-0 rounded-full z-10"
+                style={{
+                  background:
+                    "url('/images/about/circleShadow.svg')",
+                  backgroundSize: "130% 130%",
+                  backgroundPosition: "center",
+                }}
+              />
+              <div
+                className="relative w-full h-full rounded-full overflow-hidden"
+                style={{
+                  WebkitMaskImage:
+                    "radial-gradient(circle, black 70%, rgba(0,0,0,0.8) 80%, transparent 90%)",
+                  maskImage:
+                    "radial-gradient(circle, black 70%, rgba(0,0,0,0.8) 80%, transparent 90%)",
+                }}
+              >
+                {activeContent.type === "video" ? (
+                  <video
+                    key={activeIndex}
+                    src={activeContent.media}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <img
+                    key={activeIndex}
+                    src={activeContent.media}
+                    alt={activeContent.title}
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </div>
+            </div>
           </div>  
-
-          <div ref={contentRef} key={activeIndex}>
-            <h3 className="text-h3 mb-2">{activeContent.title}</h3>
-            <p>{activeContent.description}</p>
-          </div>
-
-          <div className="flex items-center gap-6 mt-8 text-xs sm:text-sm uppercase tracking-widest">
-            <button
-              onClick={prevYear}
-              disabled={activeIndex === 0}
-              className="hover:opacity-80 disabled:opacity-40"
-            >
-              ← Prev
-            </button>
-            <span className="w-px h-4 bg-white/50" />
-            <button
-              onClick={nextYear}
-              disabled={activeIndex === TOTAL - 1}
-              className="hover:opacity-80 disabled:opacity-40"
-            >
-              Next →
-            </button>
-          </div>
-        </div>
-
-        {/* ===== IMAGE / VIDEO ===== */}
-        <div className="relative w-screen md:w-[80vw] max-w-[90vw] md:max-w-[35vw] aspect-square flex items-center justify-center">
-          <div
-            className="absolute inset-0 rounded-full z-10"
-            style={{
-              background:
-                "url('/images/about/circleShadow.svg')",
-              backgroundSize: "130% 130%",
-              backgroundPosition: "center",
-            }}
-          />
-          <div
-            className="relative w-full h-full rounded-full overflow-hidden"
-            style={{
-              WebkitMaskImage:
-                "radial-gradient(circle, black 70%, rgba(0,0,0,0.8) 80%, transparent 90%)",
-              maskImage:
-                "radial-gradient(circle, black 70%, rgba(0,0,0,0.8) 80%, transparent 90%)",
-            }}
-          >
-            {activeContent.type === "video" ? (
-              <video
-                key={activeIndex}
-                src={activeContent.media}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <img
-                key={activeIndex}
-                src={activeContent.media}
-                alt={activeContent.title}
-                className="w-full h-full object-cover"
-              />
-            )}
-          </div>
         </div>
       </div>
     </section>

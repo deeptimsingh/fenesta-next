@@ -1,42 +1,42 @@
-.intro-heightlight{ padding:3rem;}
-.intro-heightlight .first-intro-line{ font-size:22px; line-height: 1.5; }
-
-
-/* components/templates/aboutPage/aboutus.css */
-/* kept minimal — you can merge into your global Tailwind as needed */
-
-
-
-/* Values section adjustments */
-.values-section {
-  position: relative;
+/**=============================
+OUR VALUES
+=============================**/
+.letters-outer  img{ height: 150px;}
+.values-section { position: relative;}
+.values-block .letter{will-change: transform, opacity;}
+.handSvg svg{ width: 100%; height: auto; display: block;}
+@media all and (max-width:1280px) and (min-width:768px) {
+  .letters-outer{ max-width:50vw; margin: 0 auto; gap:1vw;}
+  .letters-outer  img{ height:7vw; width: 6vw;}
+  .iaction-outer p{ font-size:1.25vw; line-height: 1.25;}
+  .values-section .handSvg{ margin-top:4vw; margin-left: -2vw;}
 }
 
-/* Hint for animated images to reduce repaints */
-.values-block .letter,
-.intro-heightlight img,
-.missionBox svg,
-.visionBox svg {
-  will-change: transform, opacity;
-}
+.dark .iaction-outer h2{ color: var(--color-white);}
+.dark .iaction-outer h2 *{ color: var(--color-cream);}
+.dark .iaction-outer p{ color: var(--color-white);}
 
-/* Positioning tweaks */
-.missionBox,
-.visionBox {
-  pointer-events: none;
-}
+
+
+/**===============================
+OUR MISSION & VISION
+===============================**/
+.missionBox svg, .visionBox svg {will-change: transform, opacity;}
+.missionBox, .visionBox {pointer-events: none;}
 
 /* Make svg not scale stroke when transformed (where supported) */
 svg { vector-effect: non-scaling-stroke; }
 
 
-.handSvg svg{
-  width: 100%;
-  height: auto;
-  display: block;
-}
 
-.letters-outer  img{ height: 150px;}
+.dark .mission-vision{ background:var(--bg-darkBase)}
+.dark .mission-outer *,
+.dark .vision-outer *{ color: var(--color-white);}
+
+
+
+
+
 
 /* Ensure slow devices don't run too many animations simultaneously */
 @media (prefers-reduced-motion: reduce) {
@@ -49,47 +49,47 @@ svg { vector-effect: non-scaling-stroke; }
 }
 
 /* Our Journey section */
-.our-journey-section {
-  background: var(--bg-blue, #0094D9);
-}
+.our-journey-section { background: var(--bg-blue, #0094D9);}
+.journey-timeline { min-height: 480px;}
+.journey-year-btn { transform: translateY(-50%);}
+.journey-year-btn:focus { outline: none;}
+.journey-diamond { box-shadow: 0 0 0 2px rgba(156, 220, 249, 0.5);}
 
-.journey-timeline {
-  min-height: 480px;
-}
 
-.journey-year-btn {
-  transform: translateY(-50%);
+@media all and (max-width:1180px) {
+  .values-section{ max-height:660px; overflow: hidden;}
+  .values-section .handSvg {top: 6vw; left: -10vw; width: calc(110vw + 10vw); position: relative; margin-top: inherit; margin-left: inherit;}
+   .letters-outer img {height: 10vw;max-height: inherit; width: 8vw;}
+    .letters-outer{ max-width: 70vw; gap:2vw}
+    .letters-outer .inline-flex:nth-of-type(3){ top:4vw;}
 }
-
-.journey-year-btn:focus {
-  outline: none;
-}
-
-.journey-diamond {
-  box-shadow: 0 0 0 2px rgba(156, 220, 249, 0.5);
-}
-
 
 @media all and (max-width: 768px) {
-
-
-  .letters-outer img {
-    height: 26vw; max-height:100px;
-}
-
 .handSvg { position: relative; bottom:0; left:0; right:0; top:inherit; width:100%;}
 .handSvg svg { width:100%; height:auto;}
-.year-item.active {
-  transform-origin: 0 50%;
-  z-index: 20;
-}
+.year-item.active {transform-origin: 0 50%; z-index: 20;}
 
-.year-item.active span {
-  font-weight: 600;         rotate: -49deg;
-}
-
+.year-item.active span{ font-weight: 600;         rotate: -49deg;}
 .year-item.active span:nth-child(1) {font-weight: 600; rotate: -0deg; top:-20px; position: absolute;}
 .year-item.active span:nth-child(2) {font-weight: 600; rotate: -49deg;}
+}
 
+@media all and (max-width:660px){
+  /**OUR VALUES**/
+    .letters-outer {
+        gap: 8vw;
+        max-width: 100vw;
+    }
+        .letters-outer img {
+        height: 90px;
+        max-height: inherit;
+        width: 90px;
+    }
+        .values-section {max-height: inherit; padding-bottom: 20vw;}
+        .values-section .handSvg{ position: absolute; bottom:0; top: inherit; left:-30vw; width: 200vw;}
+      
+        
+/**OUR JOURNEY**/
+        .our-journey-right{ gap:5vw;}
 }
 

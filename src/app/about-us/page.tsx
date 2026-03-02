@@ -149,11 +149,11 @@ if (visionLineRef.current && visionRef.current) {
       </section>
 
       {/* MISSION & VISION */}
-      <section className="w-full bg-white mission-vision relative -mt-5 common-padding overflow-hidden">
+      <section className="w-full bg-white  mission-vision relative mt-4 common-padding overflow-hidden">
         <div className="container-fluid px-4 md:px-0!">
-          <div className="max-w-3xl mx-auto">
+          <div className="max-w-lg 2xl:max-w-xl mx-auto">
             {/* LEFT - MISSION */}
-            <div ref={missionRef} className="flex flex-col items-start text-center md:text-left relative">
+            <div ref={missionRef} className="flex flex-col items-start text-center md:text-left relative mission-outer">
               <div className="missionBox md:absolute md:-left-[30vw] md:-top-[3.5vw]  max-w-none z-20 mx-auto md:mx-0">
                 <svg ref={missionLineRef}
                   className="w-full md:w-[28vw] h-auto"
@@ -171,7 +171,7 @@ if (visionLineRef.current && visionRef.current) {
                 <div ref={missionDotRef} className="w-4 h-4 rounded-full bg-[#009FE3] hidden md:flex md:absolute md:top-[6.5vw] md:right-0"></div>                
               </div>
 
-              <div className="max-w-sm relative">                
+              <div className="max-w-xs relative">                
                 <h2 className="text-h2 leading-normal">Mission</h2>
                 <p className="text-p leading-normal mb-0">
                   To establish a service organisation that passionately provides Customised Building Solutions and delivers Exceptional Customer Experience.
@@ -180,7 +180,7 @@ if (visionLineRef.current && visionRef.current) {
             </div>
 
             {/* RIGHT - VISION */}
-            <div ref={visionRef} className="flex flex-col items-end text-center md:text-right mt-10 md:mt-0 relative">
+            <div ref={visionRef} className="flex flex-col items-end text-center md:text-right mt-10 md:mt-0 relative vision-outer">
               <div className="visionBox md:absolute md:right-[-30vw] md:-top-[5.5vw] max-w-none z-20 mx-auto md:mx-0">                
                        
                 <svg ref={visionLineRef}  className="w-full md:w-[28vw] h-auto" viewBox="0 0 499 145"  preserveAspectRatio="xMinYMid slice" fill="none"  stroke="#009FE3" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
@@ -195,7 +195,7 @@ if (visionLineRef.current && visionRef.current) {
                 <div ref={visionDotRef} className="w-4 h-4 rounded-full bg-[#009FE3] hidden md:flex md:absolute md:top-[7.5vw] md:-left-[10px]"></div>
               </div>
 
-              <div className="max-w-sm">
+              <div className="max-w-xs relative">
                 <h2 className="text-h2 leading-normal">Vision</h2>
                 <p className="text-p leading-normal mb-0">
                   To Improve the Lives and Homes of customers through Innovation and Excellence and be the brand leader in Customised Building Solutions

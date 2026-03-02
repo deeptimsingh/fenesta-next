@@ -1,12 +1,12 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
 
 import {useEffect, useState } from "react";
-import BannerMain from "@/components/templates/blogPage/bannerMain";
-import CategoryFilter from "@/components/templates/blogPage/CategoryFilter";
+
+import BannerMain from "@/components/templates/blogPage/Insidepage/bannerMain";
 import ClientStories from "@/app/home/ClientStories";
-import "@/components/templates/blogPage/blogs.css";
+import "@/components/templates/blogPage/Insidepage/blogsInside.css";
+import Image from "next/image";
+import Link from "next/link";
 
 
 export default function BlogPage() {
@@ -17,11 +17,6 @@ export default function BlogPage() {
   const toggle = (year: string) => {
     setOpen(open === year ? null : year);
   };
-
-   /**==============================
-  Sticky Right Side Calculating Height 
-  ==============================**/
-
     useEffect(() => {
     const updateOffset = () => {
       const header = document.getElementById("site-header");
@@ -43,16 +38,36 @@ export default function BlogPage() {
   return (
     <>  
     <section  className="inside-page w-full">
-      <BannerMain />   
+      <BannerMain />           
        
       <section className="two-col-outer mx-auto w-full common-padding-md">
         <div className="container mx-auto">
-          <div className="two-col flex flex-wrap gap-5">
-            <div className="left-side  flex-1 max-w-full lg:max-w-[calc(100%-315px)]">
-              <CategoryFilter /> 
+          <div className="two-col flex gap-5">
+            {/* Left SIDEBAR */}
+            <div className="left-side blog-left-side  flex-1 max-w-[calc(100%-315px)] mt-0 lg:mt-[-10vw] z-20">               
+              <div className="blog-content bg-white  p-6 rounded-2xl h-full">
+                {/*Bread Crumbs */}
+                <div className="flex items-center gap-2 text-theme/90 text-sm mb-5">
+                    <span className="hover:text-white cursor-pointer ">Home</span>
+                    <Image
+                      src="/images/down-arrow.svg"
+                      alt="arrow"
+                      width={12}
+                      height={12}
+                      className="transform -rotate-90"
+                    />
+                    <span className="text-white">Latest Blogs</span>
+                </div>
+                
+
+                <h1 className="text-32 font-extrabold mb-4 text-theme">Blog Title Goes Here</h1>
+                <p className="text-base text-ThemeParaColor mb-6">
+                  Published on January 1, 2025 by John Doe
+                </p>
+              </div>   
             </div>          
 
-            {/* RIGHT SIDEBAR */}
+           {/* RIGHT SIDEBAR */}
             <aside className="max-w-full lg:max-w-[315px]   lg:block right-side  h-fit dynamic-sticky flex-1 ">
               {/* Subscribe */}
               <div className="p-4 rounded-xl bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)]">

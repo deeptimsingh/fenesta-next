@@ -37,7 +37,7 @@ export default function BannerMain() {
   }, []);
 
   return (
-     <section className="relative h-screen max-h-[768px] w-full overflow-hidden flex items-center justify-start">        
+    <section className="relative h-screen max-h-[100vh] 2xl:max-h-[768px] w-full overflow-hidden flex items-center justify-start">        
         {/* BACKGROUND IMAGE WITH PARALLAX */}
         <div ref={bgRef} className="absolute inset-0">
           <Image
@@ -55,30 +55,31 @@ export default function BannerMain() {
               background:
                 "linear-gradient(-90deg, rgba(0, 0, 0, 0) 36.81%, rgba(0, 0, 0, 0.7) 70%)",
             }}
-          /></div>
+          />
+          </div>
 
         {/* CENTER TITLE + DESCRIPTION */}
         <div className="container relative h-full">          
-        <div
-            ref={titleRef}
-            className="absolute  inset-0 top-auto bottom-20 sm:bottom-[14vw] xl:bottom-[8vw]  z-10  px-6 max-w-3xl"
-          >
-            <h1 className="text-white text-h1 leading-none flex justify-start flex-wrap "><span className="font-subFont text-corinthiaHeading text-cream leading-none"> Products</span></h1>
+          {/* <div
+              ref={titleRef}
+              className="absolute  inset-0 top-auto bottom-20 sm:bottom-[14vw] xl:bottom-[5vw]  z-10  px-6 max-w-3xl"
+            >
+              <h1 className=" text-h1 leading-none text-white flex justify-start flex-wrap ">Latest <span className="font-subFont text-corinthiaHeading text-cream leading-none"> Blogs</span></h1>
 
-            {/* Breadcrumb */}
-            <div className="flex items-center gap-2 text-white/90 text-sm mt-5">
-              <span className="hover:text-white cursor-pointer ">Home</span>
-              <Image
-                src="/images/down-arrow.svg"
-                alt="arrow"
-                width={12}
-                height={12}
-                className="transform -rotate-90"
-              />
-              <span className="text-white">Products</span>
-            </div>
-          </div>      
+           
+              <div className="flex items-center gap-2 text-white/90 text-sm mt-5">
+                <span className="hover:text-white cursor-pointer ">Home</span>
+                <Image
+                  src="/images/down-arrow.svg"
+                  alt="arrow"
+                  width={12}
+                  height={12}
+                  className="transform -rotate-90"
+                />
+                <span className="text-white">Latest Blogs</span>
+              </div>
+            </div>       */}
         </div>  
-      </section>
+    </section>
   );
 }

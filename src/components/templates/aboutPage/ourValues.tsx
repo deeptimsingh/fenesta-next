@@ -71,7 +71,7 @@ export default function ValuesSection() {
 
 
   return (
-    <section ref={sectionRef} className="w-full py-12 text-center values-section relative common-padding">       
+    <section ref={sectionRef} className="w-full py-12 text-center values-section relative bg-darkBase common-padding">       
         <div className="handSvg w-full overflow-hidden ">
             <div className=" container-fluid p-0">
                 <svg width="1600" height="416" viewBox="0 0 1600 416" fill="none" className="mx-auto" aria-hidden>
@@ -87,15 +87,15 @@ export default function ValuesSection() {
             </div>
         </div>
 
-        <div className="iaction-outer relative md:absolute letters-wrap  md:top-20 md:inset-0">           
+        <div className="iaction-outer  relative md:absolute letters-wrap  md:top-20 md:inset-0">           
             <div className="container text-center">      
               <div className="headingTitle mb-6 xl:mb-6 px-0 md:px-0">
                 <div className="title-section  flex flex-col  w-full">
                   <h2 className="font-mainFont text-h2 leading-none text-theme flex justify-center flex-wrap mx-auto">Our <span className="font-subFont text-corinthiaHeading text-brown leading-none">Values</span></h2>
                 </div>
 
-                <div className="headingSubTitle flex flex-col justify-center w-full sm:max-w-md mx-auto">  
-                  <p className="mt-3 max-w-3xl">Vibrant Growth With Trust, Energised Employees & Delighted Customers</p>
+                <div className="headingSubTitle flex flex-col justify-center w-full mx-auto text-center">  
+                  <p className="mt-3">Vibrant Growth With Trust, Energised Employees & Delighted Customers</p>
                 </div>
               </div>     
             </div>
