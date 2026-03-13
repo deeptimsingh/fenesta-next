@@ -44,10 +44,20 @@ function NavItemWithMega({
   return (
     <div
       className="relative"
-      onMouseEnter={() => {
-        onHoverEnter();
-        onOpenFromHover(id);
-      }}
+    onMouseEnter={(e) => {
+  onHoverEnter();
+  onOpenFromHover(id);
+
+  const target = e.currentTarget;
+  const rect = target.getBoundingClientRect();
+
+  gsap.to(".nav-highlight", {
+    width: rect.width,
+    x: target.offsetLeft,
+    duration: 0.3,
+    ease: "power2.out"
+  });
+}}
     >
       <button
         onClick={() => (isActive ? onClose() : onOpen(id))}
@@ -267,43 +277,66 @@ export default function NavigationBar({
   onSetMobileOpen,
 }: NavigationBarProps) {
 
-
+const navRef = useRef<HTMLDivElement>(null);
+const highlightRef = useRef<HTMLDivElement>(null);
   /**
    * Mega menu: slide in from top + staggered link animation
    */
   useEffect(() => {
-    if (!mounted || !megaMenuRef.current) return;
-    const el = megaMenuRef.current;
+  if (!mounted || !megaMenuRef.current) return;
 
-    if (megaMenuOpen) {
-      gsap.set(el, { pointerEvents: "auto" });
-      const tl = gsap.timeline();
-      tl.fromTo(
-        el,
-        { y: "-100%", opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" }
-      );
-      tl.from(
-        el.querySelectorAll(".mega-menu-item"),
-        {
-          opacity: 0,
-          y: 24,
-          stagger: 0.08,
-          duration: 0.4,
-          ease: "power2.out",
-        },
-        "-=0.25"
-      );
-    } else {
-      gsap.to(el, {
-        y: "-100%",
-        opacity: 0,
-        duration: 0.6,
-        ease: "power2.in",
-        pointerEvents: "none",
-      });
-    }
-  }, [megaMenuOpen, activeMegaMenu, mounted, megaMenuRef]);
+  const el = megaMenuRef.current;
+
+  if (megaMenuOpen) {
+    gsap.set(el, { pointerEvents: "auto" });
+
+    gsap.fromTo(
+      el,
+      { y: -40, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }
+    );
+  } else {
+    gsap.to(el, {
+      y: -40,
+      opacity: 0,
+      duration: 0.35,
+      ease: "power2.in",
+      pointerEvents: "none",
+    });
+  }
+}, [megaMenuOpen, mounted]);
+useLayoutEffect(() => {
+  if (!megaMenuRef.current || !megaMenuOpen) return;
+
+  const ctx = gsap.context(() => {
+
+    const items = gsap.utils.toArray(".mega-menu-item");
+
+    gsap.set(items, { opacity: 0, y: 24 });
+
+    gsap.to(items, {
+      opacity: 1,
+      y: 0,
+      stagger: 0.08,
+      duration: 0.45,
+      ease: "power3.out"
+    });
+
+  }, megaMenuRef);
+
+  return () => ctx.revert();
+
+}, [activeMegaMenu, megaMenuOpen]);
+
+useEffect(() => {
+  if (!megaMenuOpen) {
+    gsap.to(".nav-highlight", {
+      width: 0,
+      duration: 0.25,
+      ease: "power2.out"
+    });
+  }
+}, [megaMenuOpen]);
 
   /** Mobile sub-menu: main list vs sub-view with back button */
   const [mobileMenuLevel, setMobileMenuLevel] = useState<"main" | "sub">("main");
@@ -348,11 +381,24 @@ export default function NavigationBar({
   return (
     <>
       {/* ========== DESKTOP NAV - Center of header ========== */}
-      <nav
-        className="hidden lg:flex gap-[2vw] items-center absolute left-1/2 -translate-x-1/2 z-100"
+      <nav  ref={navRef}
+        className="hidden lg:flex gap-[1.5vw] items-center absolute left-1/2 -translate-x-1/2 z-100"
         onMouseEnter={onClearHoverClose}
-        onMouseLeave={onScheduleHoverClose}
+        onMouseLeave={() => {
+    onScheduleHoverClose();
+
+    gsap.to(".nav-highlight", {
+      width: 0,
+      duration: 0.25,
+      ease: "power2.out"
+    });
+  }}
       >
+      <div
+  ref={highlightRef}
+  className="nav-highlight absolute left-0 top-1/2 -translate-y-1/2 h-9.5 w-0 bg-[#0094D9] rounded-full pointer-events-none"
+/>
+
         <NavItemWithMega
           id="who-we-are"
           label="Who we are"
@@ -405,7 +451,7 @@ export default function NavigationBar({
         ref={megaMenuRef}
         onMouseEnter={onClearHoverClose}
         onMouseLeave={onScheduleHoverClose}
-        className="fixed left-0 right-0 w-full bg-darkbase z-90 pointer-events-none opacity-0 flex flex-col"
+        className="fixed left-0 right-0 w-full bg-darkbase z-90 pointer-events-none opacity-0 flex flex-col overflow-hidden"
         style={{
           transform: "translateY(-100%)",
           top: headerHeight,
@@ -445,7 +491,7 @@ export default function NavigationBar({
       {/* ========== MOBILE DRAWER - Slide-in from right with spring overshoot ========== */}
       <div
         ref={mobileRef}
-        className={`mobile-drawer fixed top-0 right-0 h-screen  w-[85%] max-w-sm bg-white dark:bg-gray-900 text-black dark:text-white z-[100] overflow-hidden shadow-xl flex flex-col ${mobileOpen ? "mobile-drawer-open" : ""}`}
+        className={`mobile-drawer fixed top-0 right-0 h-screen  w-[85%] max-w-sm bg-white dark:bg-gray-900 text-black dark:text-white z-100 overflow-hidden shadow-xl flex flex-col ${mobileOpen ? "mobile-drawer-open" : ""}`}
       >
         <div className="relative flex-1 min-h-0 overflow-hidden">
           {/* Main level - slides left when going to sub */}
@@ -529,7 +575,7 @@ function MegaMenuOurCollection({
   return (
     <>
       <div className="flex-1 bg-theme overflow-y-auto">
-        <div className="container-fluid mx-[20px] sm:mx-[5%] 2xl:mx-[10%] py-10 px-8 flex flex-col lg:flex-row gap-12 lg:gap-16">
+        <div className="container-fluid mx-5 sm:mx-[5%] 2xl:mx-[10%] py-10 px-8 flex flex-col lg:flex-row gap-12 lg:gap-16">
           <div className="flex-1 w-[20vw] flex-wrap shrink-0">
             <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-6">
               By Room
@@ -701,7 +747,7 @@ function MegaMenuOurCollection({
             </div>
           </div>           
 
-          <div className="hidden lg:flex w-[40vw] max-w-xl shrink-0 p-6 gap-4">
+          <div className="hidden lg:flex w-[40vw] max-w-xl shrink-0 p-6 gap-4 max-h-125 h-125">
             <div className="mega-menu-item relative flex-1 aspect-3/2 rounded-xl overflow-hidden shadow-lg max-w-[30%] h-full">
               <Image
                 src="/images/nav-img1.webp"
@@ -742,7 +788,34 @@ function AccordionSection({
   onToggle,
   content,
 }: AccordionSectionProps) {
+
   const isOpen = openAccordion === id;
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!contentRef.current) return;
+
+    if (isOpen) {
+      gsap.fromTo(
+        contentRef.current,
+        { height: 0, opacity: 0 },
+        {
+          height: "auto",
+          opacity: 1,
+          duration: 0.35,
+          ease: "power2.out",
+        }
+      );
+    } else {
+      gsap.to(contentRef.current, {
+        height: 0,
+        opacity: 0,
+        duration: 0.25,
+        ease: "power2.in",
+      });
+    }
+  }, [isOpen]);
+
   return (
     <div className="mega-menu-item">
       <button
@@ -753,7 +826,13 @@ function AccordionSection({
         <span>{label}</span>
         <span className="text-white/70 text-xl">{isOpen ? "−" : "+"}</span>
       </button>
-      {isOpen && content}
+
+      <div
+        ref={contentRef}
+        style={{ height: 0, overflow: "hidden" }}
+      >
+        {content}
+      </div>
     </div>
   );
 }
@@ -783,7 +862,7 @@ function MegaMenuWhoWeAre() {
           </ul>
         </div>
       
-        <div className="hidden lg:flex w-[40vw] max-w-xl shrink-0 p-6 gap-4 min-h-[50vh]">
+        <div className="hidden lg:flex w-[40vw] max-w-xl shrink-0 p-6 gap-4 max-h-125 h-125">
             <div className="mega-menu-item relative flex-1 aspect-3/2 rounded-xl overflow-hidden shadow-lg max-w-[30%] h-full">
               <Image
                 src="/images/nav-img1.webp"
@@ -823,7 +902,7 @@ function MegaMenuFenestaDifference() {
           </ul>
         </div>
        
-        <div className="hidden lg:flex w-[40vw] max-w-xl shrink-0 p-6 gap-4 min-h-[50vh]">
+        <div className="hidden lg:flex w-[40vw] max-w-xl shrink-0 p-6 gap-4 max-h-125 h-125">
             <div className="mega-menu-item relative flex-1 aspect-3/2 rounded-xl overflow-hidden shadow-lg max-w-[30%] h-full">
               <Image
                 src="/images/nav-img1.webp"
@@ -863,7 +942,7 @@ function MegaMenuProjectsStories() {
           </ul>
         </div>
       
-        <div className="hidden lg:flex w-[40vw] max-w-xl shrink-0 p-6 gap-4 min-h-[50vh]">
+        <div className="hidden lg:flex w-[40vw] max-w-xl shrink-0 p-6 gap-4 max-h-125 h-125">
             <div className="mega-menu-item relative flex-1 aspect-3/2 rounded-xl overflow-hidden shadow-lg max-w-[30%] h-full">
               <Image
                 src="/images/nav-img1.webp"
@@ -903,7 +982,7 @@ function MegaMenuContactUs() {
           </ul>
         </div>
         
-        <div className="hidden lg:flex w-[40vw] max-w-xl shrink-0 p-6 gap-4 min-h-[50vh]">
+        <div className="hidden lg:flex w-[40vw] max-w-xl shrink-0 p-6 gap-4 max-h-125 h-125">
             <div className="mega-menu-item relative flex-1 aspect-3/2 rounded-xl overflow-hidden shadow-lg max-w-[30%] h-full">
               <Image
                 src="/images/nav-img1.webp"
