@@ -132,12 +132,17 @@ export default function Header() {
   };
 
   /** Open a specific mega menu by id */
-  const openMegaMenu = (id: Exclude<MegaMenuId, null>) => {
-    clearHoverCloseTimeout();
-    setActiveMegaMenu(id);
-    setMegaMenuOpen(true);
-  };
+const openMegaMenu = (id: Exclude<MegaMenuId, null>) => {
+  clearHoverCloseTimeout();
 
+  // open panel only once
+  if (!megaMenuOpen) {
+    setMegaMenuOpen(true);
+  }
+
+  // switch content only
+  setActiveMegaMenu(id);
+};
   /** Open mega menu from hover only when ready (avoids accidental open when header first appears) */
   const openMegaMenuFromHover = (id: Exclude<MegaMenuId, null>) => {
     if (hoverReady) openMegaMenu(id);
@@ -174,7 +179,9 @@ export default function Header() {
           megaMenuOpen ? "bg-theme " : "bg-theme/80"
         } ${pageLoaded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
       >
-        <div className="container-fluid mx-0 sm:mx-0 2xl:mx-[10%] md:h-16 flex items-center  justify-between relative">
+        <div className="container-fluid mx-0 sm:mx-0 2xl:mx-[10%] md:h-16 flex items-center justify-between relative"
+  onMouseEnter={clearHoverCloseTimeout}
+  onMouseLeave={scheduleHoverClose}>
           {/* Logo - left */}
           <Link href="/" className="font-bold text-lg dark:text-white z-10">
             <Image
@@ -187,6 +194,7 @@ export default function Header() {
           </Link>
 
           {/* Navigation - center (desktop) */}
+        
           <NavigationBar
             megaMenuOpen={megaMenuOpen}
             activeMegaMenu={activeMegaMenu}
@@ -204,6 +212,7 @@ export default function Header() {
             onSetOpenAccordion={setOpenAccordion}
             onSetMobileOpen={setMobileOpen}
           />
+         
 
           {/* Right side - close mega menu, theme, search (keep-open zone when menu is open) */}
           <div
