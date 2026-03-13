@@ -19,11 +19,17 @@ export const initCardReveal = ({
   if (!container) return;
 
   const ctx = gsap.context(() => {
-    const cards = gsap.utils.toArray<HTMLElement>(cardSelector);
+    const allCards = Array.from(container.querySelectorAll<HTMLElement>(cardSelector));
+    // Only process visible cards (hidden/display:none breaks ScrollTrigger) and not yet inited
+    const cards = allCards.filter(
+      (card) => card.offsetParent !== null && !card.dataset.revealInited
+    );
 
     cards.forEach((card) => {
       const image = card.querySelector<HTMLElement>(imageSelector);
       if (!image) return;
+
+      card.dataset.revealInited = "true";
 
       // Reset initial state
       gsap.set(card, { opacity: 0, y: 100 });
@@ -48,6 +54,8 @@ export const initCardReveal = ({
         0
       );
     });
+
+    ScrollTrigger.refresh();
   }, container);
 
   return ctx;

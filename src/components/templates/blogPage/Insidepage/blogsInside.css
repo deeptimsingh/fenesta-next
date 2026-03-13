@@ -24,13 +24,51 @@
 }
 
 
-.blog-left-side{}
+.blog-left-side .blog-content{ position: relative;}
+.blog-left-side .blog-content::before{ content: ""; z-index: -1;
+    height: 30vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 -40px 20px 10px #0000001a;} 
+.blog-left-side .blog-content h1{ font-size:32px; line-height:1.25; margin-bottom:20px;}
+.blog-left-side .blog-content p{ margin-bottom: 20px;}
+.blog-left-side .blog-content h3{ font-size:24px; margin-bottom:20px; line-height: 1.25;}
+
+
+
+/**STICKY**/
+@media all and (min-width: 1024px) {
+.dynamic-sticky {
+  position: sticky;
+  top: var(--header-offset, 100px); /* fallback */
+}
+
+.tab-sticky {
+  position: sticky;
+  top: var(--header-offset, 100px); /* fallback if JS fails */
+  z-index: 40; /* ensures it stays above page content */
+  background: #F4F5F7; /* same background used in tabs */
+  justify-content: space-evenly;
+}
+
+.dark .tab-sticky{ background: #121212;}
+.dark .tab-sticky button{ color: #fff;}
+}
+
+
+.dark .breadcrumbs *{ color: #fff;}
+
+.archives-list-item:last-child {border-bottom: none; padding-bottom:0;} 
+.archives-list ul li a{ background-color:#1212120a; transition: color 0.3s;}
+.archives-list ul li a:hover{ background-color:#3faee2; color: #fff;}
 
 
 @media all and (max-width:767px) {
   .left-side,
-  .right-side {
-    max-width: 100% !important; flex: 1 1 100% !important;
-  }
+  .right-side{max-width: 100% !important; flex: 1 1 100% !important;}
+
+  .images-box-item { flex: 1 1 100% !important; }
 }
 

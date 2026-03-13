@@ -37,7 +37,7 @@ export default function BannerMain() {
   }, []);
 
   return (
-     <section className="relative h-screen max-h-[768px] w-full overflow-hidden flex items-center justify-start">        
+     <section className="inside-page-banner relative h-screen max-h-192 w-full overflow-hidden flex items-center justify-start ">        
         {/* BACKGROUND IMAGE WITH PARALLAX */}
         <div ref={bgRef} className="absolute inset-0">
           <Image
@@ -58,12 +58,9 @@ export default function BannerMain() {
           /></div>
 
         {/* CENTER TITLE + DESCRIPTION */}
-        <div className="container relative h-full">          
-        <div
-            ref={titleRef}
-            className="absolute  inset-0 top-auto bottom-20 sm:bottom-[14vw] xl:bottom-[8vw]  z-10  px-6 max-w-3xl"
-          >
-            <h1 className="text-white text-h1 leading-none flex justify-start flex-wrap ">About <span className="font-subFont text-corinthiaHeading text-cream leading-none"> Us</span></h1>
+        <div className="banner-caption container relative h-full ">          
+          <div ref={titleRef} className="absolute inset-0 top-auto bottom-20 sm:bottom-[14vw] xl:bottom-[8vw]  z-10  px-6 max-w-3xl">
+            <h1 className="text-white text-h1 leading-none flex justify-start flex-wrap gap-3">About <span className="font-subFont text-corinthiaHeading text-cream leading-none"> Us</span></h1>
 
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-white/90 text-sm mt-5">

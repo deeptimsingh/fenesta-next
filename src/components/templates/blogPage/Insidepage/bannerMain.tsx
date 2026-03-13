@@ -37,7 +37,7 @@ export default function BannerMain() {
   }, []);
 
   return (
-    <section className="relative h-screen max-h-[100vh] 2xl:max-h-[768px] w-full overflow-hidden flex items-center justify-start">        
+    <section className="relative h-screen max-h-[140vw] 2xl:max-h-[768px] w-full overflow-hidden flex items-center justify-start">        
         {/* BACKGROUND IMAGE WITH PARALLAX */}
         <div ref={bgRef} className="absolute inset-0">
           <Image

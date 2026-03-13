@@ -120,7 +120,7 @@
 /* sm ≥576px */
 @media (min-width: 576px) {
   .container {
-    max-width: 540px;
+    max-width: 100vw;
   }
 }
 
@@ -233,7 +233,7 @@
 
 /* Footer spacing - footer appears when main ends */
 main {padding-bottom: 0;}
-.text-corinthiaHeading{ line-height: 0.65;}
+.text-corinthiaHeading{ line-height:0.65 !important;}
 
 
 
@@ -329,10 +329,9 @@ h1, h2,h3,h4, h5, h6{font-weight: 400;}
 }
 
 
-
   .dark .bg-brown{background: var(--color-brown);}
   .dark .bg-black{background: var(--color-black);}
-  .dark .bg-white{background: var(--bg-lightdarkbase);}
+  .dark .bg-white{background: #1a1a1a;}
   .dark .bg-white .text-theme{ color: var(--color-cream);}
   .dark .bg-grayLight{background: var(--color-grayLight);}
   .dark .bg-blueLight{background: var(--color-blueLight);}
@@ -355,6 +354,7 @@ h1, h2,h3,h4, h5, h6{font-weight: 400;}
 
 
   .dark .first-intro-line{color: var(--color-white);}
+  .dark .intro-section .content-inside{background: #212121;}
 
   /**======================================
 DARK MODE STYLES
