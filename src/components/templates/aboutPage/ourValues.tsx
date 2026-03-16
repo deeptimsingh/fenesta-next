@@ -6,11 +6,13 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
+import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 
 gsap.registerPlugin(ScrollTrigger, DrawSVGPlugin);
 
 export default function ValuesSection() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
+  const { headingRef } = useHeadingAnimation({ sectionRef });
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -90,7 +92,7 @@ export default function ValuesSection() {
         <div className="iaction-outer  relative md:absolute letters-wrap  md:top-20 md:inset-0">           
             <div className="container text-center">      
               <div className="headingTitle mb-6 xl:mb-6 px-0 md:px-0">
-                <div className="title-section  flex flex-col  w-full">
+                <div ref={headingRef} className="title-section  flex flex-col  w-full">
                   <h2 className="font-mainFont text-h2 leading-none text-theme flex justify-center flex-wrap mx-auto">Our <span className="font-subFont text-corinthiaHeading text-brown leading-none">Values</span></h2>
                 </div>
 

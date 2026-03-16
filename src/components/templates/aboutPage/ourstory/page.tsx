@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Image from "next/image";
+import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 
 import BannerMain from "@/components/templates/aboutPage/ourstory/bannerMain";
 import JourneyTimeline from "@/components/templates/aboutPage/ourstory/ourJourney";
@@ -30,6 +31,7 @@ export default function About() {
 
   const missionDotRef = useRef<HTMLDivElement | null>(null);
   const visionDotRef = useRef<HTMLDivElement | null>(null);
+  const { headingRef: missionVisionHeadingRef, sectionRef: missionVisionSectionRef } = useHeadingAnimation();
 
   useEffect(() => {
     /** ==========================================
@@ -149,9 +151,9 @@ if (visionLineRef.current && visionRef.current) {
       </section>
 
       {/* MISSION & VISION */}
-      <section className="w-full bg-white  mission-vision relative mt-4 common-padding overflow-hidden">
+      <section ref={missionVisionSectionRef} className="w-full bg-white  mission-vision relative mt-4 common-padding overflow-hidden">
         <div className="container-fluid px-4 md:px-0!">
-          <div className="max-w-lg 2xl:max-w-xl mx-auto">
+          <div ref={missionVisionHeadingRef} className="max-w-lg 2xl:max-w-xl mx-auto">
             {/* LEFT - MISSION */}
             <div ref={missionRef} className="flex flex-col items-start text-center md:text-left relative mission-outer">
               <div className="missionBox md:absolute md:-left-[30vw] md:-top-[3.5vw]  max-w-none z-20 mx-auto md:mx-0">

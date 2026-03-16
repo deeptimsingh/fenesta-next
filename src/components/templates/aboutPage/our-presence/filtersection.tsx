@@ -310,7 +310,7 @@ export default function OfficeFilter() {
       {/* ----------------------------------------------------------------------- */}
       {/* Filter bar: Office + Location dropdowns, Submit, Clear (responsive)     */}
       {/* ----------------------------------------------------------------------- */}
-      <div className="filter-section w-full max-w-[960px] mt-5 mx-auto px-4 sm:px-0 relative z-10">
+      <div className="filter-section w-full max-w-[960px] mt-5 mx-auto  relative z-10">
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-stretch sm:items-end flex-wrap">
 
           <CustomSelect

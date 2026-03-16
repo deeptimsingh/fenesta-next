@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Image from "next/image";
 
+import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 import BannerMain from "@/components/templates/aboutPage/bannerMain";
 import JourneyTimeline from "@/components/templates/aboutPage/ourJourney";
 import OurValues from "@/components/templates/aboutPage/ourValues";
@@ -16,6 +17,8 @@ gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 export default function About() {
   const imageRefs = useRef<HTMLDivElement[]>([]);
+  const pageWrapRef = useRef<HTMLElement | null>(null);
+
   const addToRefs = (el: HTMLDivElement | null) => {
     if (el && !imageRefs.current.includes(el)) {
       imageRefs.current.push(el);
@@ -30,6 +33,28 @@ export default function About() {
 
   const missionDotRef = useRef<HTMLDivElement | null>(null);
   const visionDotRef = useRef<HTMLDivElement | null>(null);
+
+  const { headingRef: missionVisionHeadingRef, sectionRef: missionVisionSectionRef } = useHeadingAnimation();
+
+  // Load sequence: scroll to top; header shows first (no hide), then banner → caption → rightbar
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+
+    const t = setTimeout(() => {
+      const rightbar = document.getElementById("right-sticky-bar");
+      if (rightbar) {
+        gsap.set(rightbar, { opacity: 0 });
+        gsap.to(rightbar, {
+          opacity: 1,
+          duration: 0.5,
+          delay: 2.5,
+          ease: "power2.out",
+        });
+      }
+    }, 0);
+
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     /** ==========================================
@@ -119,7 +144,7 @@ if (visionLineRef.current && visionRef.current) {
   }, []);
 
   return (
-    <section className="about-page w-full">
+    <section ref={pageWrapRef} className="about-page w-full">
       {/*Banner Main*/}
       <BannerMain />
 
@@ -149,9 +174,9 @@ if (visionLineRef.current && visionRef.current) {
       </section>
 
       {/* MISSION & VISION */}
-      <section className="w-full bg-white  mission-vision relative mt-4 common-padding overflow-hidden">
+      <section ref={missionVisionSectionRef} className="w-full bg-white  mission-vision relative mt-4 common-padding overflow-hidden">
         <div className="container-fluid px-4 md:px-0!">
-          <div className="max-w-lg 2xl:max-w-xl mx-auto">
+          <div ref={missionVisionHeadingRef} className="max-w-lg 2xl:max-w-xl mx-auto">
             {/* LEFT - MISSION */}
             <div ref={missionRef} className="flex flex-col items-start text-center md:text-left relative mission-outer">
               <div className="missionBox md:absolute md:-left-[30vw] md:-top-[3.5vw]  max-w-none z-20 mx-auto md:mx-0">

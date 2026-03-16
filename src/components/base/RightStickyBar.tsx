@@ -91,6 +91,7 @@ export default function RightStickyBar() {
         </button>
       )}
       <div 
+        id="right-sticky-bar"
         className={`group fixed right-0 z-80 rightsidebar transition-all duration-500 ease-in-out top-1/2 -translate-y-1/2 
           ${isMobile ? " top-1/2 -translate-y-1/2 h-auto w-full max-w-[90px]" : ""}
           ${!isMobile && scrolled ? "h-auto top-1/2 -translate-y-1/2 group-hover:h-auto group-hover:top-1/2 group-hover:-translate-y-1/2" : ""}

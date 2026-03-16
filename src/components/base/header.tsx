@@ -174,6 +174,7 @@ const openMegaMenu = (id: Exclude<MegaMenuId, null>) => {
     <>
       {/* ========== HEADER BAR ========== */}
       <header
+        id="site-header"
         ref={headerRef}
         className={`fixed top-0 left-0 w-full z-100 shadow py-5 transition-all duration-500 ${
           megaMenuOpen ? "bg-theme " : "bg-theme/80"

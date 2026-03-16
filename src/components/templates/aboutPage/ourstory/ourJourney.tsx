@@ -3,6 +3,7 @@
 
 import { useRef, useState, useEffect, useCallback } from "react";
 import gsap from "gsap";
+import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 
 /* ===== CONFIG ===== */
 const TOTAL = 12;
@@ -13,6 +14,7 @@ export default function JourneySection() {
   const circleRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const { headingRef, sectionRef: journeySectionRef } = useHeadingAnimation();
 
   
 
@@ -190,7 +192,7 @@ export default function JourneySection() {
   };
 
   return (
-    <section className="relative w-full min-h-screen bg-[#0094D9] flex items-center overflow-hidden common-padding our-journey-outer">
+    <section ref={journeySectionRef} className="relative w-full min-h-screen bg-[#0094D9] flex items-center overflow-hidden common-padding our-journey-outer">
       {/* Left Background */}
       <div className="absolute -left-[20vw] top-[-10vw] bottom-0 w-full h-[130vh] pointer-events-none z-0 our-journey-left" aria-hidden >
         <img
@@ -200,7 +202,7 @@ export default function JourneySection() {
       </div>
 
       {/* Main Content */}
-      <div className="flex w-full flex-col lg:flex-row items-center gap-10 relative z-10 our-journey-right">
+      <div ref={headingRef} className="flex w-full flex-col lg:flex-row items-center gap-10 relative z-10 our-journey-right">
         <div className="headingTitle mb-6 xl:mb-6 px-0 md:px-0 flex  md:hidden">
               <div className="title-section  md:flex flex-col w-full">
                 <h2 className="font-mainFont text-h2 leading-none text-white flex justify-center flex-wrap mx-auto">Our  <span className="font-subFont text-corinthiaHeading text-cream leading-none">Journey</span></h2>

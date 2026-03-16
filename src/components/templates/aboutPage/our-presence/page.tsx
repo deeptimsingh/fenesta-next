@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 
 import BannerMain from "@/components/templates/aboutPage/our-presence/bannerMain";
 import FilterSection from "@/components/templates/aboutPage/our-presence/filtersection";
@@ -14,6 +15,7 @@ import "@/components/templates/common.css";
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 export default function About() {
+  const { headingRef, sectionRef: headingSectionRef } = useHeadingAnimation();
   const imageRefs = useRef<HTMLDivElement[]>([]);
   const addToRefs = (el: HTMLDivElement | null) => {
     if (el && !imageRefs.current.includes(el)) {
@@ -68,11 +70,11 @@ export default function About() {
       <BannerMain />
 
       {/* INTRO SECTION */}
-      <section className="intro-section relative  content-over-banner">
+      <section ref={headingSectionRef} className="intro-section relative  content-over-banner">
         <div className="container">          
             <div className="content-inside bg-white rounded-tl-2xl rounded-tr-2xl shadow-[0px_-156px_35.3px_0px_#00000017]">         
               <div className="headingTitle px-0 md:px-0 text-center">
-                  <div className="title-section  flex flex-col  w-full">
+                  <div ref={headingRef} className="title-section  flex flex-col  w-full">
                     <h2 className="font-mainFont text-h2 leading-none text-theme flex justify-center flex-wrap mx-auto">All <span className="font-subFont text-corinthiaHeading text-brown leading-none">Office</span></h2>
                   </div>
               </div>   

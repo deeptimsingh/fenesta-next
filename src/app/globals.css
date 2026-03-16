@@ -396,3 +396,21 @@ DARK MODE STYLES
     font-size: 18px;
   }
 }
+
+
+
+
+@media screen and (min-width: 1025px) and (-webkit-min-device-pixel-ratio: 1.25), screen and (min-width: 1025px) and (min-resolution: 120dpi) { 
+    .container{max-width: 70vw;}
+}
+
+
+ @media screen and (min-width: 1025px) and (-webkit-min-device-pixel-ratio:1.5),screen and (min-width:1025px) and (min-resolution:144dpi) {
+  .container{max-width: 70vw;}
+ }
+
+
+ @media screen and (min-width: 1440px) and (max-width: 1780px) {
+  .container { max-width: 70vw;}
+}
+

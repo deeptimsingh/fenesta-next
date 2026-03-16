@@ -1,45 +1,20 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
+import { useInsidePageBannerAnimation, getInsidePageBannerInitialStyles } from "@/hooks/useInsidePageBannerAnimation";
 
-gsap.registerPlugin(ScrollTrigger);
+const initial = getInsidePageBannerInitialStyles();
 
 export default function BannerMain() {
-  const bgRef = useRef(null);
-  const titleRef = useRef(null);
+  const bgRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (!bgRef.current) return;
-
-    gsap.to(bgRef.current, {
-      yPercent: 20,
-      ease: "none",
-      scrollTrigger: {
-        trigger: bgRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-      },
-    });
-
-       gsap.to(titleRef.current, {
-      opacity: 0.5,
-      y: -40,
-      scrollTrigger: {
-        trigger: bgRef.current,
-        start: "top top",
-        end: "40% top",
-        scrub: true,
-      },
-    });
-  }, []);
+  useInsidePageBannerAnimation(bgRef, titleRef);
 
   return (
      <section className="relative h-screen max-h-[160vw] 2xl:max-h-[768px] w-full overflow-hidden flex items-center justify-start">      
         {/* BACKGROUND IMAGE WITH PARALLAX */}
-        <div ref={bgRef} className="absolute inset-0">
+        <div ref={bgRef} className="absolute inset-0" style={initial.bgStyle}>
           <Image
             src="/images/banner/awards-banner.webp"
             alt="Hero Background"
@@ -62,6 +37,7 @@ export default function BannerMain() {
         <div
             ref={titleRef}
             className="absolute  inset-0 top-auto bottom-20 sm:bottom-[14vw] xl:bottom-[8vw]  z-10  px-6 max-w-3xl"
+            style={initial.captionStyle}
           >
             <h1 className="text-white text-h1 leading-none flex justify-start flex-wrap ">Awards &  <span className="font-subFont text-corinthiaHeading text-cream leading-none"> Accreditations</span></h1>
 

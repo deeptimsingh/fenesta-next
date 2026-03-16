@@ -10,8 +10,11 @@ import "swiper/css";
 import { useMediaQuery } from "react-responsive";
 import { useRef, useState, useLayoutEffect, useEffect } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import FenestaButton from "@/components/base/FenestaButton";
+
+gsap.registerPlugin(ScrollTrigger);
 import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 
 interface ClientBreakpoint {
@@ -40,6 +43,8 @@ export default function ClientStories() {
   }, []);
 
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const clientScrollWrapRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const desktopSectionRef = useRef<HTMLDivElement | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
   const modalPanelRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
@@ -160,6 +165,71 @@ export default function ClientStories() {
       });
     });
   }, []);
+
+  /* ===============================
+     DESKTOP ONLY: client items scroll reveal – start offset, come to rest on scroll, offset again on scroll back
+  =============================== */
+  useEffect(() => {
+    if (!mounted) return;
+    const isDesktop = () => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches;
+    if (!isDesktop()) return;
+
+    const setup = () => {
+      const section = desktopSectionRef.current;
+      const wrappers = clientScrollWrapRefs.current.filter(Boolean) as HTMLDivElement[];
+      if (!section || wrappers.length === 0) return null;
+
+      const triggers: ScrollTrigger[] = [];
+      const offsetY = 60;
+      const offsetX = 120; // px off-screen for left/right entry
+      const scrubDuration = 1.2;
+
+      wrappers.forEach((el, i) => {
+        const style = getClientStyle(clients[i]);
+        const offsetXNum = parseFloat(style.offsetX);
+        const startX = offsetXNum < 0 ? -offsetX : offsetXNum > 0 ? offsetX : 0;
+
+        gsap.set(el, {
+          x: startX,
+          y: offsetY,
+          opacity: 0.5,
+          force3D: true,
+        });
+        const st = ScrollTrigger.create({
+          trigger: section,
+          start: "top 88%",
+          end: "top 28%",
+          scrub: scrubDuration,
+          invalidateOnRefresh: true,
+          animation: gsap.to(el, {
+            x: 0,
+            y: 0,
+            opacity: 1,
+            ease: "none",
+            force3D: true,
+          }),
+        });
+        triggers.push(st);
+      });
+
+      ScrollTrigger.refresh();
+      return triggers;
+    };
+
+    const triggers = setup();
+    if (!triggers) return;
+
+    const onRefresh = () => ScrollTrigger.refresh();
+    window.addEventListener("resize", onRefresh);
+
+    return () => {
+      window.removeEventListener("resize", onRefresh);
+      triggers.forEach((st) => st.kill());
+      clientScrollWrapRefs.current.forEach((el) => {
+        if (el) gsap.set(el, { clearProps: "x,y,opacity" });
+      });
+    };
+  }, [mounted]);
 
   /* ===============================
      SAFE VIDEO PLAY
@@ -293,27 +363,37 @@ export default function ClientStories() {
 
        
 
-        {/* Desktop/Tablet View - Hidden on mobile */}
-        <div className="hidden md:flex relative w-full h-full items-center justify-center" suppressHydrationWarning>
+        {/* Desktop/Tablet View - Hidden on mobile; scroll reveal on desktop only */}
+        <div
+          ref={desktopSectionRef}
+          className="hidden md:flex relative w-full h-full items-center justify-center min-h-[480px]"
+          suppressHydrationWarning
+        >
           {clients.map((client, i) => {
             const style = getClientStyle(client);
             return (
-            <div
-              key={client.id}
-              ref={(el) => {imageRefs.current[i] = el}}
-              className="absolute cursor-pointer z-50"
-              style={{ transform: `translate(${style.offsetX}, ${style.offsetY})` }}
-              onClick={() => openModal(client)}
-            >
-              {/* ✅ PLAY ICON RESTORED */}
-              <div className="relative">
-                <Image src={client.img} alt={client.name} width={style.size} height={style.size} className="rounded-full object-cover" />
-                <div className={`absolute left-[65%] top-[75%] bg-[#00000073] rounded-full flex items-center justify-center pointer-events-none ${style.size < 120 ? "w-10 h-10" : style.size < 160 ? "w-12 h-12" : "w-14 h-14"}`}>
-                  <Image src="/images/clients/play-icon.webp" alt="Play" width={style.size < 120 ? 14 : style.size < 160 ? 16 : 20} height={style.size < 120 ? 14 : style.size < 160 ? 16 : 20} />
+              <div
+                key={client.id}
+                className="absolute z-50"
+                style={{ transform: `translate(${style.offsetX}, ${style.offsetY})` }}
+              >
+                <div
+                  ref={(el) => {
+                    clientScrollWrapRefs.current[i] = el;
+                  }}
+                  className="cursor-pointer client-items"
+                  onClick={() => openModal(client)}
+                >
+                  {/* Scroll-reveal animates this wrapper (y + opacity); floating animates the inner ref */}
+                  <div ref={(el) => { imageRefs.current[i] = el; }} className="relative">
+                    <Image src={client.img} alt={client.name} width={style.size} height={style.size} className="rounded-full object-cover" />
+                    <div className={`absolute left-[65%] top-[75%] bg-[#00000073] rounded-full flex items-center justify-center pointer-events-none ${style.size < 120 ? "w-10 h-10" : style.size < 160 ? "w-12 h-12" : "w-14 h-14"}`}>
+                      <Image src="/images/clients/play-icon.webp" alt="Play" width={style.size < 120 ? 14 : style.size < 160 ? 16 : 20} height={style.size < 120 ? 14 : style.size < 160 ? 16 : 20} />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
+            );
           })}
         </div>
 

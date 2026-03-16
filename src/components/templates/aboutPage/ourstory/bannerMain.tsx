@@ -37,38 +37,27 @@ export default function BannerMain() {
   }, []);
 
   return (
-     <section className=" relative h-screen max-h-192 w-full overflow-hidden flex items-center justify-start">        
+     <section className="relative h-screen max-h-140  md:max-h-192 w-full overflow-hidden flex items-center justify-start inside-page-banner">        
         {/* BACKGROUND IMAGE WITH PARALLAX */}
         <div ref={bgRef} className="absolute inset-0">
-          <Image
-            src="/images/banner/blog-bg.webp"
-            alt="Hero Background"
-            fill
-            className="object-cover"
-            priority
-          />
+          <Image src="/images/banner/presence-bg.webp" alt="Hero Background"  fill className="object-cover" priority />
 
           {/* ✨ GRADIENT OVERLAY — YOUR CUSTOM STYLE */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(-90deg, rgba(0, 0, 0, 0) 36.81%, rgba(0, 0, 0, 0.7) 70%)",
-            }}
+          <div className="absolute inset-0 pointer-events-none"  style={{background: "linear-gradient(-90deg, rgba(0, 0, 0, 0) 36.81%, rgba(0, 0, 0, 0.7) 70%)",}}
           /></div>
 
         {/* CENTER TITLE + DESCRIPTION */}
         <div className="container relative h-full">          
-          <div ref={titleRef} className="absolute  inset-0 top-auto bottom-20 sm:bottom-[14vw] xl:bottom-[8vw]  z-10  px-6 max-w-3xl">
-              <h1 className="text-white text-h1 leading-normal flex justify-start flex-wrap ">Works of Art Made <span className="font-subFont text-corinthiaHeading text-cream leading-none"> by Science</span></h1>
+          <div ref={titleRef} className="absolute inset-0 top-auto bottom-20 sm:bottom-[14vw] xl:bottom-[8vw] z-10 max-w-3xl px-4  md:px-0">
+            <h1 className="text-white text-h1 leading-none flex justify-start flex-wrap gap-2">Works of Art Made <span className="font-subFont text-corinthiaHeading text-cream leading-none"> by Science</span></h1>
 
-              {/* Breadcrumb */}
-              <div className="flex items-center gap-2 text-white/90 text-sm mt-5">
-                <span className="hover:text-white cursor-pointer ">Home</span>
-                <Image src="/images/down-arrow.svg" alt="arrow" width={12} height={12} className="transform -rotate-90"   />
-                <span className="text-white">Our Story</span>
-              </div>
-            </div>      
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 text-white/90 text-sm mt-10">
+              <span className="hover:text-white cursor-pointer ">Home</span>
+              <Image src="/images/down-arrow.svg" alt="arrow"  width={12} height={12} className="transform -rotate-90" />
+              <span className="text-white">Our Presence</span>
+            </div>
+          </div>      
         </div>
       </section>
   );
