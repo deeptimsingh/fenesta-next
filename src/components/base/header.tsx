@@ -180,9 +180,7 @@ const openMegaMenu = (id: Exclude<MegaMenuId, null>) => {
           megaMenuOpen ? "bg-theme " : "bg-theme/80"
         } ${pageLoaded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
       >
-        <div className="container-fluid mx-0 sm:mx-0 2xl:mx-[10%] md:h-16 flex items-center justify-between relative"
-  onMouseEnter={clearHoverCloseTimeout}
-  onMouseLeave={scheduleHoverClose}>
+        <div className="container-fluid mx-0 sm:mx-0 2xl:mx-[10%] md:h-16 flex items-center justify-between relative"  onMouseEnter={clearHoverCloseTimeout} onMouseLeave={scheduleHoverClose}>
           {/* Logo - left */}
           <Link href="/" className="font-bold text-lg dark:text-white z-10">
             <Image

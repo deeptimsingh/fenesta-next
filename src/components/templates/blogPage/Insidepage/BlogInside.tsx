@@ -1,18 +1,44 @@
 "use client";
+import Image from "next/image";
+import Link from "next/link";
 
 import {useEffect, useState, useRef } from "react";
 
-import BannerMain from "@/components/templates/blogPage/Insidepage/bannerMain";
-import ClientStories from "@/app/home/ClientStories";
+import "@/components/templates/common.css";
 import "@/components/templates/blogPage/Insidepage/blogsInside.css";
-import Image from "next/image";
-import Link from "next/link";
+
+import ClientStories from "@/app/home/ClientStories";
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+import { useInsidePageBannerAnimation, getInsidePageBannerInitialStyles } from "@/hooks/useInsidePageBannerAnimation";
+const initial = getInsidePageBannerInitialStyles();
 
-export default function BlogPage() {
+type BannerMainProps = {
+  animationReady?: boolean;
+  title?: string;
+  accentWordIndex?: number;
+};
+
+
+export default function BannerMain({
+  animationReady = true,
+  title = "Top Window & Door Design Trends for Modern Homes in 2026",
+  accentWordIndex,
+}: BannerMainProps) {
+  const bgRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLDivElement | null>(null);
+  const words = title.trim().split(/\s+/).filter(Boolean);
+  const effectiveAccentIndex =
+    typeof accentWordIndex === "number"
+      ? Math.min(Math.max(accentWordIndex, 0), Math.max(words.length - 1, 0))
+      : Math.max(words.length - 1, 0);
+
+  useInsidePageBannerAnimation(bgRef, titleRef, {
+    startWhenReady: animationReady,
+  });
+
  /**==============================
   Accordion 
   ==============================**/
@@ -72,258 +98,334 @@ export default function BlogPage() {
 
   return (
     <>  
-    <section  className="inside-page w-full">
-      <BannerMain />           
-       
-      <section className="two-col-outer mx-auto w-full common-padding-md">
-        <div className="container mx-auto">
-          <div className="two-col flex flex-wrap gap-5">
-            {/* Left SIDEBAR */}
-            <div className="left-side blog-left-side  flex-1 max-w-[calc(100%-315px)] -mt-[25vw] lg:mt-[-10vw] z-20 ">               
-              <div className="blog-content bg-white bg-darkbase p-4 2xl:p-6 rounded-2xl h-full ">
-                {/*Bread Crumbs */}
-                <div className="flex items-center gap-2 text-theme/90 text-sm mb-5 breadcrumbs">
-                    <span className="hover:text-white cursor-pointer ">Home</span>
-                    <Image
-                      src="/images/down-arrow.svg"
-                      alt="arrow"
-                      width={12}
-                      height={12}
-                      className="transform -rotate-90"
-                    />
-                    <span className="text-theme">Latest Blogs</span>
-                </div>                
+    <section  className="inside-page w-full mt-16">
 
-                <h1>uPVC Bathroom Windows: The Best Rust-Free Choice for the Monsoon Season</h1>
+      {/* Breadcrumb Section */}
+      <section className="common-padding-md">
+         <div className="container mx-auto">
+            {/* Breadcrumb */}
+             <div className="breadcrumbs-outer flex items-center gap-2 text-theme/75 text-sm mt-5">
+              <span className="hover:text-white cursor-pointer ">Home</span>
+              <Image
+                src="/images/down-arrow.svg"
+                alt="arrow"
+                width={12}
+                height={12}
+                className="transform -rotate-90"
+              />
+              <span className="hover:text-white cursor-pointer ">Blogs</span>
+              <Image
+                src="/images/down-arrow.svg"
+                alt="arrow"
+                width={12}
+                height={12}
+                className="transform -rotate-90"
+              />
+              <span className="text-theme">Top Window & Door Design Trends for Modern Homes in 2026</span>
+            </div>
 
-                <p>Creating a spacious home is not just about its square footage; it’s about smart, thoughtful design choices. Glass windows play a crucial role in bringing in natural light, adding visual depth, and creating seamless indoor-outdoor connections. With the right design, the benefits of glass windows in interior design can go beyond aesthetic appeal; they can completely transform how your space feels and functions.</p>
+            {/* Blog Title */}
+            <div className="relative  z-10 " >
+            <h1 className="text-theme text-h1 leading-[1.1] flex justify-start flex-wrap gap-3"            >
+              {words.map((word, index) => {
+                const isAccent = index === effectiveAccentIndex;
+                return (
+                  <span
+                    key={`${word}-${index}`}
+                    className="heading-word-wrap relative inline-flex overflow-visible px-1 py-2">
+                    <span className="absolute -left-px -right-px inset-y-0 z-1 overflow-hidden pointer-events-none">
+                      <span className="heading-word-bg absolute inset-0 origin-left bg-blue" />
+                    </span>
 
-                <p>What Is the Role of Natural Light in Creating Spaciousness?</p>
+                    <span className="heading-word-text relative z-10 inline-block overflow-visible">
+                      <span
+                        className={`heading-word-text-inner inline-block ${
+                          isAccent ? "font-subFont text-corinthiaHeading text-brown leading-[1.1] py-[0.06em]" : ""
+                        }`}
+                      >
+                        {word}
+                      </span>
+                    </span>
+                  </span>
+                );
+              })}
+            </h1>
 
-                <p>Natural light brightens the walls, reduces shadows, and creates a bright and open atmosphere, which enhances the sense of volume and depth in a room. Glass windows also form a visual bridge to the outdoors. By extending your view beyond the walls of the space, windows trick the eye into perceiving the room as larger. As aluminium has become one of the most highly preferred fenestration materials today, it makes sense to choose t es that can completely transform any space and make it feel more expansive.</p>
+           
+          </div>      
+         </div>
+      </section>
 
-                <p>Dimly lit spaces often feel cramped and closed off, while bright, sunlit spaces tend to have an open and airy ambiance. The more natural light you let inside a room, the less noticeable its size limitations become.</p>
-                
 
-                <h3 className="text-blue">Also Read: 5 Reasons to Choose Aluminium Windows for Your Home</h3>
-                <p>The benefits of glass windows in interior design are not just about aesthetics; they also have a profound impact on the overall feel and functionality of a space. By allowing natural light to flood in, creating visual connections to the outdoors, and enhancing the sense of spaciousness, glass windows can transform any room into a bright, open, and inviting environment. Whether you’re designing a cozy living room or a sleek modern kitchen, incorporating glass windows can elevate your interior design and create a more enjoyable living experience.</p>
+      <section className="inside-page-banner relative h-screen max-h-120 w-full overflow-hidden flex items-center justify-start ">        
+        <div className="container relative h-full">
+          {/* BACKGROUND IMAGE WITH PARALLAX */}
+          <div className="absolute inset-0 rounded-xl overflow-hidden mx-6">
+            <picture className="absolute inset-0 block w-full h-full ">
+              {/* Desktop: 768px and up */}
+              <source
+                media="(min-width: 768px)"
+                srcSet="/images/banner/blogs-inside-page.webp"
+              />
+              {/* Mobile: below 768px — use blog-bg-mobile.webp when available, or same as desktop */}
+              <source
+                media="(max-width: 767px)"
+                srcSet="/images/banner/blogs-inside-page-mobile.webp"
+              />
+              <img
+                src="/images/banner/blogs-inside-page.webp"
+                alt="Hero Background"
+                className="absolute inset-0 w-full h-full object-cover"
+                fetchPriority="high"
+              />
+            </picture>
 
-                <div ref={imagesRef} className="images-box flex flex-wrap gap-4 my-6 ">
-                  <div className="relative w-full h-[345px] flex-1 overflow-hidden rounded-2xl images-box-item">
-                    <Image
-                      src="/images/blog/blog-img1.webp"
-                      alt=""
-                      fill
-                      className="object-cover"
-                    />
+            {/* ✨ GRADIENT OVERLAY — YOUR CUSTOM STYLE */}
+            <div
+              className="banner-overlay absolute inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(0,0,0,0)_36.81%,rgba(0,0,0,0.7)_70%)] sm:bg-[linear-gradient(-90deg,rgba(0,0,0,0)_36.81%,rgba(0,0,0,0.7)_70%)]"
+            />
+          </div> 
+        </div>      
+      </section>
+
+
+          
+      <section className="content-wrapper content-over-banner">
+        <div className="two-col-outer mx-auto w-full   flex flex-row d:flex-col flex-wrap  items-start  ">
+          <div className="container mx-auto">
+            <div className="two-col flex flex-wrap gap-5 common-padding-md">
+              {/* Left SIDEBAR */}
+              <div className="left-side blog-left-side  flex-1 max-w-[calc(100%-315px)]  relative z-20 ">               
+                <div className="blog-content bg-white bg-darkbase h-full ">
+                  <p>Creating a spacious home is not just about its square footage; it’s about smart, thoughtful design choices. Glass windows play a crucial role in bringing in natural light, adding visual depth, and creating seamless indoor-outdoor connections. With the right design, the benefits of glass windows in interior design can go beyond aesthetic appeal; they can completely transform how your space feels and functions.</p>
+
+                  <p>What Is the Role of Natural Light in Creating Spaciousness?</p>
+
+                  <p>Natural light brightens the walls, reduces shadows, and creates a bright and open atmosphere, which enhances the sense of volume and depth in a room. Glass windows also form a visual bridge to the outdoors. By extending your view beyond the walls of the space, windows trick the eye into perceiving the room as larger. As aluminium has become one of the most highly preferred fenestration materials today, it makes sense to choose t es that can completely transform any space and make it feel more expansive.</p>
+
+                  <p>Dimly lit spaces often feel cramped and closed off, while bright, sunlit spaces tend to have an open and airy ambiance. The more natural light you let inside a room, the less noticeable its size limitations become.</p>
+                  
+
+                  <h3 className="text-blue">Also Read: 5 Reasons to Choose Aluminium Windows for Your Home</h3>
+                  <p>The benefits of glass windows in interior design are not just about aesthetics; they also have a profound impact on the overall feel and functionality of a space. By allowing natural light to flood in, creating visual connections to the outdoors, and enhancing the sense of spaciousness, glass windows can transform any room into a bright, open, and inviting environment. Whether you’re designing a cozy living room or a sleek modern kitchen, incorporating glass windows can elevate your interior design and create a more enjoyable living experience.</p>
+
+                  <div ref={imagesRef} className="images-box flex flex-wrap gap-4 my-6 ">
+                    <div className="relative w-full h-[345px] flex-1 overflow-hidden rounded-2xl images-box-item">
+                      <Image
+                        src="/images/blog/blog-img1.webp"
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    <div className="relative w-full h-[345px] flex-1 rounded-2xl overflow-hidden images-box-item">
+                      <Image
+                        src="/images/blog/blog-img2.webp"
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                   </div>
 
-                  <div className="relative w-full h-[345px] flex-1 rounded-2xl overflow-hidden images-box-item">
-                    <Image
-                      src="/images/blog/blog-img2.webp"
-                      alt=""
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
+                  <h3>Ready to Transform Your Space with Aluminium Glass Windows?</h3>
+                  <p>Fenesta offers the best aluminium glass windows for homes, which have been designed to offer style, durability, and energy savings. Fenesta’s range of energy efficient aluminium windows has been designed with wide glass panels and sleek frames that can not only enhance the openness and spaciousness of a space but can also prevent heat transfer, ensuring comfortable indoor temperatures throughout the year.</p>
 
-                <h3>Ready to Transform Your Space with Aluminium Glass Windows?</h3>
-                <p>Fenesta offers the best aluminium glass windows for homes, which have been designed to offer style, durability, and energy savings. Fenesta’s range of energy efficient aluminium windows has been designed with wide glass panels and sleek frames that can not only enhance the openness and spaciousness of a space but can also prevent heat transfer, ensuring comfortable indoor temperatures throughout the year.</p>
+                  <p>Fenesta offers customisable fenestration solutions, allowing you to choose from various options in size, style, design, colour, and finish, so you can find the perfect aluminium windows for different rooms, based on your size and design preferences with ease.</p>
 
-                <p>Fenesta offers customisable fenestration solutions, allowing you to choose from various options in size, style, design, colour, and finish, so you can find the perfect aluminium windows for different rooms, based on your size and design preferences with ease.</p>
-
-                <p>Discover Fenesta’s range of high-quality aluminium windows with thermal break and make your space feel more spacious, brighter, and welcoming. Get in touch with our fenestration experts for a free consultation today!</p>
-              </div>   
-            </div>          
-
-            {/* RIGHT SIDEBAR */}
-            <aside className="max-w-full lg:max-w-[315px]   lg:block right-side  h-fit dynamic-sticky flex-1 ">
-              {/* Subscribe */}
-              <div className="bg-white p-4 rounded-2xl border border-theme/15  subscribe-box">
-                <h5 className="text-18 font-extrabold mb-5 text-theme">Subscribe to our blog</h5>
-                <div className="flex bg-[#E5E5E5] rounded-full overflow-hidden p-2 items-center h-12">               
-                  <input
-                    type="email"
-                    placeholder="Enter Email Address"
-                    className="flex-1 px-3 py-3 bg-transparent text-black placeholder:text-gray-500 text-base min-w-0 outline-none"
-                  />
-                  <button
-                    type="submit"
-                    className="arrow-btn h-10 w-10 shrink-0 rounded-full bg-[#0094D9] flex items-center justify-center hover:bg-[#0080c0] transition-colors"
-                  >
-                    <Image
-                      src="/images/arrow-right.svg"
-                      alt="Subscribe"
-                      width={14}
-                      height={14}
-                    />
-                  </button>                
-
-                </div>
-              </div>
-
-              {/* Popular blogs */}
-              <div className="bg-white p-4 rounded-2xl border border-theme/15 mt-6 popularBlogs">
-                <h5 className="text-18 text-theme font-extrabold mb-3">Popular blogs</h5>
-
-                <div className="flex gap-3 mb-4 popularBlogsitem">
-                  <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
-                    <Image
-                      src="/images/blog/corporateNewsroomImg1.webp"
-                      alt=""
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  <p className="text-base text-theme leading-tight line-clamp-2 flex-1 max-w-[calc(100%-120px)]  max-h-[42px]">
-                    Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
-                    Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
-                  </p>
-                </div>
-
-                <div className="flex gap-3 mb-4 popularBlogsitem">
-                  <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
-                    <Image
-                      src="/images/blog/corporateNewsroomImg1.webp"
-                      alt=""
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  <p className="text-base text-theme leading-tight line-clamp-2 flex-1 max-w-[calc(100%-120px)]  max-h-[42px]">
-                    Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
-                    Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
-                  </p>
-                </div>
-
-                <div className="flex gap-3 mb-4 popularBlogsitem">
-                  <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
-                    <Image
-                      src="/images/blog/corporateNewsroomImg1.webp"
-                      alt=""
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  <p className="text-base text-theme leading-tight line-clamp-2 flex-1 max-w-[calc(100%-120px)] max-h-[42px]">
-                    Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
-                    Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
-                  </p>
+                  <p>Discover Fenesta’s range of high-quality aluminium windows with thermal break and make your space feel more spacious, brighter, and welcoming. Get in touch with our fenestration experts for a free consultation today!</p>
                 </div>   
+              </div>          
 
-                <div className="flex gap-3 mb-4 popularBlogsitem">
-                  <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
-                    <Image
-                      src="/images/blog/corporateNewsroomImg1.webp"
-                      alt=""
-                      fill
-                      className="object-cover"
+              {/* RIGHT SIDEBAR */}
+              <aside className="max-w-full lg:max-w-[315px] lg:block right-side  h-fit dynamic-sticky flex-1  ">
+                {/* Subscribe */}
+                <div className="bg-white p-4 rounded-2xl border border-theme/15  subscribe-box">
+                  <h5 className="text-18 font-extrabold mb-5 text-theme">Subscribe to our blog</h5>
+                  <div className="flex bg-[#E5E5E5] rounded-full overflow-hidden p-2 items-center h-12">               
+                    <input
+                      type="email"
+                      placeholder="Enter Email Address"
+                      className="flex-1 px-3 py-3 bg-transparent text-black placeholder:text-gray-500 text-base min-w-0 outline-none"
                     />
+                    <button
+                      type="submit"
+                      className="arrow-btn h-10 w-10 shrink-0 rounded-full bg-[#0094D9] flex items-center justify-center hover:bg-[#0080c0] transition-colors"
+                    >
+                      <Image
+                        src="/images/arrow-right.svg"
+                        alt="Subscribe"
+                        width={14}
+                        height={14}
+                      />
+                    </button>                
+
                   </div>
-
-                  <p className="text-base text-theme leading-tight line-clamp-2 flex-1 max-w-[calc(100%-120px)] max-h-[42px]">
-                    Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
-                    Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
-                  </p>
-                </div>              
-              </div>
-
-              {/* Archives */}       
-              <div className=" bg-white p-4 rounded-2xl border border-theme/15 mt-6 archives-list">
-                <h5 className="text-18 text-theme  font-extrabold mb-3">Archives</h5>
-
-                {/* 2025 */}
-                <div
-                  className="border-b border-theme/15 py-1 text-base  cursor-pointer hover:text-blue-600 flex justify-between flex-wrap text-theme items-center archives-list-item"
-                  onClick={() => toggle("2025")}>
-                  <span>2025</span>
-                  <span className="text-2xl text-blue-600">{open === "2025" ? "-" : "+"}</span>
                 </div>
-                {open === "2025" && (
-                  <div className="py-2 text-base text-ThemeParaColor">
-                    <ul className="w-full flex flex-wrap gap-1.5" role="list">
-                      {[
-                        "January", "February",  "April", "May", 
-                        "July", "August","October", "November", "December"
-                      ].map((month, i) => (
-                        <li key={month}>
-                          <Link
-                            href={`/blog?year=2025&month=${i + 1}`}
-                            className="block w-full py-1.5 px-2 rounded-md hover:bg-theme/10 hover:text-theme transition-colors text-sm"
-                          >
-                            {month}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
 
-                {/* 2024 */}
-                <div
-                  className="border-b border-theme/15 py-3 text-theme text-base cursor-pointer hover:text-blue-600 flex justify-between items-center archives-list-item"
-                  onClick={() => toggle("2024")}
-                >
-                  <span>2024</span>
-                  <span className="text-2xl text-blue-600">{open === "2024" ? "-" : "+"}</span>
+                {/* Popular blogs */}
+                <div className="bg-white p-4 rounded-2xl border border-theme/15 mt-6 popularBlogs">
+                  <h5 className="text-18 text-theme font-extrabold mb-3">Popular blogs</h5>
+
+                  <div className="flex gap-3 mb-4 popularBlogsitem">
+                    <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
+                      <Image
+                        src="/images/blog/corporateNewsroomImg1.webp"
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    <p className="text-base text-theme leading-tight line-clamp-2 flex-1 max-w-[calc(100%-120px)]  max-h-[42px]">
+                      Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
+                      Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3 mb-4 popularBlogsitem">
+                    <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
+                      <Image
+                        src="/images/blog/corporateNewsroomImg1.webp"
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    <p className="text-base text-theme leading-tight line-clamp-2 flex-1 max-w-[calc(100%-120px)]  max-h-[42px]">
+                      Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
+                      Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3 mb-4 popularBlogsitem">
+                    <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
+                      <Image
+                        src="/images/blog/corporateNewsroomImg1.webp"
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    <p className="text-base text-theme leading-tight line-clamp-2 flex-1 max-w-[calc(100%-120px)] max-h-[42px]">
+                      Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
+                      Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
+                    </p>
+                  </div>   
+
+                  <div className="flex gap-3 mb-4 popularBlogsitem">
+                    <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
+                      <Image
+                        src="/images/blog/corporateNewsroomImg1.webp"
+                        alt=""
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    <p className="text-base text-theme leading-tight line-clamp-2 flex-1 max-w-[calc(100%-120px)] max-h-[42px]">
+                      Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
+                      Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
+                    </p>
+                  </div>              
                 </div>
-                {open === "2024" && (
-                  <div className="py-2 text-base text-ThemeParaColor">
-                    <ul className="w-full flex flex-wrap gap-1.5" role="list">
-                      {[
-                        "January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December"
-                      ].map((month, i) => (
-                        <li key={month}>
-                          <Link
-                            href={`/blog?year=2024&month=${i + 1}`}
-                            className="block w-full py-1.5 px-2 rounded-md hover:bg-theme/10 hover:text-theme transition-colors text-sm"
-                          >
-                            {month}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
 
-                {/* 2023 */}
-                <div
-                  className="border-b border-theme/15 text-theme py-3 text-base cursor-pointer hover:text-blue-600 flex justify-between items-center archives-list-item"
-                  onClick={() => toggle("2023")}
-                >
-                  <span>2023</span>
-                  <span className="text-2xl text-blue-600">{open === "2023" ? "-" : "+"}</span>
+                {/* Archives */}       
+                <div className=" bg-white p-4 rounded-2xl border border-theme/15 mt-6 archives-list">
+                  <h5 className="text-18 text-theme  font-extrabold mb-3">Archives</h5>
+
+                  {/* 2025 */}
+                  <div
+                    className="border-b border-theme/15 py-1 text-base  cursor-pointer hover:text-blue-600 flex justify-between flex-wrap text-theme items-center archives-list-item"
+                    onClick={() => toggle("2025")}>
+                    <span>2025</span>
+                    <span className="text-2xl text-blue-600">{open === "2025" ? "-" : "+"}</span>
+                  </div>
+                  {open === "2025" && (
+                    <div className="py-2 text-base text-ThemeParaColor">
+                      <ul className="w-full flex flex-wrap gap-1.5" role="list">
+                        {[
+                          "January", "February",  "April", "May", 
+                          "July", "August","October", "November", "December"
+                        ].map((month, i) => (
+                          <li key={month}>
+                            <Link
+                              href={`/blog?year=2025&month=${i + 1}`}
+                              className="block w-full py-1.5 px-2 rounded-md hover:bg-theme/10 hover:text-theme transition-colors text-sm"
+                            >
+                              {month}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* 2024 */}
+                  <div
+                    className="border-b border-theme/15 py-3 text-theme text-base cursor-pointer hover:text-blue-600 flex justify-between items-center archives-list-item"
+                    onClick={() => toggle("2024")}
+                  >
+                    <span>2024</span>
+                    <span className="text-2xl text-blue-600">{open === "2024" ? "-" : "+"}</span>
+                  </div>
+                  {open === "2024" && (
+                    <div className="py-2 text-base text-ThemeParaColor">
+                      <ul className="w-full flex flex-wrap gap-1.5" role="list">
+                        {[
+                          "January", "February", "March", "April", "May", "June",
+                          "July", "August", "September", "October", "November", "December"
+                        ].map((month, i) => (
+                          <li key={month}>
+                            <Link
+                              href={`/blog?year=2024&month=${i + 1}`}
+                              className="block w-full py-1.5 px-2 rounded-md hover:bg-theme/10 hover:text-theme transition-colors text-sm"
+                            >
+                              {month}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* 2023 */}
+                  <div
+                    className="border-b border-theme/15 text-theme py-3 text-base cursor-pointer hover:text-blue-600 flex justify-between items-center archives-list-item"
+                    onClick={() => toggle("2023")}
+                  >
+                    <span>2023</span>
+                    <span className="text-2xl text-blue-600">{open === "2023" ? "-" : "+"}</span>
+                  </div>
+                  {open === "2023" && (
+                    <div className="py-2 text-base text-ThemeParaColor">
+                      <ul className="w-full flex flex-wrap gap-1.5" role="list">
+                        {[
+                          
+                          "July", "August", "September", "October", "November", "December"
+                        ].map((month, i) => (
+                          <li key={month}>
+                            <Link
+                              href={`/blog?year=2023&month=${i + 1}`}
+                              className="block w-full py-1.5 px-2 rounded-md hover:bg-theme/10 hover:text-theme transition-colors text-sm"
+                            >
+                              {month}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {/* Repeat for remaining years */}
                 </div>
-                {open === "2023" && (
-                  <div className="py-2 text-base text-ThemeParaColor">
-                    <ul className="w-full flex flex-wrap gap-1.5" role="list">
-                      {[
-                        
-                        "July", "August", "September", "October", "November", "December"
-                      ].map((month, i) => (
-                        <li key={month}>
-                          <Link
-                            href={`/blog?year=2023&month=${i + 1}`}
-                            className="block w-full py-1.5 px-2 rounded-md hover:bg-theme/10 hover:text-theme transition-colors text-sm"
-                          >
-                            {month}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {/* Repeat for remaining years */}
-              </div>
 
-            </aside>
-          </div>  
-        </div>
+              </aside>
+            </div>  
+          </div>
+        </div>  
       </section>    
 
       <ClientStories />  

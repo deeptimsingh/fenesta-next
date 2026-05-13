@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { initCardReveal } from "@/components/base/cardReveal";
 
@@ -46,6 +45,32 @@ export default function PressCoverage({ pressCards = PRESS_CARDS, adsCards = ADS
 
   const containerRef = useRef<HTMLDivElement>(null);
   const revealCtxRef = useRef<ReturnType<typeof initCardReveal> | null>(null);
+  const tabTrackRef = useRef<HTMLDivElement>(null);
+  const [pillStyle, setPillStyle] = useState({ left: 6, width: 0 });
+
+  // Update sliding pill position when activeTab or layout changes (smooth move)
+  const updatePill = () => {
+    const track = tabTrackRef.current;
+    if (!track) return;
+    const activeBtn = track.querySelector<HTMLButtonElement>(
+      activeTab === "press" ? "[data-tab=press]" : "[data-tab=ads]"
+    );
+    if (!activeBtn) return;
+    const trackRect = track.getBoundingClientRect();
+    const btnRect = activeBtn.getBoundingClientRect();
+    setPillStyle({
+      left: btnRect.left - trackRect.left + track.scrollLeft,
+      width: btnRect.width,
+    });
+  };
+  useLayoutEffect(() => updatePill(), [activeTab]);
+  useEffect(() => {
+    const track = tabTrackRef.current;
+    if (!track) return;
+    const ro = new ResizeObserver(updatePill);
+    ro.observe(track);
+    return () => ro.disconnect();
+  }, [activeTab]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -83,46 +108,56 @@ export default function PressCoverage({ pressCards = PRESS_CARDS, adsCards = ADS
   return (
     <div className="content-wrapper content-over-banner InThisNews">
       <div className="container">
-        <div className="content-inside bg-white p-4 2xl:p-6 rounded-tl-2xl rounded-tr-2xl">
-
-          <div className="flex justify-center gap-6 2xl:gap-8 mb-6 mt-10 text-22 2xl:text-xl leading-normal">
-            <button
-              onClick={() => setActiveTab("press")}
-              className={`pb-1 border-b-2 ${
-                activeTab === "press"
-                  ? "text-black border-black"
-                  : "text-gray-400 border-transparent"
-              }`}
+        <div className="content-inside bg-white dark:bg-theme px-4 2xl:px-[5vw] common-pb">
+          <div className="tab-outer flex justify-center">
+            <div
+              ref={tabTrackRef}
+              className="tab-outer-inner relative inline-flex rounded-full bg-theme/20 p-1.5 gap-1 text-22 2xl:text-xl leading-normal"
             >
-              Press Coverage
-            </button>
-            <button
-              onClick={() => setActiveTab("ads")}
-              className={`pb-1 border-b-2 ${
-                activeTab === "ads"
-                  ? "text-black border-black"
-                  : "text-gray-400 border-transparent"
-              }`}
-            >
-              Advertisement Centre
-            </button>
+              {/* Sliding capsule background */}
+              <div
+                className="tab-bg-move absolute top-1.5 bottom-1.5 rounded-full bg-theme/80 transition-[left,width] duration-300 ease-out"
+                style={{
+                  left: pillStyle.left,
+                  width: pillStyle.width,
+                }}
+                aria-hidden
+              />
+              <button
+                data-tab="press"
+                type="button"
+                onClick={() => setActiveTab("press")}
+                className={`relative z-10 py-2.5 px-5 2xl:px-6 rounded-full font-medium transition-colors duration-200 ${
+                  activeTab === "press"
+                    ? "text-white"
+                    : "text-neutral-500"
+                }`}
+              >
+                Press Coverage
+              </button>
+              <button
+                data-tab="ads"
+                type="button"
+                onClick={() => setActiveTab("ads")}
+                className={`relative z-10 py-3 px-5 2xl:px-6 rounded-full font-medium transition-colors duration-200 ${
+                  activeTab === "ads"
+                    ? "text-white"
+                    : "text-neutral-500"
+                }`}
+              >
+                Advertisement Centre
+              </button>
+            </div>
           </div>
 
-          <p className="pressDescription text-center text-theme text-22 max-w-3xl mx-auto mb-10">
+          <p className="pressDescription text-center text-theme text-22 max-w-3xl mx-auto my-10">
             {description}
           </p>
 
           {(activeTab === "press" || activeTab === "ads") && (
-            <div
-              key={activeTab}
-              className="press-card-outer flex flex-wrap justify-center"
-              ref={containerRef}
-            >
+            <div key={activeTab} className="press-card-outer flex flex-wrap justify-center" ref={containerRef}>
               {cards.map((item, index) => (
-                <div
-                  key={`${activeTab}-${index}`}
-                  className={`press-card cardreveal ${index < visibleCards ? "block" : "hidden"}`}
-                >
+                <div key={`${activeTab}-${index}`} className={`press-card cardreveal ${index < visibleCards ? "block" : "hidden"}`}>
                   <div className="press-card-inner">
                     <div className="press-card-image">
                       <Image

@@ -45,8 +45,8 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="en" 
-      className={`${helvetica.variable} ${corinthia.variable}`}
+      lang="en"  
+      className={`${helvetica.variable} ${corinthia.variable} dark`}
       suppressHydrationWarning
     >
       <head>
@@ -55,7 +55,11 @@ export default function RootLayout({
             __html: `
               (function(){
                 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-                var scrollTop = function(){ window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; };
+                var scrollTop = function(){
+                  window.scrollTo(0,0);
+                  if (document.documentElement) document.documentElement.scrollTop = 0;
+                  if (document.body) document.body.scrollTop = 0;
+                };
                 scrollTop();
                 if (document.readyState === 'loading') {
                   document.addEventListener('DOMContentLoaded', scrollTop);
@@ -67,7 +71,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="text-theme  transition-colors duration-200 scroll-lock">
+      <body className="text-theme transition-colors duration-200">
         <Providers>
           <Header />
           <PageIntroWrapper>

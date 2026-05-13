@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
+import { useInsidePageBlurLoad } from "@/hooks/useInsidePageBlurLoad";
 
 import BannerMain from "@/components/templates/aboutPage/our-presence/bannerMain";
 import FilterSection from "@/components/templates/aboutPage/our-presence/filtersection";
@@ -16,6 +17,7 @@ gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 export default function About() {
   const { headingRef, sectionRef: headingSectionRef } = useHeadingAnimation();
+  const { pageBlurClass, isReady } = useInsidePageBlurLoad(1000);
   const imageRefs = useRef<HTMLDivElement[]>([]);
   const addToRefs = (el: HTMLDivElement | null) => {
     if (el && !imageRefs.current.includes(el)) {
@@ -65,9 +67,9 @@ export default function About() {
   }, []);
 
   return (
-    <section className="about-page w-full">
+    <section className={`about-page w-full ${pageBlurClass}`}>
       {/*Banner Main*/}
-      <BannerMain />
+      <BannerMain animationReady={isReady} />
 
       {/* INTRO SECTION */}
       <section ref={headingSectionRef} className="intro-section relative  content-over-banner">
@@ -75,7 +77,7 @@ export default function About() {
             <div className="content-inside bg-white rounded-tl-2xl rounded-tr-2xl shadow-[0px_-156px_35.3px_0px_#00000017]">         
               <div className="headingTitle px-0 md:px-0 text-center">
                   <div ref={headingRef} className="title-section  flex flex-col  w-full">
-                    <h2 className="font-mainFont text-h2 leading-none text-theme flex justify-center flex-wrap mx-auto">All <span className="font-subFont text-corinthiaHeading text-brown leading-none">Office</span></h2>
+                    <h2 className="font-mainFont text-h2 leading-none text-theme flex justify-center flex-wrap mx-auto gap-2">All <span className="font-subFont text-corinthiaHeading text-brown leading-none">Office</span></h2>
                   </div>
               </div>   
             </div> 

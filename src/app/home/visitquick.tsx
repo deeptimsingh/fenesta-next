@@ -127,6 +127,9 @@ export default function ParallaxSection() {
       </div>
 
       {/* RIGHT SECTION */}
+
+
+
       <div
         ref={rightSection}
         className="relative flex-1 flex items-center justify-center overflow-hidden min-h-141.25 md:min-h-auto bg-cream bg-lightdarkbase"
@@ -136,7 +139,13 @@ export default function ParallaxSection() {
           className="absolute inset-0 bg-[url('/images/home/GetaQuickEstimate-bg.webp')] bg-center bg-cover will-change-transform scale-110"
         ></div> */}
 
-        <div ref={rightCaption} className="title-section relative z-10 text-center text-white px-6 xl:px-8 py-6  xl:py-8 trustedpartners-gradient-background backdrop-blur-sm rounded-xl mx-6 md:mx-0 w-full xl:w-[65%]  flex items-center flex-wrap content-center h-[350px] max-w-[552px]">          
+
+<div
+          ref={rightCaption}
+          className="title-section relative z-10 text-center text-white px-6 xl:px-8 bg-gradient-to-b from-[#EDE8D0]/60 to-brown/60 backdrop-blur-md rounded-xl mx-6 md:mx-0 w-full xl:w-[65%] flex items-center flex-wrap content-center h-[350px] max-w-[552px]"
+        >
+
+               
             {/* Heading */}
             <div ref={rightSectionRef}  className="headingOuter w-full">
               <div className="headingTitle mb-6 xl:mb-6 px-6 md:px-0 ">

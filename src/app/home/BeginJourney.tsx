@@ -22,12 +22,7 @@ export default function BeginJourney() {
     useEffect(() => {
         // Small delay to ensure DOM is fully rendered
         const timer = setTimeout(() => {
-            if (!cardsContainerRef.current || !backgroundImageRef.current || !sectionRefForBg.current) return;
-
-            const cards = cardsRef.current.filter(Boolean) as HTMLElement[];
-            const images = imagesRef.current.filter(Boolean) as HTMLDivElement[];
-            
-            if (cards.length === 0) return;
+            if (!cardsContainerRef.current || !sectionRefForBg.current) return;
 
             // Clear previous animations
             animationsRef.current.forEach((anim) => {
@@ -39,135 +34,223 @@ export default function BeginJourney() {
             });
             animationsRef.current = [];
 
-            try {
-                // Refresh ScrollTrigger to ensure proper calculations
-                ScrollTrigger.refresh();
+            // try {
+            //     // Refresh ScrollTrigger to ensure proper calculations
+            //     ScrollTrigger.refresh();
 
-                // Background image parallax on scroll
-                if (backgroundImageRef.current && 
-                    sectionRefForBg.current && 
-                    backgroundImageRef.current.isConnected &&
-                    sectionRefForBg.current.isConnected) {
-                    try {
-                        const bgAnim = gsap.to(backgroundImageRef.current, {
-                            x: 150,
-                            ease: "none",
-                            scrollTrigger: {
-                                trigger: sectionRefForBg.current,
-                                start: "top bottom",
-                                end: "bottom top",
-                                scrub: 1,
-                                invalidateOnRefresh: true,
-                            },
-                        });
-                        animationsRef.current.push(bgAnim);
-                    } catch (error) {
-                        console.warn("Error creating background animation:", error);
-                    }
-                }
+            //     // Background image parallax on scroll
+            //     if (backgroundImageRef.current && 
+            //         sectionRefForBg.current && 
+            //         backgroundImageRef.current.isConnected &&
+            //         sectionRefForBg.current.isConnected) {
+            //         try {
+            //             const bgAnim = gsap.to(backgroundImageRef.current, {
+            //                 x: 150,
+            //                 ease: "none",
+            //                 scrollTrigger: {
+            //                     trigger: sectionRefForBg.current,
+            //                     start: "top bottom",
+            //                     end: "bottom top",
+            //                     scrub: 1,
+            //                     invalidateOnRefresh: true,
+            //                 },
+            //             });
+            //             animationsRef.current.push(bgAnim);
+            //         } catch (error) {
+            //             console.warn("Error creating background animation:", error);
+            //         }
+            //     }
 
-                // Set initial state for images - positioned for parallax
-                images.forEach((image) => {
-                    if (image && image.parentElement && image.isConnected) {
-                        try {
-                            gsap.set(image, {
-                                scale: 1,
-                            });
-                        } catch (e) {
-                            // Ignore set errors
-                        }
-                    }
-                });
+            //     // Set initial state for images - positioned for parallax
+            //     images.forEach((image) => {
+            //         if (image && image.parentElement && image.isConnected) {
+            //             try {
+            //                 gsap.set(image, {
+            //                     scale: 1,
+            //                 });
+            //             } catch (e) {
+            //                 // Ignore set errors
+            //             }
+            //         }
+            //     });
 
-                // Card animation - smooth slide-up on viewport entry
-                const validCards = cards.filter(card => card && card.parentElement && card.isConnected);
-                if (!validCards.length || !cardsContainerRef.current) return;
+            //     // Card animation - smooth slide-up on viewport entry
+            //     const validCards = cards.filter(card => card && card.parentElement && card.isConnected);
+            //     if (!validCards.length || !cardsContainerRef.current) return;
 
-                // Kill any existing ScrollTriggers on this trigger
-                ScrollTrigger.getAll().forEach((st) => {
-                    if (st.vars && st.vars.trigger === cardsContainerRef.current) {
-                        try {
-                            st.kill();
-                        } catch (e) {
-                            // Ignore
-                        }
-                    }
-                });
+            //     // Kill any existing ScrollTriggers on this trigger
+            //     ScrollTrigger.getAll().forEach((st) => {
+            //         if (st.vars && st.vars.trigger === cardsContainerRef.current) {
+            //             try {
+            //                 st.kill();
+            //             } catch (e) {
+            //                 // Ignore
+            //             }
+            //         }
+            //     });
 
-                try {
-                    // INITIAL STATE (all cards hidden & down)
-                    validCards.forEach((card) => {
-                        if (!card || !card.parentElement || !card.isConnected) return;
+            //     try {
+            //         // INITIAL STATE (all cards hidden & down)
+            //         validCards.forEach((card) => {
+            //             if (!card || !card.parentElement || !card.isConnected) return;
                         
-                        try {
-                            gsap.set(card, {
-                                opacity: 0,
-                                y: 60,
-                                scale: 0.95,
-                                transformOrigin: "center",
-                                force3D: true,
-                            });
-                        } catch (e) {
-                            console.warn("Error setting card initial state:", e);
-                        }
-                    });
+            //             try {
+            //                 gsap.set(card, {
+            //                     opacity: 0,
+            //                     y: 60,
+            //                     scale: 0.95,
+            //                     transformOrigin: "center",
+            //                     force3D: true,
+            //                 });
+            //             } catch (e) {
+            //                 console.warn("Error setting card initial state:", e);
+            //             }
+            //         });
 
-                    // SMOOTH SLIDE-UP ON CONTAINER ENTER
-                    const tl = gsap.timeline({
-                        scrollTrigger: {
-                            trigger: cardsContainerRef.current,
-                            end: "top 10%",
-                            scrub: false, // play once smoothly
-                            toggleActions: "play none none reset",
-                            invalidateOnRefresh: true,
+            //         // SMOOTH SLIDE-UP ON CONTAINER ENTER
+            //         const tl = gsap.timeline({
+            //             scrollTrigger: {
+            //                 trigger: cardsContainerRef.current,
+            //                 end: "top 10%",
+            //                 scrub: false, // play once smoothly
+            //                 toggleActions: "play none none reset",
+            //                 invalidateOnRefresh: true,
+            //             },
+            //         });
+
+            //         tl.to(validCards, {
+            //             opacity: 1,
+            //             y: 0,
+            //             scale: 1,
+            //             duration: 0.5, // Faster duration (was 0.8)
+            //             ease: "power3.out",
+            //             stagger: 0.1, // Faster stagger - one-by-one slide up (was 0.2)
+            //             force3D: true,
+                        
+            //         });
+
+            //         animationsRef.current.push(tl);
+            //     } catch (error) {
+            //         console.warn("Error creating card animation:", error);
+            //     }
+
+            //     // Parallax effect for images within diamond clip-path
+            //     images.forEach((image, index) => {
+            //         if (!image || !image.parentElement || !image.isConnected) return;
+            //         if (!cards[index] || !cards[index].parentElement || !cards[index].isConnected) return;
+
+            //         try {
+            //             const trigger = cards[index] || cardsContainerRef.current;
+            //             if (!trigger || !trigger.isConnected) return;
+
+            //             const imgAnim = gsap.to(image, {
+            //                 scale: 1,
+            //                 ease: "none",
+            //                 scrollTrigger: {
+            //                     trigger: trigger,
+            //                     start: "top bottom",
+            //                     end: "bottom top",
+            //                     scrub: 1,
+            //                     invalidateOnRefresh: true,
+            //                 },
+            //             });
+            //             animationsRef.current.push(imgAnim);
+            //         } catch (error) {
+            //             console.warn("Error creating image parallax animation:", error);
+            //         }
+            //     });
+            // } catch (error) {
+            //     console.warn("Error setting up animations:", error);
+            // }
+
+            if (!cardsContainerRef.current) return;
+
+            // Use DOM query instead of refs (more reliable with Next/Link)
+            const validCards = Array.from(
+                cardsContainerRef.current.querySelectorAll<HTMLElement>(".cardItem")
+            );
+
+            if (validCards.length === 0) return;
+
+            // ✅ ONLY RUN ON DESKTOP
+            if (window.matchMedia("(min-width: 1024px)").matches) {
+                gsap.registerPlugin(ScrollTrigger);
+
+                // 4-card layout: cards fan in from outside → center
+                const startX     = ["120%",  "60%",   "-60%",  "-120%"];
+                const startY     = ["0%",    "6%",    "6%",    "0%"];
+                const startScale = [0.80,    0.88,    0.88,    0.80];
+                const startRot   = [-7,      -2,       2,       7];
+
+                validCards.forEach((card, i) => {
+                    gsap.set(card, {
+                        x:               startX[i]     ?? "0%",
+                        y:               startY[i]     ?? "0%",
+                        scale:           startScale[i] ?? 0.85,
+                        rotation:        startRot[i]   ?? 0,
+                        opacity:         1,
+                        transformOrigin: "center bottom",
+                    });
+                });
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: cardsContainerRef.current,
+                        // Ensure we ENTER the section with cards still fanned out
+                        start:   "top 90%",
+                        end:     "top top",
+                        scrub:   2,
+                        invalidateOnRefresh: true,
+                        onEnter: () => {
+                            validCards.forEach((card, i) => {
+                                gsap.set(card, {
+                                    x:               startX[i]     ?? "0%",
+                                    y:               startY[i]     ?? "0%",
+                                    scale:           startScale[i] ?? 0.85,
+                                    rotation:        startRot[i]   ?? 0,
+                                    opacity:         1,
+                                    transformOrigin: "center bottom",
+                                });
+                            });
+                            tl.progress(0);
                         },
-                    });
-
-                    tl.to(validCards, {
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        duration: 0.5, // Faster duration (was 0.8)
-                        ease: "power3.out",
-                        stagger: 0.1, // Faster stagger - one-by-one slide up (was 0.2)
-                        force3D: true,
-                        
-                    });
-
-                    animationsRef.current.push(tl);
-                } catch (error) {
-                    console.warn("Error creating card animation:", error);
-                }
-
-                // Parallax effect for images within diamond clip-path
-                images.forEach((image, index) => {
-                    if (!image || !image.parentElement || !image.isConnected) return;
-                    if (!cards[index] || !cards[index].parentElement || !cards[index].isConnected) return;
-
-                    try {
-                        const trigger = cards[index] || cardsContainerRef.current;
-                        if (!trigger || !trigger.isConnected) return;
-
-                        const imgAnim = gsap.to(image, {
-                            scale: 1,
-                            ease: "none",
-                            scrollTrigger: {
-                                trigger: trigger,
-                                start: "top bottom",
-                                end: "bottom top",
-                                scrub: 1,
-                                invalidateOnRefresh: true,
-                            },
-                        });
-                        animationsRef.current.push(imgAnim);
-                    } catch (error) {
-                        console.warn("Error creating image parallax animation:", error);
+                        onEnterBack: () => {
+                            validCards.forEach((card, i) => {
+                                gsap.set(card, {
+                                    x:               startX[i]     ?? "0%",
+                                    y:               startY[i]     ?? "0%",
+                                    scale:           startScale[i] ?? 0.85,
+                                    rotation:        startRot[i]   ?? 0,
+                                    opacity:         1,
+                                    transformOrigin: "center bottom",
+                                });
+                            });
+                            tl.progress(0);
+                        },
                     }
                 });
-            } catch (error) {
-                console.warn("Error setting up animations:", error);
+
+                validCards.forEach((card) => {
+                    tl.to(card, {
+                        x:        "0%",
+                        y:        "0%",
+                        scale:    1,
+                        rotation: 0,
+                        opacity:  1,
+                        ease:     "power3.out",
+                        duration: 1,
+                    }, 0);
+                });
+
+                animationsRef.current.push(tl);
+                ScrollTrigger.refresh();
             }
-        }, 50);
+
+            
+        }, 
+        50);
+
+        
 
         return () => {
             clearTimeout(timer);
@@ -272,7 +355,7 @@ export default function BeginJourney() {
   return (
     <section ref={sectionRefForBg} className="BeginJourney bg-darkbase w-full common-padding flex items-center justify-center overflow-hidden relative">     
       {/* Background Image */}
-      <div ref={backgroundImageRef} className="backgroundImageRefimg absolute w-full z-2 right-0 left-auto h-[95%] max-w-[60vw] sm:max-w-[60vw] md:max-w-[55vw] mt-[-3%] -translate-y-1/2 top-1/2">
+      {/* <div ref={backgroundImageRef} className="backgroundImageRefimg absolute w-full z-2 right-0 left-auto h-[95%] max-w-[60vw] sm:max-w-[60vw] md:max-w-[55vw] mt-[-3%] -translate-y-1/2 top-1/2">
         <Image
           src="/images/home/profession/professionbg.svg"
           alt="Background"
@@ -280,7 +363,7 @@ export default function BeginJourney() {
           className="object-contain"
           priority
         />
-      </div>
+      </div> */}
       
       {/* Content */}
       <div className="container m-auto px-0 md:px-0 relative z-10 ">

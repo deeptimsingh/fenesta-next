@@ -6,12 +6,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function BannerMain() {
+export default function BannerMain({ animationReady = true }: { animationReady?: boolean }) {
   const bgRef = useRef(null);
   const titleRef = useRef(null);
 
   useEffect(() => {
-    if (!bgRef.current) return;
+    if (!animationReady || !bgRef.current) return;
 
     gsap.to(bgRef.current, {
       yPercent: 20,
@@ -34,7 +34,7 @@ export default function BannerMain() {
         scrub: true,
       },
     });
-  }, []);
+  }, [animationReady]);
 
   return (
      <section className="relative h-screen max-h-140  md:max-h-192 w-full overflow-hidden flex items-center justify-start inside-page-banner">        

@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { initCardReveal } from "@/components/base/cardReveal";
 
@@ -45,6 +44,32 @@ export default function PressCoverage({ awardsCards = AWARDS_CARDS, accreditatio
 
   const containerRef = useRef<HTMLDivElement>(null);
   const revealCtxRef = useRef<ReturnType<typeof initCardReveal> | null>(null);
+  const tabTrackRef = useRef<HTMLDivElement>(null);
+  const [pillStyle, setPillStyle] = useState({ left: 6, width: 0 });
+
+  // Update sliding pill position when activeTab or layout changes (smooth move)
+  const updatePill = () => {
+    const track = tabTrackRef.current;
+    if (!track) return;
+    const activeBtn = track.querySelector<HTMLButtonElement>(
+      activeTab === "awards" ? "[data-tab=awards]" : "[data-tab=accreditations]"
+    );
+    if (!activeBtn) return;
+    const trackRect = track.getBoundingClientRect();
+    const btnRect = activeBtn.getBoundingClientRect();
+    setPillStyle({
+      left: btnRect.left - trackRect.left + track.scrollLeft,
+      width: btnRect.width,
+    });
+  };
+  useLayoutEffect(() => updatePill(), [activeTab]);
+  useEffect(() => {
+    const track = tabTrackRef.current;
+    if (!track) return;
+    const ro = new ResizeObserver(updatePill);
+    ro.observe(track);
+    return () => ro.disconnect();
+  }, [activeTab]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -76,32 +101,72 @@ export default function PressCoverage({ awardsCards = AWARDS_CARDS, accreditatio
 
   const description =
     activeTab === "awards"
-      ? "We are proud to have been featured in several leading publications of the country. Below are the links to our recent print media coverage"
-      : "Fenesta regularly invests in smart marketing campaigns to build market share and leadership. Here's a collection of our past advertising campaigns.";
+      ? "We are proud to have received several prestigious awards and accolades over the years. Below are some of our recent recognitions."
+      : "Our accreditations reflect our commitment to quality, safety, and performance across products and processes.";
 
   return (
     <div className="content-wrapper content-over-banner InThisNews">
       <div className="container">
-        <div className="content-inside bg-white px-4 2xl:px-[5vw] rounded-tl-2xl rounded-tr-2xl">
+        <div className=" intro-heightlight mx-auto flex flex-row d:flex-col flex-wrap  gap-x-10 items-start -mt-[40px] sm:-mt-[60px] rounded-sm bg-white dark:bg-theme sm:p-6 relative z-20 common-pb">
           <div className="page-intro text-center">          
-            <p className="text-22 text-theme">Fenesta is the proud recipient of prestigious industry awards and accolades that recognise the company’s efforts and achievements over the years. It’s the motivation we need to innovate, improve, and push boundaries in the pursuit of excellence.</p>
+            <p className="text-22 text-theme dark:text-white">
+              Fenesta is the proud recipient of prestigious industry awards and accolades that recognise the company’s efforts and achievements over the years. It’s the motivation we need to innovate, improve, and push boundaries in the pursuit of excellence.
+            </p>
           </div>
 
-          <div className="flex justify-center gap-6 2xl:gap-8 mb-6 mt-10 text-22 2xl:text-xl leading-normal">
-            <button onClick={() => setActiveTab("awards")} className={`pb-1 border-b-2 ${activeTab === "awards" ? "text-black border-black" : "text-gray-400 border-transparent"
-              }`}>Awards</button>
+          
+          <div className="tab-outer flex justify-center mt-10 w-full">
+            <div
+              ref={tabTrackRef}
+              className="tab-outer-inner relative inline-flex rounded-full bg-theme/20 p-1.5 gap-1 text-22 2xl:text-xl leading-normal"
+            >
+              {/* Sliding capsule background */}
+              <div
+                className="tab-bg-move absolute top-1.5 bottom-1.5 rounded-full bg-theme/80 transition-[left,width] duration-300 ease-out"
+                style={{
+                  left: pillStyle.left,
+                  width: pillStyle.width,
+                }}
+                aria-hidden
+              />
+              <button
+                data-tab="awards"
+                type="button"
+                onClick={() => setActiveTab("awards")}
+                className={`relative z-10 py-2.5 px-5 2xl:px-6 rounded-full font-medium transition-colors duration-200 ${
+                  activeTab === "awards"
+                    ? "text-white"
+                    : "text-neutral-500"
+                }`}
+              >
+                Awards
+              </button>
 
-            <button onClick={() => setActiveTab("accreditations")} className={`pb-1 border-b-2 ${ activeTab === "accreditations"  ? "text-black border-black" : "text-gray-400 border-transparent"}`}>Accreditations</button>
+              <button
+                data-tab="accreditations"
+                type="button"
+                onClick={() => setActiveTab("accreditations")}
+                className={`relative z-10 py-3 px-5 2xl:px-6 rounded-full font-medium transition-colors duration-200 ${
+                  activeTab === "accreditations"
+                    ? "text-white"
+                    : "text-neutral-500"
+                }`}
+              >
+                Accreditations
+              </button>
+            </div>
           </div>
 
-          <p className="pressDescription text-center text-theme text-22 max-w-3xl mx-auto mb-10">
+          
+
+          <p className="pressDescription text-center text-theme text-22 max-w-3xl mx-auto mt-10 w-full">
             {description}
           </p>
 
           {(activeTab === "awards" || activeTab === "accreditations") && (
             <div
               key={activeTab}
-              className="press-card-outer flex flex-wrap justify-center"
+              className="press-card-outer flex flex-wrap justify-center mt-10"
               ref={containerRef}
             >
               {cards.map((item, index) => (

@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import Image from "next/image";
 import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
+import { useInsidePageBlurLoad } from "@/hooks/useInsidePageBlurLoad";
 
 import BannerMain from "@/components/templates/aboutPage/ourstory/bannerMain";
 import JourneyTimeline from "@/components/templates/aboutPage/ourstory/ourJourney";
@@ -32,6 +33,7 @@ export default function About() {
   const missionDotRef = useRef<HTMLDivElement | null>(null);
   const visionDotRef = useRef<HTMLDivElement | null>(null);
   const { headingRef: missionVisionHeadingRef, sectionRef: missionVisionSectionRef } = useHeadingAnimation();
+  const { pageBlurClass, isReady } = useInsidePageBlurLoad(1000);
 
   useEffect(() => {
     /** ==========================================
@@ -121,9 +123,9 @@ if (visionLineRef.current && visionRef.current) {
   }, []);
 
   return (
-    <section className="about-page w-full">
+    <section className={`about-page w-full ${pageBlurClass}`}>
       {/*Banner Main*/}
-      <BannerMain />
+      <BannerMain animationReady={isReady} />
 
       {/* INTRO SECTION */}
       <section className="intro-section relative ">

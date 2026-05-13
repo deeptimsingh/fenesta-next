@@ -8,6 +8,8 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import CustomSelect from "@/components/templates/aboutPage/our-presence/CustomSelect";
 import "@/components/templates/common.css";
+import { useInsidePageBlurLoad } from "@/hooks/useInsidePageBlurLoad";
+import { initCardReveal } from "@/components/base/cardReveal";
 
 // -----------------------------------------------------------------------------
 // Dropdown options for Office and Location filters
@@ -190,6 +192,7 @@ export default function OfficeFilter() {
 
   const sliderRef = useRef<HTMLDivElement>(null);   // Slider track (moving part)
   const wrapperRef = useRef<HTMLDivElement>(null);  // Visible viewport (overflow hidden)
+  const revealCtxRef = useRef<ReturnType<typeof initCardReveal> | null>(null);
   const startX = useRef(0);                         // For drag/swipe start position
   const isDragging = useRef(false);                 // Whether user is actively dragging
   const [slideOffsetPx, setSlideOffsetPx] = useState(0);
@@ -259,6 +262,29 @@ export default function OfficeFilter() {
     return () => clearTimeout(t);
   }, [currentSlide, cardsPerView, filteredOffices.length]);
 
+  // Card reveal animation on scroll (like Awards / InThisNews)
+  useEffect(() => {
+    const container = sliderRef.current;
+    if (!container) return;
+
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        revealCtxRef.current?.revert();
+        revealCtxRef.current = initCardReveal({
+          container,
+          cardSelector: ".cardreveal",
+          imageSelector: ".cardreveal-image",
+        });
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(id);
+      revealCtxRef.current?.revert();
+      revealCtxRef.current = null;
+    };
+  }, [filteredOffices.length, cardsPerView]);
+
   // Reset to first slide when filter results change
   useEffect(() => {
     setCurrentSlide(0);
@@ -312,7 +338,6 @@ export default function OfficeFilter() {
       {/* ----------------------------------------------------------------------- */}
       <div className="filter-section w-full max-w-[960px] mt-5 mx-auto  relative z-10">
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-stretch sm:items-end flex-wrap">
-
           <CustomSelect
             label="Office"
             // @ts-expect-error – CustomSelect options prop typed from JSX
@@ -380,14 +405,14 @@ export default function OfficeFilter() {
               {filteredOffices.map((item: OfficeItem) => (
                 <div
                   key={item.id}
-                  className={`filter-slider-card filter-slider-card-per-view-${cardsPerView}`}
+                  className={`filter-slider-card filter-slider-card-per-view-${cardsPerView} cardreveal`}
                 >
                   {/* Top: image with location + office overlay */}
                   <div className="filter-slider-card-image-wrap relative aspect-[4/3] w-full overflow-hidden rounded-t-lg bg-gray-200">
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="absolute inset-0 h-full w-full object-cover"
+                      className="absolute inset-0 h-full w-full object-cover cardreveal-image"
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = "none";
                       }}

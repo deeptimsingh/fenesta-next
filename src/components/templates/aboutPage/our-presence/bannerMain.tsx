@@ -5,11 +5,11 @@ import { useInsidePageBannerAnimation, getInsidePageBannerInitialStyles } from "
 
 const initial = getInsidePageBannerInitialStyles();
 
-export default function BannerMain() {
+export default function BannerMain({ animationReady = true }: { animationReady?: boolean }) {
   const bgRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLDivElement | null>(null);
 
-  useInsidePageBannerAnimation(bgRef, titleRef);
+  useInsidePageBannerAnimation(bgRef, titleRef, { startWhenReady: animationReady });
 
   return (
      <section className="inside-page-banner relative h-screen max-h-192 w-full overflow-hidden flex items-center justify-start inside-page-banner">        

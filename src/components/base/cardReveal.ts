@@ -45,12 +45,12 @@ export const initCardReveal = ({
       tl.to(card, {
         y: 0,
         opacity: 1,
-        duration: 1,
+        duration: 0.75,
         ease: "power3.out",
       }).fromTo(
         image,
-        { scale: 1.15, filter: "blur(20px)" },
-        { scale: 1, filter: "blur(0px)", duration: 1.2 },
+        { scale: 1.08, filter: "blur(4px)" },
+        { scale: 1, filter: "blur(0px)", duration: 0.45, ease: "power2.out" },
         0
       );
     });

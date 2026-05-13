@@ -5,6 +5,7 @@ OUR VALUES
 .values-section { position: relative;}
 .values-block .letter{will-change: transform, opacity;}
 .handSvg svg{ width: 100%; height: auto; display: block;}
+
 @media all and (max-width:1280px) and (min-width:768px) {
   .letters-outer{ max-width:50vw; margin: 0 auto; gap:1vw;}
   .letters-outer  img{ height:7vw; width: 6vw;}

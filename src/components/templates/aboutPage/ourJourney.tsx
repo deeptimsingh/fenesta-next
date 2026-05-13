@@ -1,22 +1,24 @@
-
 "use client";
-
 import { useRef, useState, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
+import "@/components/templates/common.css";
+
 
 /* ===== CONFIG ===== */
 const TOTAL = 12;
 const DESKTOP_ARC = 160; // from -80 to 80
+const AUTO_ADVANCE_MS = 6000; // year slider auto-move every 6s
 
 export default function JourneySection() {
   /* ===== REFS ===== */
   const circleRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const activeIndexRef = useRef(6);
   const { headingRef, sectionRef: journeySectionRef } = useHeadingAnimation();
-
-  
+ 
 
   /* ===== STATE ===== */
   const [activeIndex, setActiveIndex] = useState(6);
@@ -103,15 +105,46 @@ export default function JourneySection() {
   const nextYear = () => rotateTo(activeIndex + 1);
   const prevYear = () => rotateTo(activeIndex - 1);
 
-  /* ===== CONTENT ANIMATION ===== */
+  /* Keep ref in sync for auto-advance interval */
   useEffect(() => {
-    if (contentRef.current) {
-      gsap.fromTo(
-        contentRef.current,
-        { opacity: 0, y: 16 },
-        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
+
+  /* ===== AUTO ADVANCE: move to next year every 6s, loop from last to first ===== */
+  useEffect(() => {
+    if (!mounted) return;
+    const id = setInterval(() => {
+      const prev = activeIndexRef.current;
+      const next = prev >= TOTAL - 1 ? 0 : prev + 1;
+      rotateTo(next);
+    }, AUTO_ADVANCE_MS);
+    return () => clearInterval(id);
+  }, [mounted]);
+
+  /* ===== CONTENT ANIMATION: caption left→right, image zoom with 1s delay ===== */
+  useEffect(() => {
+    const caption = contentRef.current;
+    const media = mediaRef.current;
+    const tl = gsap.timeline();
+    if (caption) {
+      tl.fromTo(
+        caption,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" },
+        0
       );
     }
+    if (media) {
+      tl.fromTo(
+        media,
+        { opacity: 0, scale:0.5 },
+        { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" },
+        1
+      );
+    }
+    return () => {
+      tl.kill();
+    };
   }, [activeIndex]);
 
   /* ===== YEAR CONTENT ===== */
@@ -144,6 +177,13 @@ export default function JourneySection() {
   };
 
   const activeContent = getActiveContent();
+
+  /* ===== YEAR LABEL: e.g. 1998 → "1998-99", 2013 → "2013-14" ===== */
+  const getYearLabel = (index: number) => {
+    const start = 1998 + index;
+    const endShort = (start + 1) % 100;
+    return `${start}-${String(endShort).padStart(2, "0")}`;
+  };
 
   /* ===== RENDER INDIVIDUAL YEARS ===== */
   const renderYear = (index: number, label: string) => {
@@ -242,13 +282,12 @@ export default function JourneySection() {
                 >
                   {mounted &&
                     [...Array(TOTAL)].map((_, i) =>
-                      renderYear(i, `${1998 + i}`)
+                      renderYear(i, getYearLabel(i))
                     )}
                 </div>
               </div>
             </div>
           </div>
-
            
           <div className="circle-content flex flex-1 items-center gap-10 lg:gap-10 xl:gap-30 2xl:gap-30">
             {/* ===== CONTENT TEXT ===== */}
@@ -285,42 +324,26 @@ export default function JourneySection() {
 
             {/* ===== IMAGE / VIDEO ===== */}
             <div className="relative w-screen md:w-[80vw] max-w-[90vw] md:max-w-[35vw] aspect-square flex items-center justify-center me-20">
-              <div
-                className="absolute inset-0 rounded-full z-10"
-                style={{
-                  background:
-                    "url('/images/about/circleShadow.svg')",
-                  backgroundSize: "130% 130%",
-                  backgroundPosition: "center",
-                }}
-              />
-              <div
-                className="relative w-full h-full rounded-full overflow-hidden"
-                style={{
-                  WebkitMaskImage:
-                    "radial-gradient(circle, black 70%, rgba(0,0,0,0.8) 80%, transparent 90%)",
-                  maskImage:
-                    "radial-gradient(circle, black 70%, rgba(0,0,0,0.8) 80%, transparent 90%)",
-                }}
-              >
-                {activeContent.type === "video" ? (
-                  <video
-                    key={activeIndex}
-                    src={activeContent.media}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <img
-                    key={activeIndex}
-                    src={activeContent.media}
-                    alt={activeContent.title}
-                    className="w-full h-full object-cover"
-                  />
-                )}
+              <div className="absolute inset-0 rounded-full z-10 overlay-circle-shadow" />
+              <div className="relative w-full h-full rounded-full overflow-hidden circle-img-inner " >
+                <div ref={mediaRef} key={activeIndex} className="w-full h-full">
+                  {activeContent.type === "video" ? (
+                    <video
+                      src={activeContent.media}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={activeContent.media}
+                      alt={activeContent.title}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
               </div>
             </div>
           </div>  

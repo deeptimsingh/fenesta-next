@@ -38,7 +38,7 @@ export default function RightStickyBar() {
   if (!mounted) {
     return (
       <div 
-        className="fixed right-0 z-50  rightsidebar top-0 bottom-0 h-screen opacity-0 pointer-events-none"
+        className="fixed right-0 z-10  rightsidebar top-0 bottom-0 h-screen opacity-0 pointer-events-none"
         suppressHydrationWarning
       >
         <div className="relative flex flex-col overflow-hidden backdrop-blur-md text-white rounded-l-xl w-22.5 h-full" />
@@ -92,7 +92,7 @@ export default function RightStickyBar() {
       )}
       <div 
         id="right-sticky-bar"
-        className={`group fixed right-0 z-80 rightsidebar transition-all duration-500 ease-in-out top-1/2 -translate-y-1/2 
+        className={`group fixed right-0 z-10 rightsidebar transition-all duration-500 ease-in-out top-1/2 -translate-y-1/2 
           ${isMobile ? " top-1/2 -translate-y-1/2 h-auto w-full max-w-[90px]" : ""}
           ${!isMobile && scrolled ? "h-auto top-1/2 -translate-y-1/2 group-hover:h-auto group-hover:top-1/2 group-hover:-translate-y-1/2" : ""}
           ${!isMobile && !scrolled ? "top-1/2 -translate-y-1/2 h-auto" : ""}
@@ -110,9 +110,9 @@ export default function RightStickyBar() {
         {!isMobile && (
           <div className={`absolute left-0 top-1/2 -translate-y-1/2 flex w-14 h-14 0 bg-[#1212127D]  items-center justify-center transition-all duration-300 z-10 ${scrolled ? "opacity-100 group-hover:opacity-0 group-hover:pointer-events-none" : "opacity-0 pointer-events-none"}`}>
             <Image
-              src="/images/slider-arrow-next-white.svg"
+              src="/images/three-dots-vertical.svg"
               alt="Open"
-              width={18}
+              width={30}
               height={18}
               className="pointer-events-none"
             />

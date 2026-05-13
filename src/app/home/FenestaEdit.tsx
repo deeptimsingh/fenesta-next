@@ -2,22 +2,13 @@
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
+import { useRef } from "react";
 
 import "swiper/css";
 import "swiper/css/autoplay";
 
-
 import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
-
-gsap.registerPlugin(ScrollTrigger);
-
-ScrollTrigger.config({
-  limitCallbacks: true,
-  ignoreMobileResize: true,
-});
+import { useImageParallax } from "@/hooks/useImageParallax";
 
 const posts = [
   {
@@ -52,45 +43,66 @@ const posts = [
   },
 ];
 
-export default function FenestaEdit() {
-  const imageRefs = useRef<HTMLDivElement[]>([]);
-  // 🔥 Heading animation with GSAP (using common defaults)
-  const { headingRef, sectionRef } = useHeadingAnimation(); 
-  
-useEffect(() => {
-  imageRefs.current.forEach((el) => {
-    if (!el) return;
-
-    const img = el.querySelector("img");
-    if (!img) return;
-
-    // 🔥 IMPORTANT: base state
-    gsap.set(img, {
-      scale: 1.15,
-      yPercent: 0,
-      transformOrigin: "center center",
-      willChange: "transform",
-    });
-
-    // 🔥 Smooth parallax (editorial style)
-    gsap.to(img, {
-      yPercent: 15, // 👈 subtle downward movement
-      ease: "none",
-      scrollTrigger: {
-        trigger: el,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1.6, // 👈 smoother than 0.8
-        invalidateOnRefresh: true,
-      },
-    });
+/** Single desktop card with same Y parallax as LeftRightStructure (fromY -50 → toY 50, smooth 0.08) */
+function FenestaEditCard({
+  post,
+  index,
+}: {
+  post: (typeof posts)[0];
+  index: number;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imageWrapRef = useRef<HTMLDivElement>(null);
+  useImageParallax(containerRef, imageWrapRef, {
+    // Keep enough overscan while moving on Y so card edges stay filled.
+    fromScale: 1.25,
+    toScale: 1.25,
+    fromY: -50,
+    toY: 50,
+    smooth: 0.08,
   });
 
-  return () => {
-    ScrollTrigger.getAll().forEach((st) => st.kill());
-  };
-}, []);
+  return (
+    <div
+      ref={containerRef}
+      className={`relative rounded-xl overflow-hidden group cursor-pointer ${
+        index === 0
+          ? "col-span-1 row-span-2 h-[295px] lg:h-[500px] 2xl:h-[650px]"
+          : "h-[295px] lg:h-[240px] 2xl:h-[310px]"
+      }`}
+      data-cursor
+    >
+      <div
+        ref={imageWrapRef}
+        className="relative w-full h-full overflow-hidden will-change-transform"
+        style={{ transformOrigin: "center" }}
+      >
+        <Image
+          src={post.img}
+          alt={post.title}
+          fill
+          className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+        />
+      </div>
+      <div className="absolute inset-x-0 bottom-0 bg-[#12121250] group-hover:bg-[#0288D1] text-white px-4 py-4 pr-14 backdrop-blur-sm">
+        <p className="text-sm opacity-80 leading-none ">{post.date}</p>
+        <p className=" mt-2 leading-tight text-p">{post.title}</p>
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#12121250] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(.22,.61,.36,1)] scale-75 group-hover:scale-100">
+          <Image
+            src="/images/arrow-right.svg"
+            alt=""
+            width={14}
+            height={14}
+            className="object-cover transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:-rotate-45 relative top-[2px] -left-[2px]"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
 
+export default function FenestaEdit() {
+  const { headingRef, sectionRef } = useHeadingAnimation();
 
   return (
     <section className="FenestaEdit common-padding w-full mx-auto overflow-hidden relative bg-darkbase ">
@@ -109,39 +121,10 @@ useEffect(() => {
               </div>     
             </div>  
 
-          {/* Desktop Grid */}
+          {/* Desktop Grid: same Y parallax as LeftRightStructure (-50px → 50px, smooth 0.08) */}
           <div className="hidden md:grid grid-cols-3 gap-5">
             {posts.map((post, index) => (
-              <div
-                key={post.id}
-                ref={(el) => {
-                  if (el) imageRefs.current[index] = el;
-                }}
-                className={`relative rounded-xl overflow-hidden group cursor-pointer ${
-                  index === 0 ? "col-span-1 row-span-2 h-[295px] lg:h-[500px] 2xl:h-[650px]" : "h-[295px]  lg:h-[240px] 2xl:h-[310px]" 
-                }` }
-              data-cursor>
-                {/* Parallax Image */}
-                <div className="relative w-full h-full overflow-hidden">
-                  <Image
-                    src={post.img}
-                    alt={post.title}
-                    fill
-                    className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
-                  />
-                </div>
-
-                {/* Overlay Text */}
-                <div className="absolute inset-x-0 bottom-0 bg-[#12121250] group-hover:bg-[#0288D1] text-white px-4 py-4 pr-14 backdrop-blur-sm">
-                  <p className="text-sm opacity-80 leading-none ">{post.date}</p>
-                  <p className=" mt-2 leading-tight text-p">{post.title}</p>
-
-                  {/* HOVER BUTTON */}
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#12121250] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(.22,.61,.36,1)] scale-75 group-hover:scale-100">
-                    <Image src="/images/arrow-right.svg" alt="" width="14" height="14" className="object-cover transition-transform duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:-rotate-45 relative top-[2px] -left-[2px]" />
-                  </div>
-                </div>
-              </div>
+              <FenestaEditCard key={post.id} post={post} index={index} />
             ))}
           </div>
 

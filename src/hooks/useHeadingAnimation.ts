@@ -12,6 +12,8 @@ interface UseHeadingAnimationOptions {
   stagger?: number;
   initialRotateX?: number;
   initialY?: number;
+  /** when false, heading animation does not start until this becomes true (e.g. after a parent animation) */
+  startWhen?: boolean;
 }
 
 /**
@@ -45,7 +47,8 @@ export function useHeadingAnimation({
   exitDuration = 0.7, // Common duration for exit animation
   stagger = 0.25, // Common stagger timing
   initialRotateX = 180, // Common initial rotation
-  initialY = 30 // Common initial Y offset
+  initialY = 30, // Common initial Y offset
+  startWhen = true
 }: UseHeadingAnimationOptions = {}) {
   // Create refs internally if not provided
   const internalHeadingRef = useRef<HTMLDivElement>(null);
@@ -54,6 +57,7 @@ export function useHeadingAnimation({
   const headingRef = providedHeadingRef || internalHeadingRef;
   const sectionRef = providedSectionRef || internalSectionRef;
   useEffect(() => {
+    if (startWhen === false) return;
     if (!headingRef.current || !sectionRef.current) return;
 
     const content = headingRef.current;
@@ -144,7 +148,7 @@ export function useHeadingAnimation({
       tlOut.kill();
       gsap.killTweensOf(items);
     };
-  }, [headingRef, sectionRef, selector, threshold, rootMargin, enterDuration, exitDuration, stagger, initialRotateX, initialY]);
+  }, [headingRef, sectionRef, selector, threshold, rootMargin, enterDuration, exitDuration, stagger, initialRotateX, initialY, startWhen]);
 
   // Return refs so components can use them in JSX
   return {

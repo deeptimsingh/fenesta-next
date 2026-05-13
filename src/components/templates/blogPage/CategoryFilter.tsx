@@ -1,27 +1,48 @@
 "use client";
-import { useRef, useState, useEffect, CSSProperties } from "react";
+
+import { useRef, useState, useEffect, CSSProperties, type ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { initCardReveal } from "@/components/base/cardReveal";
 
-const BLOG_OPTIONS = [
-  { value: "all", label: "All" },
-  { value: "windows", label: "Windows & doors" },
-  { value: "home", label: "Home decor" },
-  { value: "architecture", label: "Architecture & design" },
-  { value: "eco", label: "Eco-friendly home" },
-  { value: "smart", label: "Smart city" },
-  { value: "corporate", label: "Corporate newsroom" },
-] as const;
+const VALID_CATEGORY = new Set([
+  "windowsanddoor",
+  "homedecor",
+  "architectureanddesign",
+  "ecofridenly",
+  "smartcity",
+  "corporatenewsroom",
+]);
 
-export default function CategoryTabs() {
-  const [active, setActive] = useState("all");
+function getActiveTabId(pathname: string): string {
+  if (pathname === "/blog" || pathname === "/blog/") return "all";
+  const parts = pathname.split("/").filter(Boolean);
+  if (parts[0] !== "blog") return "all";
+  const seg = parts[1];
+  if (seg && VALID_CATEGORY.has(seg)) return seg;
+  return "all";
+}
+
+type CategoryFilterProps = {
+  children: ReactNode;
+};
+
+export default function CategoryFilter({ children }: CategoryFilterProps) {
+  const pathname = usePathname() ?? "";
+  const active = getActiveTabId(pathname);
+
   const [highlightStyle, setHighlightStyle] = useState<CSSProperties>({});
+  const [showRightFade, setShowRightFade] = useState(false);
+  const [showLeftFade, setShowLeftFade] = useState(false);
   const tabContainerRef = useRef<HTMLDivElement | null>(null);
   const cardsContainerRef = useRef<HTMLDivElement | null>(null);
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
 
-  /* Card reveal animation — only when "all" tab is visible */
+  /* Card reveal — only on “All” listing */
   useEffect(() => {
     if (active !== "all") return;
     if (!cardsContainerRef.current) return;
@@ -33,595 +54,361 @@ export default function CategoryTabs() {
     });
 
     return () => ctx?.revert();
-  }, [active]);
+  }, [active, pathname]);
 
-  /* ============================================================
-  MOVING HIGHLIGHT BAR
-  ============================================================ */
+  /* Hover image swap */
+  useEffect(() => {
+    const root = cardsContainerRef.current;
+    if (!root) return;
+
+    const preloaders: HTMLImageElement[] = [];
+    root.querySelectorAll<HTMLImageElement>(".project-img[data-hover]").forEach((img) => {
+      const hover = img.getAttribute("data-hover");
+      if (!hover) return;
+      const pre = new window.Image();
+      pre.src = hover;
+      preloaders.push(pre);
+    });
+
+    const wrappers = Array.from(root.querySelectorAll<HTMLElement>(".reveal-img-wrapper"));
+    const cleanups: Array<() => void> = [];
+
+    wrappers.forEach((wrapper) => {
+      const img = wrapper.querySelector<HTMLImageElement>(".project-img[data-hover]");
+      if (!img) return;
+
+      const originalSrc = img.getAttribute("src") || img.currentSrc || "";
+      const originalSrcSet = img.getAttribute("srcset") || "";
+      const originalSizes = img.getAttribute("sizes") || "";
+      const hover = img.getAttribute("data-hover");
+      if (!hover) return;
+      let timer: number | null = null;
+      let incomingTimer: number | null = null;
+      const SWAP_MS = 260;
+
+      const clearTimer = () => {
+        if (timer !== null) {
+          window.clearTimeout(timer);
+          timer = null;
+        }
+        if (incomingTimer !== null) {
+          window.clearTimeout(incomingTimer);
+          incomingTimer = null;
+        }
+      };
+
+      const resetClasses = () => {
+        img.classList.remove("is-swapping-out");
+        img.classList.remove("is-swapping-in");
+      };
+
+      const runIncomingSettle = () => {
+        img.classList.add("is-swapping-in");
+        img.getBoundingClientRect();
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            incomingTimer = window.setTimeout(() => {
+              img.classList.remove("is-swapping-in");
+              incomingTimer = null;
+            }, 40);
+          });
+        });
+      };
+
+      const onEnter = () => {
+        clearTimer();
+        resetClasses();
+        img.classList.add("is-swapping-out");
+        timer = window.setTimeout(() => {
+          img.setAttribute("srcset", "");
+          img.setAttribute("sizes", "");
+          img.src = hover;
+          img.classList.remove("is-swapping-out");
+          runIncomingSettle();
+        }, SWAP_MS);
+      };
+
+      const onLeave = () => {
+        clearTimer();
+        resetClasses();
+        img.src = originalSrc;
+        if (originalSrcSet) img.setAttribute("srcset", originalSrcSet);
+        else img.removeAttribute("srcset");
+        if (originalSizes) img.setAttribute("sizes", originalSizes);
+        else img.removeAttribute("sizes");
+      };
+
+      wrapper.addEventListener("pointerenter", onEnter);
+      wrapper.addEventListener("pointerleave", onLeave);
+
+      cleanups.push(() => {
+        clearTimer();
+        resetClasses();
+        wrapper.removeEventListener("pointerenter", onEnter);
+        wrapper.removeEventListener("pointerleave", onLeave);
+      });
+    });
+
+    return () => {
+      cleanups.forEach((fn) => fn());
+    };
+  }, [pathname, active]);
+
   const updateHighlight = (id: string) => {
     const el = document.getElementById(id);
     const container = tabContainerRef.current;
     if (!el || !container) return;
-
-    const elRect = el.getBoundingClientRect();
-    const parentRect = container.getBoundingClientRect();
+    const tabEl = el as HTMLElement;
 
     setHighlightStyle({
-      width: `${elRect.width}px`,
-      transform: `translateX(${elRect.left - parentRect.left}px)`
+      width: `${tabEl.offsetWidth}px`,
+      transform: `translateX(${tabEl.offsetLeft}px)`,
     });
   };
 
+  const ensureActiveTabVisible = (id: string) => {
+    const container = tabContainerRef.current;
+    const el = document.getElementById(id) as HTMLElement | null;
+    if (!container || !el) return;
+
+    const left = el.offsetLeft;
+    const right = left + el.offsetWidth;
+    const visibleLeft = container.scrollLeft;
+    const visibleRight = visibleLeft + container.clientWidth;
+    const pad = 8;
+
+    if (left < visibleLeft + pad) {
+      container.scrollTo({ left: Math.max(left - pad, 0), behavior: "smooth" });
+      return;
+    }
+
+    if (right > visibleRight - pad) {
+      const nextLeft = right - container.clientWidth + pad;
+      container.scrollTo({ left: Math.max(nextLeft, 0), behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
+    const container = tabContainerRef.current;
     updateHighlight(active);
-    const onResize = () => updateHighlight(active);
+    ensureActiveTabVisible(active);
+
+    const onResize = () => {
+      updateHighlight(active);
+    };
+    const onScroll = () => {
+      updateHighlight(active);
+    };
     window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    container?.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("resize", onResize);
+      container?.removeEventListener("scroll", onScroll);
+    };
   }, [active]);
 
+  useEffect(() => {
+    const container = tabContainerRef.current;
+    if (!container) return;
+
+    const updateRightFade = () => {
+      const tolerance = 3;
+      const hasOverflow = container.scrollWidth > container.clientWidth + tolerance;
+      const atLeftStart = container.scrollLeft <= tolerance;
+      const atRightEnd =
+        container.scrollLeft + container.clientWidth >= container.scrollWidth - tolerance;
+      setShowLeftFade(hasOverflow && !atLeftStart);
+      setShowRightFade(hasOverflow && !atRightEnd);
+    };
+
+    updateRightFade();
+    container.addEventListener("scroll", updateRightFade, { passive: true });
+    window.addEventListener("resize", updateRightFade);
+
+    requestAnimationFrame(updateRightFade);
+    setTimeout(updateRightFade, 260);
+
+    return () => {
+      container.removeEventListener("scroll", updateRightFade);
+      window.removeEventListener("resize", updateRightFade);
+    };
+  }, [active]);
 
   useEffect(() => {
     const updateOffset = () => {
-    const header = document.getElementById("site-header");
-    if (!header) return;
+      const header = document.getElementById("site-header");
+      if (!header) return;
 
-    const headerHeight = header.offsetHeight;
-    const offset = headerHeight + 10; // spacing below header
+      const headerHeight = header.offsetHeight;
+      const offset = headerHeight + 10;
 
-    document.documentElement.style.setProperty("--header-offset", `${offset}px`);
-  };
+      document.documentElement.style.setProperty("--header-offset", `${offset}px`);
+    };
 
-  updateOffset();
-  window.addEventListener("resize", updateOffset);
-  return () => window.removeEventListener("resize", updateOffset);
+    updateOffset();
+    window.addEventListener("resize", updateOffset);
+    return () => window.removeEventListener("resize", updateOffset);
   }, []);
-
-
-  /* ============================================================
-  DRAG + SWIPE SCROLL
-  ============================================================ */
-
-  let isDragging = false;
-  let startX = 0;
-  let scrollLeft = 0;
 
   const startDrag = (e: React.MouseEvent) => {
     const el = tabContainerRef.current;
     if (!el) return;
-    isDragging = true;
-    startX = e.pageX - el.offsetLeft;
-    scrollLeft = el.scrollLeft;
+    isDraggingRef.current = true;
+    startXRef.current = e.pageX - el.offsetLeft;
+    scrollLeftRef.current = el.scrollLeft;
   };
 
   const onDrag = (e: React.MouseEvent) => {
     const el = tabContainerRef.current;
-    if (!el || !isDragging) return;
+    if (!el || !isDraggingRef.current) return;
     e.preventDefault();
     const x = e.pageX - el.offsetLeft;
-    const walk = (x - startX) * 1.3;
-    el.scrollLeft = scrollLeft - walk;
+    const walk = (x - startXRef.current) * 1.3;
+    el.scrollLeft = scrollLeftRef.current - walk;
   };
 
-  const stopDrag = () => { isDragging = false; };
+  const stopDrag = () => {
+    isDraggingRef.current = false;
+  };
 
   const startTouch = (e: React.TouchEvent) => {
     const el = tabContainerRef.current;
     if (!el) return;
-    isDragging = true;
-    startX = e.touches[0].pageX - el.offsetLeft;
-    scrollLeft = el.scrollLeft;
+    isDraggingRef.current = true;
+    startXRef.current = e.touches[0].pageX - el.offsetLeft;
+    scrollLeftRef.current = el.scrollLeft;
   };
 
   const onTouchDrag = (e: React.TouchEvent) => {
     const el = tabContainerRef.current;
-    if (!el || !isDragging) return;
+    if (!el || !isDraggingRef.current) return;
     const x = e.touches[0].pageX - el.offsetLeft;
-    const walk = (x - startX) * 1.3;
-    el.scrollLeft = scrollLeft - walk;
+    const walk = (x - startXRef.current) * 1.3;
+    el.scrollLeft = scrollLeftRef.current - walk;
   };
 
- 
+  const tabBase =
+    "relative z-10 flex items-center gap-2  py-3 rounded-[50px] h-[50px] text-basexs leading-tight px-3 md:px-4 shrink-0";
+  const tabInactive = "bg-white text-theme/80 dark:text-white";
+  const tabActive = "text-white";
 
   return (
     <div ref={cardsContainerRef} className="w-full">
-
-      {/* ====================== DESKTOP TABS ======================= */}
-     <div
-        ref={tabContainerRef}
-        className=" tab-sticky relative hidden md:flex items-center justify-between gap-3 md:gap-[0.75vw] bg-theme/10  p-2 rounded-[50px] overflow-x-auto whitespace-nowrap no-scrollbar cursor-grab"
-        onMouseDown={startDrag} onMouseMove={onDrag} onMouseUp={stopDrag} onMouseLeave={stopDrag}  onTouchStart={startTouch}
-        onTouchMove={onTouchDrag}  onTouchEnd={stopDrag}>
-        {/* MOVING HIGHLIGHT BAR */}
+      <div
+        className={`tab-sticky-fade-wrap ${showRightFade ? "show-right-fade" : ""} ${showLeftFade ? "show-left-fade" : ""}`}
+      >
         <div
-          className="absolute top-2 bottom-2 bg-theme bg-white  rounded-full transition-all duration-300 inset-0"
-          style={highlightStyle}
-        />
+          ref={tabContainerRef}
+          className="tab-sticky relative flex md:flex items-center justify-start md:justify-between gap-3 md:gap-[0.75vw] bg-theme/20 dark:bg-cream/20 p-2 rounded-[50px] overflow-x-auto whitespace-nowrap no-scrollbar cursor-grab backdrop-blur-sm"
+          onMouseDown={startDrag}
+          onMouseMove={onDrag}
+          onMouseUp={stopDrag}
+          onMouseLeave={stopDrag}
+          onTouchStart={startTouch}
+          onTouchMove={onTouchDrag}
+          onTouchEnd={stopDrag}
+        >
+          <div
+            className="absolute top-2 bottom-2 left-0 bg-blue rounded-full transition-all duration-300"
+            style={highlightStyle}
+          />
 
-        {/* ALL */}
-        <button
-          id="all"
-          onClick={() => setActive("all")}
-          className={`relative z-10 flex items-center  py-3 rounded-[50px] h-[50px] text-basexs leading-tight
-            ${active === "all" ? "text-white" : "bg-white bg-lightdarkbase text-gray-800"}`}>
-          <span className="text-left">All</span>
-        </button>
-
-        {/* WINDOWS */}
-        <button
-          id="windows"
-          onClick={() => setActive("windows")}
-          className={`relative z-10 flex items-center  py-3 rounded-[50px] h-[50px] text-basexs leading-tight
-            ${active === "windows" ? "text-white" : "bg-white text-gray-800"}`}>
-          <Image src="/images/blog/icons/icon1.svg" width={20} height={20} alt="" />
-          <span className="text-left">Windows<br />& doors</span>
-        </button>
-
-        {/* HOME */}
-        <button
-          id="home"
-          onClick={() => setActive("home")}
-          className={`relative z-10 flex items-center  py-3 rounded-[50px] h-[50px] text-basexs leading-tight
-            ${active === "home" ? "text-white" : "bg-white text-gray-800"}`}>
-          <Image src="/images/blog/icons/icon2.svg" width={20} height={20} alt="" />
-          <span className="text-left">Home<br />decor</span>
-        </button>
-
-        {/* ARCHITECTURE */}
-        <button
-          id="architecture"
-          onClick={() => setActive("architecture")}
-          className={`relative z-10 flex items-center  py-3 rounded-[50px] h-[50px] text-basexs leading-tight
-            ${active === "architecture" ? "text-white" : "bg-white text-gray-800"}`}>
-          <Image src="/images/blog/icons/icon3.svg" width={20} height={20} alt="" />
-          <span className="text-left">Architecture<br />& design</span>
-        </button>
-
-        {/* ECO */}
-        <button
-          id="eco"
-          onClick={() => setActive("eco")}
-          className={`relative z-10 flex items-center  py-3 rounded-[50px] h-[50px] text-basexs leading-tight
-            ${active === "eco" ? "text-white" : "bg-white text-gray-800"}`}>
-          <Image src="/images/blog/icons/icon4.svg" width={20} height={20} alt="" />
-          <span className="text-left">Eco-friendly<br />home</span>
-        </button>
-
-        {/* SMART */}
-        <button
-          id="smart"
-          onClick={() => setActive("smart")}
-          className={`relative z-10 flex items-center  py-3 rounded-[50px] h-[50px] text-basexs leading-tight
-            ${active === "smart" ? "text-white" : "bg-white text-gray-800"}`}>
-          <Image src="/images/blog/icons/icon5.svg" width={20} height={20} alt="" />
-          <span className="text-left">Smart<br />city</span>
-        </button>
-
-        {/* CORPORATE */}
-        <button
-          id="corporate"
-          onClick={() => setActive("corporate")}
-          className={`relative z-10 flex items-center  py-3 rounded-[50px] h-[50px] text-basexs leading-tight
-            ${active === "corporate" ? "text-white" : "bg-white text-gray-800"}`}>
-          <Image src="/images/blog/icons/icon6.svg" width={20} height={20} alt="" />
-          <span className="text-left">Corporate<br />newsroom</span>
-        </button>
-      </div>
-
-      {/* ====================== MOBILE CUSTOM SELECT ======================= */}
-      <div className="md:hidden mt-3">
-        <CustomSelect value={active} onChange={setActive} options={BLOG_OPTIONS} />
-      </div>
-
-      {/* ====================== TAB CONTENT — USING ID ======================= */}
-
-      <div className="mt-6 animate-slideUp ">
-        <div id="content-all" className={`${active === "all" ? "block" : "hidden"}`}>
-          <div className="tab-content-in">
-              <div className="grid md:grid-cols-2 gap-8">
-                  {/* ------- CARD 1 ------- */}
-                  <Link href="/blog/blog-inside" className="block">
-                  <div className="reveal-card tab-content-item bg-white bg-lightdarkbase rounded-2xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-md ">
-                    {/* Image */}
-                    <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">                    
-                      <Image
-                        src="/images/blog/windowDoorImg1.webp"
-                        alt="Door Designs"
-                        fill
-                        className="object-cover reveal-img card-image"
-                      />
-                      {/* Tag */}
-                      <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
-                        Windows & doors
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5">
-                      <div className="reveal-con flex items-center gap-4 text-14 text-theme/70 justify-between">
-                        <div className="flex items-center gap-2">
-                        <Image
-                            src="/images/blog/calender-icon.svg"
-                            alt="calendar icon"
-                            width={16}
-                            height={16}
-                          /> Nov 18, 2025
-                        </div>
-
-                        <div className="flex items-center gap-1">
-                          <Image
-                            src="/images/blog/clock-icon.svg"
-                            alt="calendar icon"
-                            width={16}
-                            height={16}
-                          /> 9 Min Read
-                        </div>
-                      </div>
-
-                      <p className="mt-3 text-18 font-bold leading-tight text-gray-900">              
-                        Trendy and Functional Door Designs for Homes in 2025
-                      </p>
-                    </div>
-                  </div>
-                  </Link>
-
-
-                  {/* ------- CARD 2 ------- */}
-                  <div className="reveal-card tab-content-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
-                    {/* Image */}
-                    <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">
-                      <Image
-                        src="/images/blog/windowDoorImg2.webp"
-                        alt="Glass Window Tips"
-                        fill
-                        className="object-cover reveal-img card-image"
-                      />
-
-                      {/* Tag */}
-                      <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
-                      Architecture & design
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5">
-                      <div className="flex items-center gap-4 text-14 text-theme/70 justify-between">
-                        <div className="flex items-center gap-1">
-                          <Image
-                            src="/images/blog/calender-icon.svg"
-                            alt="calendar icon"
-                            width={16}
-                            height={16}
-                          /> 
-                          Oct 30, 2025
-                        </div>
-
-                        <div className="flex items-center gap-1">
-                            <Image
-                            src="/images/blog/clock-icon.svg"
-                            alt="clock icon"
-                            width={16}
-                            height={16}
-                          /> 
-                          4 Min Read
-                        </div>
-                      </div>
-
-                      <p className="mt-3 text-18 font-bold leading-tight text-gray-900">
-                        Design Tips: Using Glass Windows to Create a Spacious Look
-                      </p>
-                    </div>
-                  </div>
-
-
-                  {/* ------- CARD 3 ------- */}
-                  <div className="reveal-card tab-content-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
-                    {/* Image */}
-                    <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">                    
-                      <Image
-                        src="/images/blog/windowDoorImg1.webp"
-                        alt="Door Designs"
-                        fill
-                        className="object-cover reveal-img card-image"
-                      />
-                      {/* Tag */}
-                     <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
-                        Windows & doors
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5">
-                      <div className="flex items-center gap-4 text-14 text-theme/70 justify-between">
-                        <div className="flex items-center gap-2">
-                        <Image
-                            src="/images/blog/calender-icon.svg"
-                            alt="calendar icon"
-                            width={16}
-                            height={16}
-                          /> Nov 18, 2025
-                        </div>
-
-                        <div className="flex items-center gap-1">
-                          <Image
-                            src="/images/blog/clock-icon.svg"
-                            alt="calendar icon"
-                            width={16}
-                            height={16}
-                          /> 9 Min Read
-                        </div>
-                      </div>
-
-                      <p className="mt-3 text-18 font-bold leading-tight text-gray-900">              
-                        Trendy and Functional Door Designs for Homes in 2025
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* ------- CARD 4 ------- */}
-                  <div className="reveal-card tab-content-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
-                    {/* Image */}
-                    <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">
-                      <Image
-                        src="/images/blog/windowDoorImg2.webp"
-                        alt="Glass Window Tips"
-                        fill
-                        className="object-cover reveal-img card-image"
-                      />
-
-                      {/* Tag */}                     
-                      <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
-                        Architecture & design
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5">
-                      <div className="flex items-center gap-4 text-14 text-theme/70 justify-between">
-                        <div className="flex items-center gap-1">
-                          <Image
-                            src="/images/blog/calender-icon.svg"
-                            alt="calendar icon"
-                            width={16}
-                            height={16}
-                          /> 
-                          Oct 30, 2025
-                        </div>
-
-                        <div className="flex items-center gap-1">
-                            <Image
-                            src="/images/blog/clock-icon.svg"
-                            alt="clock icon"
-                            width={16}
-                            height={16}
-                          /> 
-                          4 Min Read
-                        </div>
-                      </div>
-
-                      <p className="mt-3 text-18 font-bold leading-tight text-gray-900">
-                        Design Tips: Using Glass Windows to Create a Spacious Look
-                      </p>
-                    </div>
-                  </div>
-
-
-                  {/* ------- CARD 5 ------- */}
-                  <div className="reveal-card tab-content-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md ">
-                    {/* Image */}
-                    <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">                    
-                      <Image
-                        src="/images/blog/windowDoorImg1.webp"
-                        alt="Door Designs"
-                        fill
-                        className="object-cover reveal-img card-image"
-                      />
-                      {/* Tag */}
-                     <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
-                        Windows & doors
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5">
-                      <div className="flex items-center gap-4 text-14 text-theme/70 justify-between">
-                        <div className="flex items-center gap-2">
-                        <Image
-                            src="/images/blog/calender-icon.svg"
-                            alt="calendar icon"
-                            width={16}
-                            height={16}
-                          /> Nov 18, 2025
-                        </div>
-
-                        <div className="flex items-center gap-1">
-                          <Image
-                            src="/images/blog/clock-icon.svg"
-                            alt="calendar icon"
-                            width={16}
-                            height={16}
-                          /> 9 Min Read
-                        </div>
-                      </div>
-
-                      <p className="mt-3 text-18 font-bold leading-tight text-gray-900">              
-                        Trendy and Functional Door Designs for Homes in 2025
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* ------- CARD 6 ------- */}
-                  <div className="reveal-card tab-content-item bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md">
-                    {/* Image */}
-                    <div className="reveal-img-wrapper relative h-56 w-full overflow-hidden">
-                      <Image
-                        src="/images/blog/windowDoorImg2.webp"
-                        alt="Glass Window Tips"
-                        fill
-                        className="object-cover reveal-img card-image"
-                      />
-
-                      {/* Tag */}
-                      <span className="tag absolute top-3 right-3 bg-[#ffffffcc] bg-lightdarkbase  text-14 font-semibold px-3 py-1 rounded-full shadow">
-                      Architecture & design
-                      </span>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5">
-                      <div className="flex items-center gap-4 text-14 text-theme/70 justify-between">
-                        <div className="flex items-center gap-1">
-                          <Image
-                            src="/images/blog/calender-icon.svg"
-                            alt="calendar icon"
-                            width={16}
-                            height={16}
-                          /> 
-                          Oct 30, 2025
-                        </div>
-
-                        <div className="flex items-center gap-1">
-                            <Image
-                            src="/images/blog/clock-icon.svg"
-                            alt="clock icon"
-                            width={16}
-                            height={16}
-                          /> 
-                          4 Min Read
-                        </div>
-                      </div>
-
-                      <p className="mt-3 text-18 font-bold leading-tight text-gray-900">
-                        Design Tips: Using Glass Windows to Create a Spacious Look
-                      </p>
-                    </div>
-                  </div>
-              </div>
-          </div>
-        </div>
-
-        <div id="content-windows" className={`${active === "windows" ? "block" : "hidden"}`}>
-          <Content title="Windows & Doors" text="Window & door design ideas." />
-        </div>
-
-        <div id="content-home" className={`${active === "home" ? "block" : "hidden"}`}>
-          <Content title="Home Decor" text="Decor inspiration & trends." />
-        </div>
-
-        <div id="content-architecture" className={`${active === "architecture" ? "block" : "hidden"}`}>
-          <Content title="Architecture & Design" text="Architecture insights." />
-        </div>
-
-        <div id="content-eco" className={`${active === "eco" ? "block" : "hidden"}`}>
-          <Content title="Eco-Friendly Home" text="Sustainable home solutions." />
-        </div>
-
-        <div id="content-smart" className={`${active === "smart" ? "block" : "hidden"}`}>
-          <Content title="Smart City" text="Technology for future living." />
-        </div>
-
-        <div id="content-corporate" className={`${active === "corporate" ? "block" : "hidden"}`}>
-          <Content title="Corporate Newsroom" text="Latest corporate updates." />
-        </div>
-
-      </div>
-    </div>
-  );
-}
-
-/* CUSTOM SELECT — styled dropdown (replaces native select) */
-function CustomSelect({
-  value,
-  onChange,
-  options,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  options: readonly { value: string; label: string }[];
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  const selectedOption = options.find((o) => o.value === value) ?? options[0];
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
-
-  return (
-    <div ref={wrapperRef} className="relative w-full">
-      {/* Hidden native select for form/accessibility fallback */}
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="fy-select sr-only"
-        aria-hidden
-        tabIndex={-1}
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-
-      <button
-        type="button"
-        onClick={() => setIsOpen((prev) => !prev)}
-        className={`selected-value w-full px-3 py-3 bg-[#F4F5F7] border-none rounded-lg flex items-center justify-between gap-2 transition-all duration-200 text-left text-gray-700 ${
-          isOpen ? "rounded-b-none" : ""
-        }`}
-        aria-expanded={isOpen}
-        aria-haspopup="listbox"
-      >
-        <span className={value === "" ? "text-[#999]" : ""}>{selectedOption.label}</span>
-        <Image
-          src="/images/down-arrow.svg"
-          alt=""
-          width={10}
-          height={10}
-          className={`select-arrow transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
-        />
-      </button>
-
-      <ul
-        role="listbox"
-        className={`dropdown-options absolute left-0 right-0 top-full mt-0 bg-white border border-t-0 border-gray-200 rounded-b-lg shadow-lg max-h-[320px] overflow-y-auto z-9 ${
-          isOpen ? "block" : "hidden"
-        }`}
-      >
-        {options.map((o) => (
-          <li
-            key={o.value}
-            role="option"
-            aria-selected={o.value === value}
-            onClick={() => {
-              onChange(o.value);
-              setIsOpen(false);
-            }}
-            className={`px-3 py-2.5 cursor-pointer text-sm sm:text-base hover:bg-[#0094D9] hover:text-white transition-colors ${
-              o.value === value ? "bg-[#0094D9]/10 text-[#0094D9] font-medium" : ""
-            }`}
+          <Link
+            id="all"
+            href="/blog"
+            scroll={false}
+            className={`${tabBase} ${active === "all" ? tabActive : `bg-white bg-lightdarkbase ${tabInactive}`}`}
           >
-            {o.label}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+            <span className="text-left">All</span>
+          </Link>
 
-/* CONTENT COMPONENT */
-function Content({ title, text }: { title: string; text: string }) {
-  return (
-    <div className="content-box">
-      <h2 className="text-xl font-semibold mb-2">{title}</h2>
-      <p className="text-theme/70">{text}</p>
+          <Link
+            id="windowsanddoor"
+            href="/blog/windowsanddoor"
+            scroll={false}
+            className={`${tabBase} ${active === "windowsanddoor" ? tabActive : tabInactive}`}
+          >
+            <Image src="/images/blog/icons/icon1.svg" width={20} height={20} alt="" />
+            <span className="text-left">
+              Windows
+              <br />
+              & doors
+            </span>
+          </Link>
+
+          <Link
+            id="homedecor"
+            href="/blog/homedecor"
+            scroll={false}
+            className={`${tabBase} ${active === "homedecor" ? tabActive : tabInactive}`}
+          >
+            <Image src="/images/blog/icons/icon2.svg" width={20} height={20} alt="" />
+            <span className="text-left">
+              Home
+              <br />
+              decor
+            </span>
+          </Link>
+
+          <Link
+            id="architectureanddesign"
+            href="/blog/architectureanddesign"
+            scroll={false}
+            className={`${tabBase} ${active === "architectureanddesign" ? tabActive : tabInactive}`}
+          >
+            <Image src="/images/blog/icons/icon3.svg" width={20} height={20} alt="" />
+            <span className="text-left">
+              Architecture
+              <br />
+              & design
+            </span>
+          </Link>
+
+          <Link
+            id="ecofridenly"
+            href="/blog/ecofridenly"
+            scroll={false}
+            className={`${tabBase} ${active === "ecofridenly" ? tabActive : tabInactive}`}
+          >
+            <Image src="/images/blog/icons/icon4.svg" width={20} height={20} alt="" />
+            <span className="text-left">
+              Eco-friendly
+              <br />
+              home
+            </span>
+          </Link>
+
+          <Link
+            id="smartcity"
+            href="/blog/smartcity"
+            scroll={false}
+            className={`${tabBase} ${active === "smartcity" ? tabActive : tabInactive}`}
+          >
+            <Image src="/images/blog/icons/icon5.svg" width={20} height={20} alt="" />
+            <span className="text-left">
+              Smart
+              <br />
+              city
+            </span>
+          </Link>
+
+          <Link
+            id="corporatenewsroom"
+            href="/blog/corporatenewsroom"
+            scroll={false}
+            className={`${tabBase} ${active === "corporatenewsroom" ? tabActive : tabInactive}`}
+          >
+            <Image src="/images/blog/icons/icon6.svg" width={20} height={20} alt="" />
+            <span className="text-left">
+              Corporate
+              <br />
+              newsroom
+            </span>
+          </Link>
+        </div>
+      </div>
+
+      <div className="mt-6 animate-slideUp">{children}</div>
     </div>
   );
 }

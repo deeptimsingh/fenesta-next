@@ -18,14 +18,13 @@ export default function Home() {
       <HeroSlider />
       <BeginJourney />
       <WindowDoorSection />
-      <ProjectsSlider />      
+      <ProjectsSlider />
       <CircularSliders />
-      <TrustedPartners />        
-      <ClientStories /> 
-      <VisitQuick />      
+      <TrustedPartners />
+      <ClientStories />
+      <VisitQuick />
       <Seeitlikeyourethere />
       <FenestaEdit />
     </main>
   );
 }
-
