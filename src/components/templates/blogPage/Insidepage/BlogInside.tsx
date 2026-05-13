@@ -99,12 +99,12 @@ export default function BannerMain({
   return (
     <>  
     <section  className="inside-page w-full mt-16">
-
       {/* Breadcrumb Section */}
       <section className="common-padding-md">
-         <div className="container mx-auto">
+         <div className="container mx-auto">         
+          <div ref={titleRef} className="relative  inset-0   z-10  max-w-6xl" style={initial.captionStyle}>
             {/* Breadcrumb */}
-             <div className="breadcrumbs-outer flex items-center gap-2 text-theme/75 text-sm mt-5">
+            <div className="breadcrumbs-outer flex items-center gap-2 text-theme/75 text-sm my-5">
               <span className="hover:text-white cursor-pointer ">Home</span>
               <Image
                 src="/images/down-arrow.svg"
@@ -123,37 +123,55 @@ export default function BannerMain({
               />
               <span className="text-theme">Top Window & Door Design Trends for Modern Homes in 2026</span>
             </div>
+            
+            <h1 className="text-theme text-h1 leading-none flex justify-center sm:justify-start flex-wrap gap-3 w-full text-center sm:text-left">Top Window & Door Design Trends for <span className="font-subFont text-corinthiaHeading text-brown leading-none contents ">Modern Homes in 2026</span></h1>        
 
-            {/* Blog Title */}
-            <div className="relative  z-10 " >
-            <h1 className="text-theme text-h1 leading-[1.1] flex justify-start flex-wrap gap-3"            >
-              {words.map((word, index) => {
-                const isAccent = index === effectiveAccentIndex;
-                return (
-                  <span
-                    key={`${word}-${index}`}
-                    className="heading-word-wrap relative inline-flex overflow-visible px-1 py-2">
-                    <span className="absolute -left-px -right-px inset-y-0 z-1 overflow-hidden pointer-events-none">
-                      <span className="heading-word-bg absolute inset-0 origin-left bg-blue" />
-                    </span>
+          </div>  
 
-                    <span className="heading-word-text relative z-10 inline-block overflow-visible">
-                      <span
-                        className={`heading-word-text-inner inline-block ${
-                          isAccent ? "font-subFont text-corinthiaHeading text-brown leading-[1.1] py-[0.06em]" : ""
-                        }`}
-                      >
-                        {word}
-                      </span>
-                    </span>
-                  </span>
-                );
-              })}
-            </h1>
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between mt-8">        
+            {/* Meta Left */}
+            <div className="flex flex-wrap items-center gap-8 ">         
+              {/* Author */}
+              <div className="flex items-center gap-3">
+                <div className="size-12 rounded-full bg-sky-500 overflow-hidden flex items-center justify-center shrink-0">
+                  <Image
+                    src="/images/fenesta-logo.svg"
+                    alt="Fenesta"
+                    className="w-7 h-7 object-contain"
+                    width={28}
+                    height={28}
+                  />
+                </div>
 
-           
-          </div>      
-         </div>
+                <div>
+                  <p className="text-xs text-neutral-500 mb-1">
+                    Author
+                  </p>
+
+                  <h6 className="text-base font-medium text-black leading-none">
+                    Fenesta
+                  </h6>
+                </div>
+              </div>
+
+              {/* Published */}
+              <div>
+                <p className="text-xs text-neutral-500 mb-1">
+                  Published
+                </p>
+
+                <h6 className="text-base font-medium text-black leading-none">
+                  Mar 18, 2026
+                </h6>
+              </div>
+            </div>
+
+            {/* Read Time */}
+            <div className="text-xs text-neutral-500">
+              5 minutes read
+            </div>
+          </div>   
+        </div>    
       </section>
 
 
@@ -172,10 +190,12 @@ export default function BannerMain({
                 media="(max-width: 767px)"
                 srcSet="/images/banner/blogs-inside-page-mobile.webp"
               />
-              <img
+              <Image
                 src="/images/banner/blogs-inside-page.webp"
                 alt="Hero Background"
-                className="absolute inset-0 w-full h-full object-cover"
+                fill
+                sizes="100vw"
+                className="object-cover"
                 fetchPriority="high"
               />
             </picture>
@@ -184,30 +204,31 @@ export default function BannerMain({
             <div
               className="banner-overlay absolute inset-0 pointer-events-none bg-[linear-gradient(180deg,rgba(0,0,0,0)_36.81%,rgba(0,0,0,0.7)_70%)] sm:bg-[linear-gradient(-90deg,rgba(0,0,0,0)_36.81%,rgba(0,0,0,0.7)_70%)]"
             />
-          </div> 
+          </div>
         </div>      
       </section>
 
-
           
-      <section className="content-wrapper content-over-banner">
+      <section className="content-wrapper ">
         <div className="two-col-outer mx-auto w-full   flex flex-row d:flex-col flex-wrap  items-start  ">
           <div className="container mx-auto">
             <div className="two-col flex flex-wrap gap-5 common-padding-md">
               {/* Left SIDEBAR */}
               <div className="left-side blog-left-side  flex-1 max-w-[calc(100%-315px)]  relative z-20 ">               
                 <div className="blog-content bg-white bg-darkbase h-full ">
-                  <p>Creating a spacious home is not just about its square footage; it’s about smart, thoughtful design choices. Glass windows play a crucial role in bringing in natural light, adding visual depth, and creating seamless indoor-outdoor connections. With the right design, the benefits of glass windows in interior design can go beyond aesthetic appeal; they can completely transform how your space feels and functions.</p>
+                  <p>In 2026, window and door trends are being shaped by minimalism, energy efficiency, smart technology, and a growing desire for seamless indoor-outdoor living. Homeowners now prioritise comfort, aesthetics, and sustainability, leading to several new trends in window and door designs for the home, such as larger glass-to-frame ratios, improved outdoor views, and designs that are well-suited to apartments, villas, and urban homes alike.</p>
 
-                  <p>What Is the Role of Natural Light in Creating Spaciousness?</p>
+                  <h3>What Is the Role of Natural Light in Creating Spaciousness?</h3>
 
-                  <p>Natural light brightens the walls, reduces shadows, and creates a bright and open atmosphere, which enhances the sense of volume and depth in a room. Glass windows also form a visual bridge to the outdoors. By extending your view beyond the walls of the space, windows trick the eye into perceiving the room as larger. As aluminium has become one of the most highly preferred fenestration materials today, it makes sense to choose t es that can completely transform any space and make it feel more expansive.</p>
+                  <p>Energy-efficient windows and doors have become essential for modern homes as homeowners are looking for solutions that can help them reduce heat gain, minimise noise, and lower energy consumption throughout the year. This growing focus on performance has accelerated the use of advanced glazing options and improved thermal insulation benefits. As a result, energy efficient windows and doors are now central to creating comfortable interiors across diverse Indian climates. Materials such as aluminium and uPVC are increasingly preferred for their durability and thermal efficiency, supporting sustainable living without compromising on style.</p>
 
                   <p>Dimly lit spaces often feel cramped and closed off, while bright, sunlit spaces tend to have an open and airy ambiance. The more natural light you let inside a room, the less noticeable its size limitations become.</p>
                   
 
                   <h3 className="text-blue">Also Read: 5 Reasons to Choose Aluminium Windows for Your Home</h3>
                   <p>The benefits of glass windows in interior design are not just about aesthetics; they also have a profound impact on the overall feel and functionality of a space. By allowing natural light to flood in, creating visual connections to the outdoors, and enhancing the sense of spaciousness, glass windows can transform any room into a bright, open, and inviting environment. Whether you’re designing a cozy living room or a sleek modern kitchen, incorporating glass windows can elevate your interior design and create a more enjoyable living experience.</p>
+
+                  
 
                   <div ref={imagesRef} className="images-box flex flex-wrap gap-4 my-6 ">
                     <div className="relative w-full h-[345px] flex-1 overflow-hidden rounded-2xl images-box-item">
@@ -229,13 +250,129 @@ export default function BannerMain({
                     </div>
                   </div>
 
+
+                  <div className="blog-quote-section">  
+                    <div className="blog-quote-card">    
+                      <div className="blog-quote-inner">      
+                        {/* Quote Icon */}
+                        <div className="blog-quote-icon">
+                          <svg
+                            width="58"
+                            height="58"
+                            viewBox="0 0 58 58"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M25.5 11C14.8 16.3 9 25.2 9 37.2V47H25V31H18.2C18.9 24.5 22.8 18.9 29 15L25.5 11ZM49.5 11C38.8 16.3 33 25.2 33 37.2V47H49V31H42.2C42.9 24.5 46.8 18.9 53 15L49.5 11Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </div>
+
+                        {/* Content */}
+                        <div className="blog-quote-content">
+                          <p className="blog-quote-text">
+                            Sed sit amet arcu tincidunt, sollicitudin ligula quis,
+                            dapibus ipsum. Donec quis diam mauris. In mi lectus,
+                          </p>
+
+                          <span className="blog-quote-author">
+                            — By Fenesta
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <h3>Ready to Transform Your Space with Aluminium Glass Windows?</h3>
                   <p>Fenesta offers the best aluminium glass windows for homes, which have been designed to offer style, durability, and energy savings. Fenesta’s range of energy efficient aluminium windows has been designed with wide glass panels and sleek frames that can not only enhance the openness and spaciousness of a space but can also prevent heat transfer, ensuring comfortable indoor temperatures throughout the year.</p>
 
                   <p>Fenesta offers customisable fenestration solutions, allowing you to choose from various options in size, style, design, colour, and finish, so you can find the perfect aluminium windows for different rooms, based on your size and design preferences with ease.</p>
 
                   <p>Discover Fenesta’s range of high-quality aluminium windows with thermal break and make your space feel more spacious, brighter, and welcoming. Get in touch with our fenestration experts for a free consultation today!</p>
-                </div>   
+
+
+                  <div className="blog-comment-section">
+                    <div className="blog-meta-top">
+                      <div className="blog-tags">
+                        <span>Tags:</span>
+                        <a href="#">Architecture & design</a>
+                        <a href="#">Smart city</a>
+                      </div>
+
+                      <div className="blog-share">
+                        <span>Share:</span>
+                        {/* <a href="#">
+                          <Image src="facebook.svg" alt="facebook" />
+                        </a>
+                        <a href="#">
+                          <Image src="linkedin.svg" alt="" />
+                        </a>
+                        <a href="#">
+                          <Image src="twitter.svg" alt="" />
+                        </a>
+                        <a href="#">
+                          <Image src="instagram.svg" alt="instagram" />
+                        </a> */}
+                      </div>
+                    </div>
+
+                    <div className="blog-author-card">
+                      <div className="blog-author-img">
+                        <Image
+                          src="/images/blog/blog-img1.webp"
+                          alt="Author"
+                          width={100}
+                          height={100}
+                          className="object-cover"
+                        />
+                      </div>
+
+                      <div className="blog-author-content">
+                        <h3>Asim Rao</h3>
+
+                        <p>
+                          Cras varius feugiat placerat. Nulla pretium pretium ante quis dignissim.
+                          Morbi viverra convallis fermentum
+                        </p>
+                      </div>
+
+                    </div>
+
+                    <div className="blog-comment-form-wrap max-w-4xl">
+                      <h2 className="blog-comment-title">
+                        Leave a <span>Comment</span>
+                      </h2>
+
+                      <form>
+                        <div className="form-grid">
+                          <div className="form-group">
+                            <label>Name<span>*</span></label>
+                            <input type="text" placeholder="Your Name" />
+                          </div>
+
+                          <div className="form-group">
+                            <label>Email<span>*</span></label>
+                            <input type="email" placeholder="Enter your email" />
+                          </div>
+                        </div>
+                      
+                        <div className="form-group">
+                          <label>Comment</label>
+                          <textarea placeholder="Comment"></textarea>
+                        </div>
+                        <div className="captcha-box">
+                         
+                        </div>
+
+                        <button type="submit" className="submit-btn">
+                          <span>→</span> SUBMIT
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>                   
               </div>          
 
               {/* RIGHT SIDEBAR */}
@@ -268,7 +405,7 @@ export default function BannerMain({
                 <div className="bg-white p-4 rounded-2xl border border-theme/15 mt-6 popularBlogs">
                   <h5 className="text-18 text-theme font-extrabold mb-3">Popular blogs</h5>
 
-                  <div className="flex gap-3 mb-4 popularBlogsitem">
+                  <Link href="#" className="flex gap-3 mb-4 popularBlogsitem">
                     <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
                       <Image
                         src="/images/blog/corporateNewsroomImg1.webp"
@@ -282,9 +419,9 @@ export default function BannerMain({
                       Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
                       Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
                     </p>
-                  </div>
+                  </Link>
 
-                  <div className="flex gap-3 mb-4 popularBlogsitem">
+                  <Link href="#" className="flex gap-3 mb-4 popularBlogsitem">
                     <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
                       <Image
                         src="/images/blog/corporateNewsroomImg1.webp"
@@ -298,9 +435,9 @@ export default function BannerMain({
                       Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
                       Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
                     </p>
-                  </div>
+                  </Link>
 
-                  <div className="flex gap-3 mb-4 popularBlogsitem">
+                  <Link href="#" className="flex gap-3 mb-4 popularBlogsitem">
                     <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
                       <Image
                         src="/images/blog/corporateNewsroomImg1.webp"
@@ -314,9 +451,9 @@ export default function BannerMain({
                       Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
                       Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
                     </p>
-                  </div>   
+                  </Link>   
 
-                  <div className="flex gap-3 mb-4 popularBlogsitem">
+                  <Link href="#" className="flex gap-3 mb-4 popularBlogsitem">
                     <div className="relative w-[120px] min-w-[120px] h-[70px] rounded-md overflow-hidden">
                       <Image
                         src="/images/blog/corporateNewsroomImg1.webp"
@@ -330,7 +467,7 @@ export default function BannerMain({
                       Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
                       Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur.
                     </p>
-                  </div>              
+                  </Link>              
                 </div>
 
                 {/* Archives */}       
