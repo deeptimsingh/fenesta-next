@@ -214,7 +214,7 @@ BLOG COMMENT SECTION
 .form-group input:focus,
 .form-group textarea:focus{
   border-color: #f0f0f0;
-  box-shadow: 0 0 0 3px rgba(0, 148, 255, 0.02);
+  box-shadow: 0 0 0 3px rgba(177, 205, 255, 0.02);
 }
 
 .form-group textarea{

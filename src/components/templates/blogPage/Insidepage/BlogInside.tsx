@@ -8,6 +8,8 @@ import "@/components/templates/common.css";
 import "@/components/templates/blogPage/Insidepage/blogsInside.css";
 
 import ClientStories from "@/app/home/ClientStories";
+import HaveQuestion from "@/components/base/HaveQuestion";  
+
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -564,7 +566,8 @@ export default function BannerMain({
           </div>
         </div>  
       </section>    
-
+  
+      <HaveQuestion />
       <ClientStories />  
     </section>  
     </>
