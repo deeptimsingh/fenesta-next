@@ -175,11 +175,11 @@ const toggleAccordion = (accordion: string) => {
                                 colour
                                 </div>
 
-                                <div className="spec-value flex items-center">
-                                    <span className="w-5 h-5 rounded-full bg-[#2a2a2a] border border-[#999]" />
-                                    <span className="w-5 h-5 rounded-full bg-[#4d4d4d] border border-[#999]" />
-                                    <span className="w-5 h-5 rounded-full bg-[#7a552f] border border-[#999]" />
-                                    <span className="w-5 h-5 rounded-full bg-[#d38a05] border border-[#999]" />
+                                <div className="spec-value flex items-center colors-spec-outer">
+                                    <span className="w-5 h-5 rounded-full bg-[#2a2a2a] border border-[#999] colors-spec" />
+                                    <span className="w-5 h-5 rounded-full bg-[#4d4d4d] border border-[#999] colors-spec" />
+                                    <span className="w-5 h-5 rounded-full bg-[#7a552f] border border-[#999] colors-spec" />
+                                    <span className="w-5 h-5 rounded-full bg-[#d38a05] border border-[#999] colors-spec" />
                                     <span className="text-[#888] text-sm ml-1">+</span>
                                 </div>
                             </div>

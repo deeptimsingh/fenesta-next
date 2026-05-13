@@ -1,3 +1,4 @@
 .spec-title { padding: 10px 20px; font-weight: 600; font-size: 0.875rem;}
 .spec-value { padding: 10px 20px;color: #606060; font-size: 1rem;}
 .spec-list {color: #606060; font-size: 1rem;}
+.colors-spec-outer .colors-spec {margin-left: -5px;}
