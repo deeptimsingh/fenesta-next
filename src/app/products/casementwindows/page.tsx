@@ -3,20 +3,18 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 
-import BannerMain from "@/components/templates/productPage/bannerMain";
-import ProductCards from "@/components/templates/productPage/ProductCards";
+import BannerMain from "./bannerMain";
+import "./allproducts-style.css";
 
-// @ts-ignore: allow CSS side-effect import without explicit module declarations
-import "@/app/product-page/productpage.css";
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
-export default function ProductPage() {
+export default function Casementwindows() {
 
   return (
     <section className="about-page w-full">
       {/*Banner Main*/}
-      <BannerMain />
+     <BannerMain/>
 
       {/* INTRO SECTION */}
       <section className="intro-section relative ">
@@ -27,10 +25,11 @@ export default function ProductPage() {
             </div>   
           </div>
         </div>
-      </section>     
+      </section>   
+      
+        
 
-      {/*Product List*/} 
-      <ProductCards />   
+     
     </section>
   );
 }
