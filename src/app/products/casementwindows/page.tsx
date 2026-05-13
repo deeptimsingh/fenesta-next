@@ -4,8 +4,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 
 import BannerMain from "./bannerMain";
+import Productspecifications from "./productspecifications";
 import "./allproducts-style.css";
-
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
@@ -14,7 +14,7 @@ export default function Casementwindows() {
   return (
     <section className="about-page w-full">
       {/*Banner Main*/}
-     <BannerMain/>
+      <BannerMain/>
 
       {/* INTRO SECTION */}
       <section className="intro-section relative ">
@@ -26,8 +26,8 @@ export default function Casementwindows() {
           </div>
         </div>
       </section>   
-      
-        
+
+      <Productspecifications/>  
 
      
     </section>
