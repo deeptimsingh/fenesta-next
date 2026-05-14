@@ -24,7 +24,7 @@ export default function BannerMain({ animationReady = true }: { animationReady?:
             {/* Mobile: below 768px — use blog-bg-mobile.webp when available, or same as desktop */}
             <source
               media="(max-width: 767px)"
-              srcSet="/images/banner/blog-bg-mobile.webp"
+              srcSet="/images/banner/blog-bg.webp"
             />
             <img
               src="/images/banner/blog-bg.webp"

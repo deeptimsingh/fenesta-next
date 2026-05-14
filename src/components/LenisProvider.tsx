@@ -2,6 +2,10 @@
 
 import { useEffect } from "react";
 import Lenis from "@studio-freight/lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function LenisProvider({
   children,
@@ -38,6 +42,8 @@ export default function LenisProvider({
 
     const raf = (time: number) => {
       lenis.raf(time);
+      // Lenis animates scroll outside the native timeline — keep GSAP ScrollTrigger in sync
+     // ScrollTrigger.update();
       requestAnimationFrame(raf);
     };
 
