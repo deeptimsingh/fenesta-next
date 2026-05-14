@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 
 const faqData = [
   {
@@ -28,9 +29,8 @@ const faqData = [
 
 export default function HaveQuestion() {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
-
-  const sectionRef = useRef<HTMLElement | null>(null);
-
+  //const sectionRef = useRef<HTMLElement | null>(null);
+  const { headingRef, sectionRef } = useHeadingAnimation();
   const toggleAccordion = (index: number) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
@@ -39,38 +39,30 @@ export default function HaveQuestion() {
     <section
       ref={sectionRef}
       id="have-question-section"
-      className="relative overflow-hidden bg-[#f5f5f5] py-20"
+      className=" overflow-hidden bg-[#f5f5f5] common-padding"
     >
       {/* Background Shape */}
       <div className="absolute bottom-0 left-0 opacity-40">
         <div className="grid h-[180px] w-[180px] rotate-[-25deg] grid-cols-2 gap-3">
-          <div className="bg-[#d9edf8]" />
-          <div className="bg-[#d9edf8]" />
-          <div className="bg-[#d9edf8]" />
-          <div className="bg-[#d9edf8]" />
+            
         </div>
       </div>
 
       <div className="container mx-auto px-5">
-        <div className="grid gap-14 lg:grid-cols-2 lg:items-start">
-          
-          {/* LEFT STICKY SECTION */}
-          <div className="lg:sticky lg:top-24 lg:self-start">
-            <div className="max-w-[480px]">
-              <h2 className="text-[42px] leading-none font-light text-black md:text-[52px]">
-                Have{" "}
-                <span className="font-serif italic text-[#5b3b2b]">
-                  Questions?
-                </span>
-              </h2>
+        <div className="grid gap-14 lg:grid-cols-2 lg:items-start">       
 
-              <p className="mt-6 text-[18px] leading-[1.7] text-black/70">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam.
-              </p>
-            </div>
-          </div>
+           {/* Heading */}
+           <div ref={sectionRef}  className="headingOuter w-full">
+              <div className="headingTitle mb-6 xl:mb-6 px-6 md:px-0 title-section  max-w-xl">
+                <div ref={headingRef} className="  flex flex-col  w-full">
+                  <h2 className="font-mainFont text-h2  leading-none">Have <span className="font-subFont text-corinthiaHeading text-brown leading-0">Questions?</span></h2>
+                </div>
+
+                <div className="headingSubTitle flex flex-col justify-center w-full">  
+                  <p className="mt-3 text-p  text-theme">Check out our Frequently Asked Questions. If that doesn’t answer your questions about our products, materials, services, installations, and more, please book a consultation with one of our highly trained service representatives or visit us at any of our Signature Studios.</p>
+                </div>
+              </div>     
+            </div>  
 
           {/* RIGHT FAQ SECTION */}
           <div className="space-y-6">
@@ -86,12 +78,12 @@ export default function HaveQuestion() {
                     onClick={() => toggleAccordion(index)}
                     className="flex w-full items-start justify-between gap-5 text-left"
                   >
-                    <h3 className="text-[20px] font-semibold leading-[1.4] text-black md:text-[22px]">
+                    <h3 className="text-p font-bold leading-tight text-black">
                       {item.question}
                     </h3>
 
                     {/* Plus / Minus Icon */}
-                    <div className="relative flex h-11 w-11 min-w-[44px] items-center justify-center rounded-full bg-[#009FE3]">
+                    <div className="relative flex h-9 w-9  items-center justify-center rounded-full bg-[#009FE3]">
                       {/* Horizontal Line */}
                       <span className="absolute h-[2px] w-4 bg-white" />
 
@@ -113,7 +105,7 @@ export default function HaveQuestion() {
                     }`}
                   >
                     <div className="overflow-hidden">
-                      <p className="pr-10 text-[16px] leading-[1.7] text-black/70">
+                      <p className="pr-10 text-p text-theme">
                         {item.answer}
                       </p>
                     </div>
