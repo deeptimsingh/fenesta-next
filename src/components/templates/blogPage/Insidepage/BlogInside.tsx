@@ -7,6 +7,8 @@ import {useEffect, useState, useRef } from "react";
 import "@/components/templates/common.css";
 import "@/components/templates/blogPage/Insidepage/blogsInside.css";
 
+
+import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 import ClientStories from "@/app/home/ClientStories";
 import HaveQuestion from "@/components/base/HaveQuestion";  
 
@@ -40,6 +42,8 @@ export default function BannerMain({
   useInsidePageBannerAnimation(bgRef, titleRef, {
     startWhenReady: animationReady,
   });
+
+  const { headingRef, sectionRef } = useHeadingAnimation();
 
  /**==============================
   Accordion 
@@ -126,7 +130,7 @@ export default function BannerMain({
               <span className="text-theme">Top Window & Door Design Trends for Modern Homes in 2026</span>
             </div>
             
-            <h1 className="text-theme text-h1 leading-none flex justify-center sm:justify-start flex-wrap gap-3 w-full text-center sm:text-left">Top Window & Door Design Trends for <span className="font-subFont text-corinthiaHeading text-brown leading-none contents ">Modern Homes in 2026</span></h1>        
+            <h1 className="text-theme text-h1 leading-none flex justify-start flex-wrap gap-3 w-full text-left">Top Window & Door Design Trends for <span className="font-subFont text-corinthiaHeading text-brown leading-none contents ">Modern Homes in 2026</span></h1>        
 
           </div>  
 
@@ -342,10 +346,16 @@ export default function BannerMain({
 
                     </div>
 
-                    <div className="blog-comment-form-wrap max-w-4xl">
-                      <h2 className="blog-comment-title">
-                        Leave a <span>Comment</span>
-                      </h2>
+                    <div className="blog-comment-form-wrap max-w-4xl">                     
+
+                      {/* Heading */}
+                      <div className="headingOuter w-full">
+                          <div className="headingTitle mb-6 xl:mb-6 px-6 md:px-0 title-section  max-w-xl">
+                            <div ref={headingRef} className="  flex flex-col  w-full">
+                              <h2 className="font-mainFont text-h2  leading-none">Leave a <span className="font-subFont text-corinthiaHeading text-brown leading-0">Comment</span></h2>
+                            </div>              
+                          </div>     
+                      </div>  
 
                       <form>
                         <div className="form-grid">

@@ -97,8 +97,8 @@ function MobileSubMenuView({
     onSetOpenAccordion(openAccordion === accId ? null : accId);
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 mb-6">
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="flex shrink-0 items-center gap-3 mb-6">
         <button
           onClick={onBack}
           className="p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
@@ -115,7 +115,7 @@ function MobileSubMenuView({
           ✕
         </button>
       </div>
-      <div className="flex-1 overflow-y-auto -mx-6 px-6">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain touch-pan-y [-webkit-overflow-scrolling:touch] -mx-6 px-6">
         {id === "who-we-are" && (
           <ul className="space-y-1">
             <li><Link href="#" className={mobileLinkClass}>OVERVIEW</Link></li>
@@ -277,59 +277,89 @@ export default function NavigationBar({
   onSetOpenAccordion,
   onSetMobileOpen,
 }: NavigationBarProps) {
+  const navRef = useRef<HTMLDivElement>(null);
+  const highlightRef = useRef<HTMLDivElement>(null);
+  const megaMenuOpenRef = useRef(false);
+  const megaMenuEverOpenedRef = useRef(false);
+  /** Keeps mega menu body mounted during exit so layout does not collapse mid-tween */
+  const [renderedMegaMenuId, setRenderedMegaMenuId] = useState<MegaMenuId>(null);
 
-const navRef = useRef<HTMLDivElement>(null);
-const highlightRef = useRef<HTMLDivElement>(null);
+  megaMenuOpenRef.current = megaMenuOpen;
+
+  useLayoutEffect(() => {
+    if (megaMenuOpen && activeMegaMenu) {
+      setRenderedMegaMenuId(activeMegaMenu);
+    }
+  }, [megaMenuOpen, activeMegaMenu]);
+
   /**
-   * Mega menu: slide in from top + staggered link animation
+   * Mega menu: smooth slide-up (enter from below) / slide-up + fade (exit toward top).
+   * GSAP owns transform + visibility — no conflicting inline transform or Tailwind opacity.
    */
-  useEffect(() => {
-  if (!mounted || !megaMenuRef.current) return;
+  useLayoutEffect(() => {
+    if (!mounted || !megaMenuRef.current) return;
 
-  const el = megaMenuRef.current;
+    const el = megaMenuRef.current;
+    gsap.killTweensOf(el);
 
-  if (megaMenuOpen) {
-    gsap.set(el, { pointerEvents: "auto" });
+    const enterY = 48;
+    const exitY = -36;
 
-    gsap.fromTo(
-      el,
-      { y: -40, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, ease: "power2.out" }
-    );
-  } else {
-    gsap.to(el, {
-      y: -40,
-      opacity: 0,
-      duration: 0.5,
-      ease: "power2.in",
-      pointerEvents: "none",
-    });
-  }
-}, [megaMenuOpen, mounted]);
-useLayoutEffect(() => {
-  if (!megaMenuRef.current || !megaMenuOpen) return;
+    if (megaMenuOpen) {
+      megaMenuEverOpenedRef.current = true;
+      gsap.set(el, { pointerEvents: "auto" });
+      gsap.fromTo(
+        el,
+        { y: enterY, autoAlpha: 0, force3D: true },
+        {
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.52,
+          ease: "power3.out",
+          overwrite: true,
+        }
+      );
+    } else if (megaMenuEverOpenedRef.current) {
+      gsap.to(el, {
+        y: exitY,
+        autoAlpha: 0,
+        duration: 0.48,
+        ease: "power2.inOut",
+        pointerEvents: "none",
+        overwrite: true,
+        force3D: true,
+        onComplete: () => {
+          if (!megaMenuOpenRef.current && megaMenuRef.current === el) {
+            gsap.set(el, { y: enterY, force3D: true });
+            setRenderedMegaMenuId(null);
+          }
+        },
+      });
+    } else {
+      gsap.set(el, { y: enterY, autoAlpha: 0, pointerEvents: "none", force3D: true });
+    }
+  }, [megaMenuOpen, mounted]);
+  useLayoutEffect(() => {
+  if (!megaMenuRef.current || !megaMenuOpen || !renderedMegaMenuId) return;
 
   const ctx = gsap.context(() => {
-
     const items = gsap.utils.toArray(".mega-menu-item");
-
     gsap.set(items, { opacity: 0, y: 24 });
-
     gsap.to(items, {
       opacity: 1,
-      y: 0,
+      y: 0, 
       stagger: 0.06,
-      duration: 0.6,
-      ease: "power2.out"
+      duration: 0.55,
+      ease: "power2.out",
+      delay: 0.1,
     });
-
   }, megaMenuRef);
 
   return () => ctx.revert();
 
-}, [activeMegaMenu, megaMenuOpen]);
+  }, [renderedMegaMenuId, megaMenuOpen]);
 
-useEffect(() => {
+  useEffect(() => {
   if (!megaMenuOpen) {
     gsap.to(".nav-highlight", {
       scaleY: 0,
@@ -465,34 +495,33 @@ useEffect(() => {
         />
       )}
 
-      {/* ========== MEGA MENU - Full-screen dropdown below header ========== */}
+      {/* ========== MEGA MENU - Auto height from content; caps at viewport, scrolls if needed ========== */}
       <div
         ref={megaMenuRef}
         onMouseEnter={onClearHoverClose}
         onMouseLeave={onScheduleHoverClose}
-        className="fixed left-0 right-0 w-full bg-darkbase z-90 pointer-events-none opacity-0 flex flex-col overflow-hidden"
+        className="dropdown-mega-menu fixed left-0 right-0 w-full bg-darkbase z-90 pointer-events-none flex flex-col overflow-x-hidden overflow-y-auto"
         style={{
-          transform: "translateY(-100%)",
           top: headerHeight,
-          height: `calc(100vh - ${headerHeight}px)`,
+          maxHeight: `calc(100vh - ${headerHeight}px)`,
         }}
         role="dialog"
         aria-modal="true"
-        aria-label={`${getMegaMenuTitle(activeMegaMenu)} menu`}
+        aria-label={`${getMegaMenuTitle(renderedMegaMenuId ?? activeMegaMenu)} menu`}
       >
-        <div className="flex flex-1 min-h-0 overflow-hidden bg-theme">
-          {activeMegaMenu === "our-collection" ? (
+        <div className="w-full shrink-0 bg-theme">
+          {renderedMegaMenuId === "our-collection" ? (
             <MegaMenuOurCollection
               openAccordion={openAccordion}
               onSetOpenAccordion={onSetOpenAccordion}
             />
-          ) : activeMegaMenu === "who-we-are" ? (
+          ) : renderedMegaMenuId === "who-we-are" ? (
             <MegaMenuWhoWeAre />
-          ) : activeMegaMenu === "fenesta-difference" ? (
+          ) : renderedMegaMenuId === "fenesta-difference" ? (
             <MegaMenuFenestaDifference />
-          ) : activeMegaMenu === "projects-stories" ? (
+          ) : renderedMegaMenuId === "projects-stories" ? (
             <MegaMenuProjectsStories />
-          ) : activeMegaMenu === "contact-us" ? (
+          ) : renderedMegaMenuId === "contact-us" ? (
             <MegaMenuContactUs />
           ) : null}
         </div>
@@ -510,13 +539,14 @@ useEffect(() => {
       {/* ========== MOBILE DRAWER - Slide-in from right with spring overshoot ========== */}
       <div
         ref={mobileRef}
-        className={`mobile-drawer fixed top-0 right-0 h-screen  w-[85%] max-w-sm bg-white dark:bg-gray-900 text-black dark:text-white z-100 overflow-hidden shadow-xl flex flex-col ${mobileOpen ? "mobile-drawer-open" : ""}`}
+        data-lenis-prevent
+        className={`mobile-drawer fixed top-0 right-0 h-[100dvh] max-h-[100dvh] w-[85%] max-w-sm bg-white dark:bg-gray-900 text-black dark:text-white z-100 overflow-hidden shadow-xl flex flex-col ${mobileOpen ? "mobile-drawer-open" : ""}`}
       >
-        <div className="relative flex-1 min-h-0 overflow-hidden">
+        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
           {/* Main level - slides left when going to sub */}
           <div
             ref={mobileMainRef}
-            className="absolute inset-0 p-6 overflow-y-auto"
+            className="absolute inset-0 min-h-0 overflow-y-auto overscroll-contain touch-pan-y p-6 [-webkit-overflow-scrolling:touch]"
           >
             <div className="flex justify-between items-center mb-8">
               <h2 className="text-xl font-bold">Menu</h2>
@@ -557,7 +587,7 @@ useEffect(() => {
           {/* Sub level - slides in from right when opening sub */}
           <div
             ref={mobileSubRef}
-            className="absolute inset-0 p-6 overflow-y-auto"
+            className="absolute inset-0 min-h-0 overflow-y-auto overscroll-contain touch-pan-y p-6 [-webkit-overflow-scrolling:touch]"
           >
             {mobileSubMenu && (
               <MobileSubMenuView
@@ -593,7 +623,7 @@ function MegaMenuOurCollection({
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto">
+      <div className="w-full">
         <div className="container-fluid mx-5 sm:mx-[5%] 2xl:mx-[10%] py-10 px-8 flex flex-col lg:flex-row gap-12 lg:gap-16">
           <div className="flex-1 w-[20vw] flex-wrap shrink-0">
             <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-6">
@@ -867,7 +897,7 @@ const imgClass =
 /** Who we are - direct links, no array */
 function MegaMenuWhoWeAre() {
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="w-full">
       <div className="container-fluid mx-[20px] sm:mx-[5%] 2xl:mx-[10%] py-10 px-8 flex flex-col lg:flex-row items-center lg:items-stretch gap-8 lg:gap-12 justify-between">
         <div className="flex-1 w-[20vw] max-w-lg flex-wrap shrink-0 max-w-lg">
           <h3 className="text-xl md:text-2xl font-medium text-white mb-4 pb-2 border-b border-white/30">
@@ -907,7 +937,7 @@ function MegaMenuWhoWeAre() {
 /** The Fenesta Difference - direct links, no array */
 function MegaMenuFenestaDifference() {
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="w-full">
       <div className="container-fluid mx-[20px] sm:mx-[5%] 2xl:mx-[10%] py-10 px-8 flex flex-col lg:flex-row items-center lg:items-stretch gap-8 lg:gap-12 justify-between">
         <div className="flex-1 w-[20vw] flex-wrap shrink-0 max-w-lg">
           <h3 className="text-xl md:text-2xl font-medium text-white mb-4 pb-2 border-b border-white/30">
@@ -947,7 +977,7 @@ function MegaMenuFenestaDifference() {
 /** Projects & stories - direct links, no array */
 function MegaMenuProjectsStories() {
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="w-full">
       <div className="container-fluid mx-[20px] sm:mx-[5%] 2xl:mx-[10%] py-10 px-8 flex flex-col lg:flex-row items-center lg:items-stretch gap-8 lg:gap-12 justify-between">
         <div className="flex-1 w-[20vw] flex-wrap shrink-0 max-w-lg">
           <h3 className="text-xl md:text-2xl font-medium text-white mb-4 pb-2 border-b border-white/30">
@@ -987,7 +1017,7 @@ function MegaMenuProjectsStories() {
 /** Contact us - direct links, no array */
 function MegaMenuContactUs() {
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="w-full">
     <div className="container-fluid mx-[20px] sm:mx-[5%] 2xl:mx-[10%] py-10 px-8 flex flex-col lg:flex-row items-center lg:items-stretch gap-8 lg:gap-12 justify-between">
       <div className="flex-1 w-[20vw] max-w-lg flex-wrap shrink-0 max-w-lg">
           <h3 className="text-xl md:text-2xl font-medium text-white mb-4 pb-2 border-b border-white/30">

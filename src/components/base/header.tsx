@@ -5,7 +5,7 @@
  *
  * Composes:
  * - Logo (left)
- * - NavigationBar (center) - desktop nav, mega menus, mobile drawer
+ * - NavigationBar (center) - desktop nav, mega menus (content-height, max viewport), mobile drawer
  * - SearchOverlay - full-screen search modal
  * - ThemeToggle, Search button, Close mega menu (right)
  */
@@ -89,16 +89,25 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [megaMenuOpen]);
 
-  /** Lock body scroll when mega menu is open */
+  /** Lock body scroll when mega menu (desktop) or mobile drawer is open */
   useEffect(() => {
-    if (megaMenuOpen) {
-      const prev = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = prev;
-      };
-    }
-  }, [megaMenuOpen]);
+    if (!megaMenuOpen && !mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [megaMenuOpen, mobileOpen]);
+
+  /** Mobile drawer: stop Lenis smooth scroll so page does not move; drawer keeps its own scroll */
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const w = window as Window & { lenis?: { stop?: () => void; start?: () => void } };
+    w.lenis?.stop?.();
+    return () => {
+      w.lenis?.start?.();
+    };
+  }, [mobileOpen]);
 
   /** Measure header height for mega menu positioning */
   useEffect(() => {
@@ -213,24 +222,11 @@ const openMegaMenu = (id: Exclude<MegaMenuId, null>) => {
           />
          
 
-          {/* Right side - close mega menu, theme, search (keep-open zone when menu is open) */}
+          {/* Right side - theme, search (keep-open zone when mega menu is open) */}
           <div
             className="flex items-center gap-4 z-10"
             onMouseEnter={megaMenuOpen ? clearHoverCloseTimeout : undefined}
           >
-            {megaMenuOpen && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  closeMegaMenu();
-                }}
-                className="w-10 h-10 flex items-center justify-center rounded-full bg-cream/20 hover:bg-white/80 text-white transition-colors cursor-pointer"
-                aria-label="Close menu">
-                <span className="text-2xl leading-none">×</span>
-              </button>
-            )}
             <ThemeToggle />
             <button
               ref={searchButtonRef}
