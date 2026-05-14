@@ -121,14 +121,14 @@ export default function Header() {
     }
   };
 
-  /** Schedule close after 600ms when mouse leaves nav/menu area */
+  /** Schedule close after 800ms when mouse leaves nav/menu area */
   const scheduleHoverClose = () => {
     clearHoverCloseTimeout();
     hoverCloseTimeoutRef.current = setTimeout(() => {
       setMegaMenuOpen(false);
       setActiveMegaMenu(null);
       hoverCloseTimeoutRef.current = null;
-    }, 600);
+    }, 800);
   };
 
   /** Open a specific mega menu by id */
