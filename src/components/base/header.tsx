@@ -121,14 +121,14 @@ export default function Header() {
     }
   };
 
-  /** Schedule close after 500ms when mouse leaves nav/menu area */
+  /** Schedule close after 600ms when mouse leaves nav/menu area */
   const scheduleHoverClose = () => {
     clearHoverCloseTimeout();
     hoverCloseTimeoutRef.current = setTimeout(() => {
       setMegaMenuOpen(false);
       setActiveMegaMenu(null);
       hoverCloseTimeoutRef.current = null;
-    }, 500);
+    }, 600);
   };
 
   /** Open a specific mega menu by id */
@@ -180,7 +180,7 @@ const openMegaMenu = (id: Exclude<MegaMenuId, null>) => {
           megaMenuOpen ? "bg-theme " : "bg-theme/80"
         } ${pageLoaded ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}`}
       >
-        <div className="container-fluid mx-0 sm:mx-0 2xl:mx-[10%] md:h-16 flex items-center justify-between relative"  onMouseEnter={clearHoverCloseTimeout} onMouseLeave={scheduleHoverClose}>
+        <div className="container-fluid mx-0 sm:mx-0 2xl:mx-[10%] md:h-16 flex items-center justify-between relative">
           {/* Logo - left */}
           <Link href="/" className="font-bold text-lg dark:text-white z-10">
             <Image

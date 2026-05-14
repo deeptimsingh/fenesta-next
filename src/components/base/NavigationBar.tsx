@@ -54,7 +54,8 @@ function NavItemWithMega({
   gsap.to(".nav-highlight", {
     width: rect.width,
     x: target.offsetLeft,
-    duration: 0.3,
+    scaleY: 1,
+    duration: 0.45,
     ease: "power2.out"
   });
 }}
@@ -293,13 +294,13 @@ const highlightRef = useRef<HTMLDivElement>(null);
     gsap.fromTo(
       el,
       { y: -40, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }
+      { y: 0, opacity: 1, duration: 0.7, ease: "power2.out" }
     );
   } else {
     gsap.to(el, {
       y: -40,
       opacity: 0,
-      duration: 0.35,
+      duration: 0.5,
       ease: "power2.in",
       pointerEvents: "none",
     });
@@ -317,9 +318,9 @@ useLayoutEffect(() => {
     gsap.to(items, {
       opacity: 1,
       y: 0,
-      stagger: 0.08,
-      duration: 0.45,
-      ease: "power3.out"
+      stagger: 0.06,
+      duration: 0.6,
+      ease: "power2.out"
     });
 
   }, megaMenuRef);
@@ -331,9 +332,10 @@ useLayoutEffect(() => {
 useEffect(() => {
   if (!megaMenuOpen) {
     gsap.to(".nav-highlight", {
+      scaleY: 0,
       width: 0,
-      duration: 0.25,
-      ease: "power2.out"
+      duration: 0.3,
+      ease: "power2.in"
     });
   }
 }, [megaMenuOpen]);
@@ -388,15 +390,17 @@ useEffect(() => {
     onScheduleHoverClose();
 
     gsap.to(".nav-highlight", {
+      scaleY: 0,
       width: 0,
-      duration: 0.25,
-      ease: "power2.out"
+      duration: 0.35,
+      ease: "power2.in"
     });
   }}
       >
       <div
   ref={highlightRef}
   className="nav-highlight absolute left-0 top-1/2 -translate-y-1/2 h-9.5 w-0 bg-[#0094D9] rounded-full pointer-events-none"
+  style={{ transform: "scaleY(0)", transformOrigin: "center bottom" }}
 />
 
         <NavItemWithMega
@@ -821,7 +825,7 @@ function AccordionSection({
       <button
         type="button"
         onClick={() => onToggle(id)}
-        className="w-full flex items-center justify-between text-white text-base font-medium hover:text-[#0094D9] transition-colors py-2 cursor-pointer"
+        className="w-full flex items-center justify-between text-white text-base font-medium hover:text-[#0094D9] transition-colors py-2 cursor-pointer border-b border-[rgba(255,255,255,0.2)]"
       >
         <span>{label}</span>
         <span className="text-white/70 text-xl">{isOpen ? "−" : "+"}</span>

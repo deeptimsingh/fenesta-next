@@ -45,7 +45,7 @@ export default function SearchOverlay({
     gsap.set(searchBackdropRef.current, {
       transformOrigin: `${cx}px ${cy}px`,
       scale: 0,
-      opacity: 1,
+      opacity: 0,
     });
     gsap.set(searchPanelRef.current, {
       left: x,
@@ -59,20 +59,21 @@ export default function SearchOverlay({
 
     gsap.to(searchBackdropRef.current, {
       scale: 1,
-      duration: 0.5,
-      ease: "power3.out",
+      opacity: 1,
+      duration: 0.6,
+      ease: "power2.out",
     });
     gsap.to(searchPanelRef.current, {
       left: "50%",
       top: "50%",
       x: "-50%",
       y: "-50%",
-      width: "min(60vw, calc(100vw - 2rem))",
+      width: "min(70vw, 800px)",
       height: "auto",
       opacity: 1,
-      duration: 0.45,
-      ease: "power3.out",
-      delay: 0.08,
+      duration: 0.55,
+      ease: "power2.out",
+      delay: 0.1,
     });
   }, [isOpen, origin, mounted]);
 
@@ -97,13 +98,14 @@ export default function SearchOverlay({
       width: width,
       height: height,
       opacity: 0,
-      duration: 0.3,
+      duration: 0.4,
       ease: "power2.in",
     });
     gsap.to(searchBackdropRef.current, {
       scale: 0,
+      opacity: 0,
       transformOrigin: `${cx}px ${cy}px`,
-      duration: 0.35,
+      duration: 0.4,
       ease: "power2.in",
       onComplete: onClose,
     });
@@ -128,7 +130,7 @@ export default function SearchOverlay({
       {/* Dark overlay - expands from button origin */}
       <div
         ref={searchBackdropRef}
-        className="absolute inset-0 z-10 bg-black/90 backdrop-blur-md"
+        className="absolute inset-0 z-10 bg-black/85 backdrop-blur-sm"
         aria-hidden
       />
 
@@ -136,7 +138,7 @@ export default function SearchOverlay({
       <button
         type="button"
         onClick={handleClose}
-        className="fixed top-3 right-3 z-20 w-10 h-10 flex items-center justify-center rounded-full bg-black/50 text-white transition-colors"
+        className="fixed top-6 right-6 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors duration-200 backdrop-blur-sm border border-white/20"
         aria-label="Close search"
       >
         <span className="text-2xl leading-none" aria-hidden>
@@ -147,7 +149,7 @@ export default function SearchOverlay({
       {/* Search panel - grows from button to center */}
       <div
         ref={searchPanelRef}
-        className="fixed z-30 rounded-2xl bg-grayLight backdrop-blur-md shadow-2xl overflow-hidden"
+        className="fixed z-30 rounded-xl bg-white dark:bg-gray-900 backdrop-blur-sm shadow-2xl overflow-hidden border border-white/20 dark:border-gray-800/50"
         style={{
           left: origin.x,
           top: origin.y,
@@ -156,25 +158,28 @@ export default function SearchOverlay({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="w-full max-w-6xl px-6 py-8 h-full min-h-[100px] flex flex-col justify-center">
+        <div className="w-full max-w-6xl px-8 py-12 h-full min-h-[120px] flex flex-col justify-center">
           <form
-            className="flex items-center"
+            className="flex items-center gap-4"
             onSubmit={(e) => e.preventDefault()}
           >
             <input
               type="text"
-              placeholder="Type and hit enter..."
-              className="w-full bg-transparent text-gray-900 dark:text-white text-2xl md:text-4xl outline-none placeholder-gray-500 dark:placeholder-white/60"
+              placeholder="Search products, windows, doors..."
+              className="w-full bg-transparent text-gray-900 dark:text-white text-2xl md:text-4xl outline-none placeholder-gray-400 dark:placeholder-gray-500 font-light border-b border-[rgba(0,0,0,0.2)]"
               autoFocus
             />
             <button
               type="submit"
-              className="ml-4 text-gray-800 dark:text-white hover:scale-110 transition-transform shrink-0"
+              className="text-gray-500 dark:text-gray-400 hover:text-[#0094D9] dark:hover:text-[#0094D9] transition-colors shrink-0"
               aria-label="Search"
             >
               <SearchIcon />
             </button>
           </form>
+          <div className="mt-6 text-sm text-gray-500 dark:text-gray-400">
+            Start typing to search...
+          </div>
         </div>
       </div>
     </div>
