@@ -456,8 +456,8 @@ useEffect(() => {
           className="fixed left-0 right-0 z-95 pointer-events-auto"
           style={{
             top: "100%",
-            height: "20px",
-            transform: `translateY(-${20}px)`,
+            height: "40px",
+            transform: `translateY(-${40}px)`,
           }}
           onMouseEnter={onClearHoverClose}
           onMouseLeave={onScheduleHoverClose}
@@ -593,7 +593,7 @@ function MegaMenuOurCollection({
 
   return (
     <>
-      <div className="flex-1 bg-theme overflow-y-auto">
+      <div className="flex-1 overflow-y-auto">
         <div className="container-fluid mx-5 sm:mx-[5%] 2xl:mx-[10%] py-10 px-8 flex flex-col lg:flex-row gap-12 lg:gap-16">
           <div className="flex-1 w-[20vw] flex-wrap shrink-0">
             <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-6">
@@ -867,7 +867,7 @@ const imgClass =
 /** Who we are - direct links, no array */
 function MegaMenuWhoWeAre() {
   return (
-    <div className="flex-1 bg-[#121212] overflow-y-auto">
+    <div className="flex-1 overflow-y-auto">
       <div className="container-fluid mx-[20px] sm:mx-[5%] 2xl:mx-[10%] py-10 px-8 flex flex-col lg:flex-row items-center lg:items-stretch gap-8 lg:gap-12 justify-between">
         <div className="flex-1 w-[20vw] max-w-lg flex-wrap shrink-0 max-w-lg">
           <h3 className="text-xl md:text-2xl font-medium text-white mb-4 pb-2 border-b border-white/30">
@@ -987,7 +987,7 @@ function MegaMenuProjectsStories() {
 /** Contact us - direct links, no array */
 function MegaMenuContactUs() {
   return (
-    <div className="flex-1 bg-[#121212] overflow-y-auto">
+    <div className="flex-1 overflow-y-auto">
     <div className="container-fluid mx-[20px] sm:mx-[5%] 2xl:mx-[10%] py-10 px-8 flex flex-col lg:flex-row items-center lg:items-stretch gap-8 lg:gap-12 justify-between">
       <div className="flex-1 w-[20vw] max-w-lg flex-wrap shrink-0 max-w-lg">
           <h3 className="text-xl md:text-2xl font-medium text-white mb-4 pb-2 border-b border-white/30">
