@@ -450,6 +450,21 @@ useEffect(() => {
         />
       </nav>
 
+      {/* ========== HOVER BRIDGE - Invisible bridge between nav and mega menu ========== */}
+      {megaMenuOpen && (
+        <div
+          className="fixed left-0 right-0 z-95 pointer-events-auto"
+          style={{
+            top: "100%",
+            height: "20px",
+            transform: `translateY(-${20}px)`,
+          }}
+          onMouseEnter={onClearHoverClose}
+          onMouseLeave={onScheduleHoverClose}
+          aria-hidden="true"
+        />
+      )}
+
       {/* ========== MEGA MENU - Full-screen dropdown below header ========== */}
       <div
         ref={megaMenuRef}
