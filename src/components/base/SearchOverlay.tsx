@@ -35,81 +35,81 @@ export default function SearchOverlay({
    * Open animation: backdrop scales from button center, panel grows to center
    */
   useEffect(() => {
-    if (!mounted || !isOpen || !origin) return;
-    if (!searchBackdropRef.current || !searchPanelRef.current) return;
+  if (!mounted || !isOpen || !origin) return;
+  if (!searchBackdropRef.current || !searchPanelRef.current) return;
 
-    const { x, y, width, height } = origin;
-    const cx = x + width / 2;
-    const cy = y + height / 2;
+  const { x, y, width, height } = origin;
+  const cx = x + width / 2;
+  const cy = y + height / 2;
 
-    gsap.set(searchBackdropRef.current, {
-      transformOrigin: `${cx}px ${cy}px`,
-      scale: 0,
-      opacity: 0,
-    });
-    gsap.set(searchPanelRef.current, {
-      left: x,
-      top: y,
-      width: width,
-      height: height,
-      x: 0,
-      y: 0,
-      opacity: 0,
-    });
+  const tl = gsap.timeline();
 
-    gsap.to(searchBackdropRef.current, {
+  // Backdrop
+  gsap.set(searchBackdropRef.current, {
+    transformOrigin: `${cx}px ${cy}px`,
+    opacity: 0,
+    scale: 0.9,
+  });
+
+  // Panel
+  gsap.set(searchPanelRef.current, {
+    opacity: 0,
+    scale: 0.8,
+    y: 40,
+  });
+
+  tl.to(searchBackdropRef.current, {
+    opacity: 1,
+    scale: 1,
+    duration: 0.5,
+    ease: "power3.out",
+  });
+
+  tl.to(
+    searchPanelRef.current,
+    {
+      opacity: 1,
       scale: 1,
-      opacity: 1,
-      duration: 0.6,
-      ease: "power2.out",
-    });
-    gsap.to(searchPanelRef.current, {
-      left: "50%",
-      top: "50%",
-      x: "-50%",
-      y: "-50%",
-      width: "min(70vw, 800px)",
-      height: "auto",
-      opacity: 1,
+      y: 0,
       duration: 0.55,
-      ease: "power2.out",
-      delay: 0.1,
-    });
-  }, [isOpen, origin, mounted]);
+      ease: "power4.out",
+    },
+    "-=0.3"
+  );
+}, [isOpen, origin, mounted]);
 
   /**
    * Close handler: animates panel and backdrop back to button, then calls onClose
    */
-  const handleClose = () => {
-    if (!searchBackdropRef.current || !searchPanelRef.current) {
-      onClose();
-      return;
-    }
+const handleClose = () => {
+  if (!searchBackdropRef.current || !searchPanelRef.current) {
+    onClose();
+    return;
+  }
 
-    const { x, y, width, height } = origin || { x: 0, y: 0, width: 40, height: 40 };
-    const cx = x + width / 2;
-    const cy = y + height / 2;
+  const tl = gsap.timeline({
+    onComplete: onClose,
+  });
 
-    gsap.to(searchPanelRef.current, {
-      left: x,
-      top: y,
-      x: 0,
-      y: 0,
-      width: width,
-      height: height,
+  tl.to(searchPanelRef.current, {
+    opacity: 0,
+    scale: 0.85,
+    y: 30,
+    duration: 0.35,
+    ease: "power3.inOut",
+  });
+
+  tl.to(
+    searchBackdropRef.current,
+    {
       opacity: 0,
-      duration: 0.4,
-      ease: "power2.in",
-    });
-    gsap.to(searchBackdropRef.current, {
-      scale: 0,
-      opacity: 0,
-      transformOrigin: `${cx}px ${cy}px`,
-      duration: 0.4,
-      ease: "power2.in",
-      onComplete: onClose,
-    });
-  };
+      scale: 0.95,
+      duration: 0.35,
+      ease: "power3.inOut",
+    },
+    "-=0.25"
+  );
+};
 
   /** Handle Escape key */
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -151,10 +151,7 @@ export default function SearchOverlay({
         ref={searchPanelRef}
         className="fixed z-30 rounded-xl bg-white dark:bg-gray-900 backdrop-blur-sm shadow-2xl overflow-hidden border border-white/20 dark:border-gray-800/50"
         style={{
-          left: origin.x,
-          top: origin.y,
-          width: origin.width,
-          height: origin.height,
+           width: "min(70vw, 800px)",
         }}
         onClick={(e) => e.stopPropagation()}
       >
