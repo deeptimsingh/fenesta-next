@@ -46,11 +46,14 @@ export default function HaveQuestion() {
 
     const ctx = gsap.context(() => {
       items.forEach((item) => {
+        // Use opacity (not autoAlpha): autoAlpha sets visibility:hidden and blocks
+        // pointer events until the tween runs — FAQ clicks feel "broken", especially
+        // with Lenis + ScrollTrigger timing. once: true avoids reversing back to hidden.
         gsap.fromTo(
           item,
-          { autoAlpha: 0, y: 20, force3D: true },
+          { opacity: 0, y: 20, force3D: true },
           {
-            autoAlpha: 1,
+            opacity: 1,
             y: 0,
             duration: 0.7,
             ease: "power3.out",
@@ -60,12 +63,16 @@ export default function HaveQuestion() {
               start: "top 88%",
               fastScrollEnd: true,
               invalidateOnRefresh: true,
-              toggleActions: "play none none reverse",
+              once: true,
             },
           }
         );
       });
     }, root);
+
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+    });
 
     return () => {
       ctx.revert();

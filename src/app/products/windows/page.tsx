@@ -21,7 +21,7 @@ import ImageGallery from "@/components/image-gallery";
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
-export default function Casementwindows() {
+export default function WindowsPage() {
   const { headingRef, sectionRef } = useHeadingAnimation();
 
   return (
@@ -66,7 +66,7 @@ export default function Casementwindows() {
       {/*Why experts trust and customers love our uPVC doors */}
       <section className="common-padding w-full flex flex-col items-center whyExperts-section">
         {/* Heading */}
-        <div className="container-fluid m-auto px-6 md:px-0 relative z-10">
+        <div className="container m-auto px-6 md:px-0 relative z-10">
             <div ref={sectionRef} className="w-full">
                 <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-4xl mx-auto">
                     <h2 className="text-h2 leading-none">
