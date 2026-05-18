@@ -1,0 +1,251 @@
+
+/**---------------------------------------------------
+panoramaSwiper
+---------------------------------------------------**/
+.PanoramaSwiper-slider.swiper {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    perspective: 1200px;
+    perspective-origin: center center;
+  }
+
+  .PanoramaSwiper-slider .swiper-slide {
+    transition: transform 0.6s ease, opacity 0.6s ease, filter 0.6s ease;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  
+  .PanoramaSwiper-slider.swiper::before {content: "";position: absolute;top: -80px;left: -10%;width: 120%;height: 120px;background:#faf8f1;border-radius: 120%;z-index: 5;}
+  .PanoramaSwiper-slider.swiper::after {content: "";position: absolute;bottom: -80px;left: -10%;width: 120%;height: 120px;background:#efead5;border-radius: 120%;z-index: 5;}
+  .PanoramaSwiper-slider.swiper .swiper-slide img,
+  .PanoramaSwiper-slider.swiper .swiper-slide video {
+    width: 130%;
+    height: 25vw;
+    max-width: inherit;
+    object-fit: contain;
+    will-change: transform;
+    object-position: center center;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform .3s ease-out;
+    display: block;
+    position: relative;
+  }
+  .PanoramaSwiper-slider.swiper .swiper-slide video{ object-fit: cover !important;}
+  .PanoramaSwiper-slider {
+    perspective: 1200px;
+    overflow: visible;
+  }
+
+  /* Touch / small screens: let horizontal swipes reach Swiper (Lenis + scroll chaining) */
+  @media (max-width: 1023px) {
+    .PanoramaSwiper-slider.swiper {
+      touch-action: pan-x pinch-zoom;
+    }
+    .PanoramaSwiper-slider .swiper-slide {
+      touch-action: pan-x;
+    }
+  } 
+  
+  /* CENTER FOCUS */
+  .PanoramaSwiper-slider .swiper-slide-active {
+    filter: blur(0) !important;
+    opacity: 1 !important;
+    transform: scale(1.05) !important;
+  }
+
+  .PanoramaSwiper-slider .swiper-slide {overflow: hidden; height: 25vw;}
+  .PanoramaSwiper-slider .parallax-img, .PanoramaSwiper-slider .parallax-video {
+    width: 130%;
+    height: 100%;
+    will-change: transform;
+    transform-origin: center center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -15%;
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* 3D Card Slider Animation */
+  .PanoramaSwiper-slider .swiper-slide {
+    transform-style: preserve-3d;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Initial Load - All slides stacked behind center */
+  .PanoramaSwiper-slider .swiper-slide.slide-hidden {
+    opacity: 0;
+    transform: translateZ(-500px);
+    pointer-events: none;
+  }
+  
+  .PanoramaSwiper-slider .swiper-slide.slide-ready {
+    opacity: 1;
+    transform: translateZ(0) rotateY(0deg);
+  }
+  
+  /* Initial state - all slides centered (stacked at center) */
+  .PanoramaSwiper-slider:not(.slides-animated) .swiper-slide {
+    transform: translateX(0) !important;
+    transition: none !important;
+  }
+  
+
+  /* When animated, slides spread to their natural positions */
+  .PanoramaSwiper-slider.slides-animated .swiper-slide {
+    transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  
+  /* Active Slide - Center Front */
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-active {
+    transform: translateZ(0px) rotateY(0deg) scale(1);
+    opacity: 1;
+    z-index: 10;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-active.slide-active-anim {
+    animation: card3DActiveIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-active.slide-from-right {
+    animation: card3DFromRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-active.slide-from-left {
+    animation: card3DFromLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  
+  /* Prev Slide - Rotate Left and Move Back */
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-prev {
+    transform: translateZ(-150px) rotateY(25deg) translateX(-100px) scale(0.85);
+    opacity: 1;
+    z-index: 1;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Next Slide - Rotate Right and Move Back */
+  .PanoramaSwiper-slider .swiper-slide.swiper-slide-next {
+    transform: translateZ(-150px) rotateY(-25deg) translateX(100px) scale(0.85);
+    opacity: 1;
+    z-index: 1;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Other Slides - Further Back */
+  .PanoramaSwiper-slider .swiper-slide:not(.swiper-slide-active):not(.swiper-slide-prev):not(.swiper-slide-next) {
+    transform: translateZ(-300px) rotateY(0deg) scale(0.7);
+    opacity: 1;
+    z-index: 0;
+    transition: transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* 3D Keyframe Animations */
+  @keyframes card3DActiveIn {
+    0% {
+      opacity: 0;
+      transform: translateZ(-200px) rotateY(45deg) scale(0.8);
+    }
+    50% {
+      transform: translateZ(20px) rotateY(-5deg) scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: translateZ(0px) rotateY(0deg) scale(1);
+    }
+  }
+  
+  @keyframes card3DFromRight {
+    0% {
+      opacity: 0;
+      transform: translateZ(-200px) rotateY(-60deg) translateX(200px) scale(0.8);
+    }
+    50% {
+      transform: translateZ(20px) rotateY(5deg) translateX(-10px) scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: translateZ(0px) rotateY(0deg) translateX(0px) scale(1);
+    }
+  }
+  
+  @keyframes card3DFromLeft {
+    0% {
+      opacity: 0;
+      transform: translateZ(-200px) rotateY(60deg) translateX(-200px) scale(0.8);
+    }
+    50% {
+      transform: translateZ(20px) rotateY(-5deg) translateX(10px) scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: translateZ(0px) rotateY(0deg) translateX(0px) scale(1);
+    }
+  }
+
+  .dark .PanoramaSwiper-slider.swiper:before{background:#1d1d1d;}
+  .dark .PanoramaSwiper-slider.swiper:after{background:#141414;}
+  .dark  .tabs-outer-container .text-brown{color: var(--color-cream); border-bottom-color: var(--color-cream);}
+  .dark  .tabs-outer-container .text-theme{color: var(--color-white);}
+
+
+
+/* Reveal card: arrow hidden until hover; slides in from right → left */
+.PanoramaSwiper-slider .reveal-card .arrow-icon {
+  opacity: 0;
+  transform: translate3d(20px, 0, 0) rotate(55deg);
+  transition:
+    opacity 0.32s ease,
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+
+.PanoramaSwiper-slider .reveal-card:hover .arrow-icon,
+.PanoramaSwiper-slider .reveal-card:focus-visible .arrow-icon {
+  opacity: 1;
+  transform: translate3d(0, 0, 0)  rotate(0deg);
+  pointer-events: auto;
+}
+.PanoramaSwiper-slider .reveal-card .parallax-img img{transform: translate3d(0px, 0, 0) scale(1.0);  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);}
+.PanoramaSwiper-slider .reveal-card:hover .parallax-img img{transform: translate3d(10px, 0, 0)  scale(1.05);}
+
+#product-styles .PanoramaSwiper-slider .project-caption  p{ font-size:1.75rem !important; }
+
+
+#ideal-for-use-in .PanoramaSwiper-slider .reveal-card .arrow-icon{display: none !important;}
+#ideal-for-use-in .PanoramaSwiper-slider .project-caption{justify-content: center !important;}
+
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  .PanoramaSwiper-slider .reveal-card .arrow-icon {
+    transition: opacity 0.2s ease;
+    transform: translate3d(0, 0, 0);
+  }
+  .PanoramaSwiper-slider .reveal-card:hover .arrow-icon,
+  .PanoramaSwiper-slider .reveal-card:focus-visible .arrow-icon {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media all and (max-width:1180px){
+    .PanoramaSwiper-slider.swiper .swiper-slide img, .PanoramaSwiper-slider.swiper .swiper-slide video {      height: 50vw;}
+}
+
+
+@media all and (max-width: 768px) {
+    .PanoramaSwiper-slider.swiper .swiper-slide img, .PanoramaSwiper-slider.swiper .swiper-slide video{ height:100vw !important; object-fit: cover !important;}
+    .PanoramaSwiper-slider .swiper-slide{ height:100vw !important;}
+}
+

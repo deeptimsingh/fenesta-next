@@ -116,7 +116,7 @@ export default function PressCoverage({ pressCards = PRESS_CARDS, adsCards = ADS
             >
               {/* Sliding capsule background */}
               <div
-                className="tab-bg-move absolute top-1.5 bottom-1.5 rounded-full bg-theme/80 transition-[left,width] duration-300 ease-out"
+                className="tab-bg-move absolute top-1.5 bottom-1.5 rounded-full bg-[#0094DA] transition-[left,width] duration-300 ease-out"
                 style={{
                   left: pillStyle.left,
                   width: pillStyle.width,

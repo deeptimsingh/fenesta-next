@@ -1,0 +1,189 @@
+/**---------------------------------------------------
+Image Gallery
+---------------------------------------------------**/
+/* .ImageGallery-section {
+  background-color: #f5f5f5;
+} */
+
+.image-gallery-swiper .swiper-slide .ig-card {
+  opacity: 0.22;
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.image-gallery-swiper .swiper-slide-active .ig-card {
+  opacity: 1;
+}
+
+.image-gallery-swiper .swiper-slide .ig-card-media {
+  transform: scale(0.92);
+  transform-origin: center center;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  touch-action: pan-x;
+}
+
+.image-gallery-swiper .swiper-slide-active .ig-card-media {
+  transform: scale(1);
+}
+
+.image-gallery-swiper .ig-card-text {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.image-gallery-swiper .swiper-slide-active .ig-card-text {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.image-gallery-swiper.swiper {
+  touch-action: pan-x pinch-zoom;
+  overscroll-behavior-x: contain;
+  overflow: visible;
+}
+
+.image-gallery-swiper .swiper-slide {
+  touch-action: pan-x;
+  box-sizing: border-box;
+}
+
+.image-gallery-swiper .swiper-wrapper {
+  touch-action: pan-x;
+  align-items: stretch;
+}
+
+/* Active slide width (centered layouts) */
+.image-gallery-slide--centered,
+.image-gallery-slide--solo {
+  width: min(92vw, 850px) !important;
+  max-width: 850px !important;
+}
+
+/* Solo (1 slide): always full opacity, no scale */
+.image-gallery-slide--solo .ig-card,
+.image-gallery-slide--solo .ig-card-media,
+.image-gallery-slide--solo .ig-card-text {
+  opacity: 1;
+  transform: none;
+}
+
+/* 2–3 slides: one at a time, centered, active width */
+.image-gallery-swiper--centered .swiper-slide .ig-card {
+  opacity: 1;
+}
+
+.image-gallery-swiper--centered .swiper-slide:not(.swiper-slide-active) .ig-card-media {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+
+.image-gallery-swiper--centered .swiper-slide-active .ig-card-media {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.image-gallery-swiper--centered .image-gallery-slide--centered {
+  width: min(92vw, 850px) !important;
+  max-width: 850px !important;
+}
+
+/* >3 slides: design carousel — faded side slides + white wash */
+.image-gallery-swiper--many .swiper-slide .ig-card {
+  opacity: 1;
+}
+
+.image-gallery-swiper--many .ig-card-media--carousel {
+  position: relative;
+}
+
+.image-gallery-swiper--many .swiper-slide:not(.swiper-slide-active) .ig-card-media--carousel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.58);
+  pointer-events: none;
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.image-gallery-swiper--many .swiper-slide-active .ig-card-media--carousel::after {
+  opacity: 0;
+}
+
+.image-gallery-swiper--many .swiper-slide:not(.swiper-slide-active) .ig-card-media {
+  transform: scale(1);
+  filter: saturate(0.85);
+}
+
+.image-gallery-swiper--many .swiper-slide-active .ig-card-media {
+  transform: scale(1);
+  filter: none;
+}
+
+.image-gallery-swiper--many .ig-card-text--carousel {
+  opacity: 0.4;
+  transform: translateY(0);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.image-gallery-swiper--many .swiper-slide-active .ig-card-text--carousel {
+  opacity: 1;
+}
+
+.image-gallery-cta {
+  position: relative;
+  z-index: 2;
+}
+
+/* 4+ slides: side-peek carousel on desktop */
+.image-gallery-swiper--many .image-gallery-slide .ig-card-text {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+  .image-gallery-swiper--many .swiper-slide-active.image-gallery-slide .ig-card-text {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+@media (min-width: 1024px) {
+  .image-gallery-swiper--many .image-gallery-slide {
+    width: min(850px, 70vw) !important;
+    max-width: min(850px, 70vw) !important;
+  }
+
+  
+}
+
+/* Mobile carousel: slightly narrower active peek */
+@media (max-width: 1023px) {
+  .image-gallery-swiper--many .image-gallery-slide {
+    width: 78vw !important;
+    max-width: 78vw !important;
+  }
+
+  .image-gallery-swiper--many .swiper-slide-active.image-gallery-slide {
+    width: min(92vw, 850px) !important;
+    max-width: 850px !important;
+  }
+}
+
+.image-gallery-swiper--single.swiper {
+  touch-action: auto;
+}
+
+/* 2–3 slides: static column grid (no Swiper) */
+.image-gallery-grid .ig-card,
+.image-gallery-grid .ig-card-media,
+.image-gallery-grid .ig-card-text {
+  opacity: 1;
+  transform: none;
+}

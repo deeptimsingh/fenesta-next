@@ -9,6 +9,8 @@ export type UseImageParallaxOptions = {
   toY?: number;
   smooth?: number;
   startVisibleVh?: number;
+  /** When false, no transform is applied (e.g. Swiper carousel slides). */
+  enabled?: boolean;
 };
 
 /**
@@ -27,21 +29,35 @@ export function useImageParallax(
     toY = 20,
     smooth = 0.12,
     startVisibleVh = 0.6,
+    enabled = true,
   } = opts;
 
   useLayoutEffect(() => {
     const container = containerRef.current;
     const imageWrap = imageWrapRef.current;
-    if (!container || !imageWrap) return;
+    if (!enabled || !container || !imageWrap) return;
 
     const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
     const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
+    const getTargets = () => {
+      const rect = container.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const travel = vh + rect.height || 1;
+      const t = clamp01((vh - rect.top) / travel);
+      const eased = 1 - Math.pow(1 - t, 2);
+      return {
+        scale: lerp(fromScale, toScale, eased),
+        y: lerp(fromY, toY, eased),
+      };
+    };
+
     let raf = 0;
     let lastTs = 0;
     let inView = false;
-    let stateScale = fromScale;
-    let stateY = fromY;
+    const initial = getTargets();
+    let stateScale = initial.scale;
+    let stateY = initial.y;
 
     const render = () => {
       imageWrap.style.transform = `translate3d(0, ${stateY}px, 0) scale(${stateScale})`;
@@ -53,13 +69,7 @@ export function useImageParallax(
       lastTs = ts;
       const alpha = 1 - Math.pow(1 - smooth, dt / 16.67);
 
-      const rect = container.getBoundingClientRect();
-      const vh = window.innerHeight || 1;
-      const travel = vh + rect.height || 1;
-      const t = clamp01((vh - rect.top) / travel);
-      const eased = 1 - Math.pow(1 - t, 2);
-      const targetScale = lerp(fromScale, toScale, eased);
-      const targetY = lerp(fromY, toY, eased);
+      const { scale: targetScale, y: targetY } = getTargets();
 
       stateScale = lerp(stateScale, targetScale, alpha);
       stateY = lerp(stateY, targetY, alpha);
@@ -81,10 +91,17 @@ export function useImageParallax(
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        const wasInView = inView;
         inView = entry.isIntersecting;
+        if (inView && !wasInView) {
+          const { scale, y } = getTargets();
+          stateScale = scale;
+          stateY = y;
+          render();
+        }
         if (inView) kick();
       },
-      { threshold: 0 }
+      { rootMargin: "50px 0px", threshold: 0 }
     );
     observer.observe(container);
     imageWrap.style.transformOrigin = "center";
@@ -99,5 +116,15 @@ export function useImageParallax(
       window.removeEventListener("resize", kick);
       if (raf) window.cancelAnimationFrame(raf);
     };
-  }, [containerRef, imageWrapRef, fromScale, toScale, fromY, toY, smooth, startVisibleVh]);
+  }, [
+    containerRef,
+    imageWrapRef,
+    fromScale,
+    toScale,
+    fromY,
+    toY,
+    smooth,
+    startVisibleVh,
+    enabled,
+  ]);
 }

@@ -122,7 +122,7 @@ export default function PressCoverage({ awardsCards = AWARDS_CARDS, accreditatio
             >
               {/* Sliding capsule background */}
               <div
-                className="tab-bg-move absolute top-1.5 bottom-1.5 rounded-full bg-theme/80 transition-[left,width] duration-300 ease-out"
+                className="tab-bg-move absolute top-1.5 bottom-1.5 rounded-full bg-blue transition-[left,width] duration-300 ease-out"
                 style={{
                   left: pillStyle.left,
                   width: pillStyle.width,
@@ -155,25 +155,18 @@ export default function PressCoverage({ awardsCards = AWARDS_CARDS, accreditatio
                 Accreditations
               </button>
             </div>
-          </div>
+          </div>          
 
-          
-
-          <p className="pressDescription text-center text-theme text-22 max-w-3xl mx-auto mt-10 w-full">
+          <p className="pressDescription text-center text-theme text-22 max-w-3xl mx-auto mt-10 w-full flex flex-wrap">
             {description}
           </p>
 
           {(activeTab === "awards" || activeTab === "accreditations") && (
             <div
               key={activeTab}
-              className="press-card-outer flex flex-wrap justify-center mt-10"
-              ref={containerRef}
-            >
+              className="press-card-outer flex flex-wrap justify-center !mt-10 w-full" ref={containerRef}>
               {cards.map((item, index) => (
-                <div
-                  key={`${activeTab}-${index}`}
-                  className={`press-card cardreveal ${index < visibleCards ? "block" : "hidden"}`}
-                >
+                <div key={`${activeTab}-${index}`}  className={`press-card cardreveal ${index < visibleCards ? "block" : "hidden"}`}>
                   <div className="press-card-inner">
                     <div className="press-card-image">
                       <Image

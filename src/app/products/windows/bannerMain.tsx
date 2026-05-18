@@ -5,10 +5,9 @@ import { useInsidePageBannerAnimation, getInsidePageBannerInitialStyles } from "
 
 const initial = getInsidePageBannerInitialStyles();
 
-/** Desktop hero clip — swap for a lighter desktop-only file when you have one */
-const VIDEO_SRC_DESKTOP = "/images/productPage/uPVCWindow.mp4";
-/** Mobile: same asset until a dedicated mobile encode exists (e.g. uPVCWindow-mobile.mp4) */
-const VIDEO_SRC_MOBILE = "/images/productPage/uPVCWindow.mp4";
+/** Hero background clip — must match a file under `public/` */
+const VIDEO_SRC_DESKTOP = "/images/banner/productuPVCWindow.mp4";
+const VIDEO_SRC_MOBILE = "/images/banner/productuPVCWindow.mp4";
 
 export default function BannerMain({ animationReady = true }: { animationReady?: boolean }) {
   const bgRef = useRef<HTMLDivElement | null>(null);
@@ -29,7 +28,28 @@ export default function BannerMain({ animationReady = true }: { animationReady?:
   useEffect(() => {
     const el = videoRef.current;
     if (!el || prefersReducedMotion) return;
-    el.play().catch(() => {});
+
+    const tryPlay = () => {
+      el.muted = true;
+      el.defaultMuted = true;
+      void el.play().catch(() => {});
+    };
+
+    tryPlay();
+    el.addEventListener("loadeddata", tryPlay);
+    el.addEventListener("canplay", tryPlay, { once: true });
+
+    const onVis = () => {
+      if (document.visibilityState === "visible") tryPlay();
+      else el.pause();
+    };
+    document.addEventListener("visibilitychange", onVis);
+
+    return () => {
+      el.removeEventListener("loadeddata", tryPlay);
+      el.removeEventListener("canplay", tryPlay);
+      document.removeEventListener("visibilitychange", onVis);
+    };
   }, [prefersReducedMotion, animationReady]);
 
   return (
@@ -57,7 +77,7 @@ export default function BannerMain({ animationReady = true }: { animationReady?:
               playsInline
               loop
               autoPlay
-              preload="metadata"
+              preload="auto"
               aria-hidden
             >
               <source media="(min-width: 768px)" src={VIDEO_SRC_DESKTOP} type="video/mp4" />

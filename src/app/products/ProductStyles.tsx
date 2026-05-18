@@ -1,27 +1,30 @@
 "use client";
+import Image from "next/image";
+import Link from "next/link";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import Image from "next/image";
+
 import "swiper/css";
-import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
-import FenestaButton from "@/components/base/FenestaButton";
+
+import "@/app/product-page/productStyles-style.css";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+
 type SlideItem = {
   title: string;
-  image?: string;
+  image?: string;   
   video?: string;
   type?: "image" | "video";
 };
 
-export default function PanoramaTabsSingle() {
+export default function PanoramaTabsSingle({ id }: { id: string }) {
   const tabs = ["By Space", "Our Collection"];
   const [activeTab, setActiveTab] = useState(0);
   const [sliderReady, setSliderReady] = useState(false);
 
-  const { headingRef, sectionRef } = useHeadingAnimation();
+  
   const swiperSectionRef = useRef<HTMLElement>(null);
   const swiperRef = useRef<any>(null);
 
@@ -30,36 +33,15 @@ export default function PanoramaTabsSingle() {
 
   const sliderData: SlideItem[][] = [
     [
-      { title: "Balcony",     image: "/images/demo/room1.webp", type: "image" },
-      { title: "Bathroom",    image: "/images/demo/room2.webp", type: "image" },
-      { title: "Bedroom",     image: "/images/demo/room3.webp", type: "image" },
-      { title: "Kitchen",     image: "/images/demo/room4.webp", type: "image" },
-      { title: "Living Room", image: "/images/demo/room5.webp", type: "image" },
-    ],
-    [
-      { title: "Noise Control",      image: "/images/demo/room1.webp",        type: "image" },
-      { title: "Thermal",            video: "/images/demo/project-video.mp4", type: "video" },
-      { title: "Security",           image: "/images/demo/room3.webp",        type: "image" },
-      { title: "Weather Protection", video: "/images/demo/project-video.mp4", type: "video" },
+      { title: "Casement window ",     image: "/images/demo/room1.webp", type: "image" },
+      { title: "Tilt and Turn",    image: "/images/demo/room2.webp", type: "image" },
+      { title: "Fixed window",     image: "/images/demo/room3.webp", type: "image" },
+      { title: "Slider window", image: "/images/demo/room4.webp", type: "image" },
+      { title: "Combination",  image: "/images/demo/room5.webp", type: "image" },
     ],
   ];
 
   const GHOST_COUNT = sliderData[activeTab].length;
-
-  // ─────────────────────────────────────────────────────────────────
-  //  SPREAD-FROM-CENTER ANIMATION
-  //
-  //  Key insight: Swiper with `loop` creates duplicate slides internally
-  //  and positions them via `transform: translateX(Npx)` on each
-  //  `.swiper-slide` element.
-  //
-  //  We read Swiper's ACTUAL computed translate for every slide via
-  //  `swiper.getTranslate()` + slide offsets — then cancel it on the
-  //  wrapper so all slides LOOK centered, then animate back to 0.
-  //
-  //  This avoids all gap issues caused by guessing slideWidth * step.
-  // ─────────────────────────────────────────────────────────────────
-
   const animateSpread = useCallback(() => {
     const swiper = swiperRef.current;
     if (!swiper?.slides) return;
@@ -196,17 +178,19 @@ export default function PanoramaTabsSingle() {
             scale: startScale[i] ?? 0.85,
             rotation: startRot[i] ?? 0,
             opacity: 1,
-            transformOrigin: "center bottom",
+            transformOrigin: "70% bottom",
           });
         });
 
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: slider,
-            start: "top 90%",
-            end: "top 10%",
+            // Start only when team-slider reaches 50% viewport
+            start: "top 50%",
+            end: "bottom 50%",
             scrub: 2,
             invalidateOnRefresh: true,
+           //  markers: true, // enable for debugging
           },
         });
 
@@ -232,145 +216,107 @@ export default function PanoramaTabsSingle() {
   }, [sliderReady, activeTab]);
 
   return (
-    <section
-      ref={swiperSectionRef}
-      className="common-padding w-full flex flex-col items-center window-door-section white-gradient-background text-black"
-    >
-      {/* Heading */}
-      <div className="container-fluid m-auto px-6 md:px-0">
-        <div ref={sectionRef} className="w-full">
-          <div
-            ref={headingRef}
-            className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-3xl mx-auto"
+    <>
+      <div id={id} ref={swiperSectionRef as React.RefObject<HTMLDivElement>} className=" w-full flex flex-col items-center text-black">
+        {/* Slider */}
+        <div
+          className="relative w-full pb-10 mt-5 team-slider-outer-container"
+          style={{ minHeight: "25vw", perspective: '1200px', perspectiveOrigin: 'center center' }}
+        >
+          <Swiper
+            key={activeTab}
+            className="PanoramaSwiper-slider team-slider"
+            loop
+            centeredSlides
+            parallax
+            freeMode
+            speed={1000}
+            grabCursor
+            // ── Show 5 slides on desktop, scale down gracefully ──
+            slidesPerView={5}
+            spaceBetween={16}
+            breakpoints={{
+              0:    { slidesPerView: 1.3,  spaceBetween: 10 },
+              480:  { slidesPerView: 2.2,  spaceBetween: 12 },
+              768:  { slidesPerView: 3.2,  spaceBetween: 14 },
+              1024: { slidesPerView: 4.5,  spaceBetween: 16 },
+              1280: { slidesPerView: 5,    spaceBetween: 16 },
+            }}
+            onInit={(swiper) => {
+              swiperRef.current = swiper;
+
+              // Pre-hide all wrappers before first paint
+              if (swiper.slides) {
+                Array.from(swiper.slides as HTMLElement[]).forEach((slide) => {
+                  const w = slide.querySelector<HTMLElement>(".slide-spread-wrapper");
+                  if (w) { w.style.transition = "none"; w.style.opacity = "0"; }
+                });
+              }
+
+              swiper.update();
+
+              // Wait for Swiper to finish layout (getBoundingClientRect needs a paint)
+              setTimeout(() => setSliderReady(true), 80);
+            }}
+
+            /* Parallax while dragging */
+            onProgress={(swiper) => {
+              if (!swiper?.slides) return;
+              Array.from(swiper.slides as HTMLElement[]).forEach((slide) => {
+                const el = slide.querySelector<HTMLElement>(".parallax-img, .parallax-video");
+                if (!el) return;
+                const progress = (slide as any).progress ?? 0;
+                requestAnimationFrame(() => {
+                  el.style.transform = `translateX(${-progress * 180}px)`;
+                });
+              });
+            }}
+
+            onSetTransition={(swiper, duration) => {
+              if (!swiper?.slides || duration === 0) return;
+              Array.from(swiper.slides as HTMLElement[]).forEach((slide) => {
+                const el = slide.querySelector<HTMLElement>(".parallax-img, .parallax-video");
+                if (el) el.style.transition = "none";
+              });
+            }}
+
+            onTransitionEnd={(swiper) => {
+              if (!swiper?.slides) return;
+              Array.from(swiper.slides as HTMLElement[]).forEach((slide) => {
+                const el = slide.querySelector<HTMLElement>(".parallax-img, .parallax-video");
+                if (el) { el.style.transform = "translateX(0px)"; el.style.transition = ""; }
+              });
+            }}
           >
-            <h2 className="text-h2 leading-none">
-              Browse to find what <br /> feels right for{" "}
-              <span className="font-subFont text-corinthiaHeading text-brown">
-                your home
-              </span>
-            </h2>
-          </div>
+            {/* Real Slides */}
+            {sliderData[activeTab].map((item, index) => (
+              <SwiperSlide key={`real-${index}`}>
+                {/* Wrapper is what we animate — Swiper never touches it */}
+                <div
+                  className="slide-spread-wrapper"
+                  style={{ width: "100%", height: "100%" }}
+                >
+                  <SlideCard item={item} />
+                </div>
+              </SwiperSlide>
+            ))}
+
+            {/* Ghost slides for seamless loop */}
+            {sliderData[activeTab].slice(0, GHOST_COUNT).map((item, index) => (
+              <SwiperSlide key={`ghost-${index}`}>
+                <div
+                  className="slide-spread-wrapper"
+                  style={{ width: "100%", height: "100%" }}
+                >
+                  <SlideCard item={item} />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
       </div>
-
-      {/* Tabs */}
-      <div className="flex gap-6 mb-6 mt-10 tabs-outer-container dark:bg-gray-900 dark:text-white">
-        {tabs.map((tab, index) => (
-          <button
-            key={index}
-            onClick={() => handleTabChange(index)}
-            className={`pb-2 text-lg transition-all border-b-2 ${
-              activeTab === index
-                ? "text-brown border-[var(--color-brown)] font-bold"
-                : "text-theme border-transparent font-medium"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* Slider */}
-      <div
-        className="relative w-full pb-10 -mt-5"
-        style={{ minHeight: "25vw" }}
-      >
-        <Swiper
-          key={activeTab}
-          className="PanoramaSwiper-slider team-slider"
-          loop
-          centeredSlides
-          parallax
-          freeMode
-          speed={1000}
-          grabCursor
-          // ── Show 5 slides on desktop, scale down gracefully ──
-          slidesPerView={5}
-          spaceBetween={16}
-          breakpoints={{
-            0:    { slidesPerView: 1.3,  spaceBetween: 10 },
-            480:  { slidesPerView: 2.2,  spaceBetween: 12 },
-            768:  { slidesPerView: 3.2,  spaceBetween: 14 },
-            1024: { slidesPerView: 4.5,  spaceBetween: 16 },
-            1280: { slidesPerView: 5,    spaceBetween: 16 },
-          }}
-          onInit={(swiper) => {
-            swiperRef.current = swiper;
-
-            // Pre-hide all wrappers before first paint
-            if (swiper.slides) {
-              Array.from(swiper.slides as HTMLElement[]).forEach((slide) => {
-                const w = slide.querySelector<HTMLElement>(".slide-spread-wrapper");
-                if (w) { w.style.transition = "none"; w.style.opacity = "0"; }
-              });
-            }
-
-            swiper.update();
-
-            // Wait for Swiper to finish layout (getBoundingClientRect needs a paint)
-            setTimeout(() => setSliderReady(true), 80);
-          }}
-
-          /* Parallax while dragging */
-          onProgress={(swiper) => {
-            if (!swiper?.slides) return;
-            Array.from(swiper.slides as HTMLElement[]).forEach((slide) => {
-              const el = slide.querySelector<HTMLElement>(".parallax-img, .parallax-video");
-              if (!el) return;
-              const progress = (slide as any).progress ?? 0;
-              requestAnimationFrame(() => {
-                el.style.transform = `translateX(${-progress * 180}px)`;
-              });
-            });
-          }}
-
-          onSetTransition={(swiper, duration) => {
-            if (!swiper?.slides || duration === 0) return;
-            Array.from(swiper.slides as HTMLElement[]).forEach((slide) => {
-              const el = slide.querySelector<HTMLElement>(".parallax-img, .parallax-video");
-              if (el) el.style.transition = "none";
-            });
-          }}
-
-          onTransitionEnd={(swiper) => {
-            if (!swiper?.slides) return;
-            Array.from(swiper.slides as HTMLElement[]).forEach((slide) => {
-              const el = slide.querySelector<HTMLElement>(".parallax-img, .parallax-video");
-              if (el) { el.style.transform = "translateX(0px)"; el.style.transition = ""; }
-            });
-          }}
-        >
-          {/* Real Slides */}
-          {sliderData[activeTab].map((item, index) => (
-            <SwiperSlide key={`real-${index}`}>
-              {/* Wrapper is what we animate — Swiper never touches it */}
-              <div
-                className="slide-spread-wrapper"
-                style={{ width: "100%", height: "100%" }}
-              >
-                <SlideCard item={item} />
-              </div>
-            </SwiperSlide>
-          ))}
-
-          {/* Ghost slides for seamless loop */}
-          {sliderData[activeTab].slice(0, GHOST_COUNT).map((item, index) => (
-            <SwiperSlide key={`ghost-${index}`}>
-              <div
-                className="slide-spread-wrapper"
-                style={{ width: "100%", height: "100%" }}
-              >
-                <SlideCard item={item} />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-
-      <div className="mt-5 sm:-mt-10 z-[1]">
-        <FenestaButton>Explore our range</FenestaButton>
-      </div>
-    </section>
+    </>
+      
   );
 }
 
@@ -431,26 +377,31 @@ function SlideCard({ item }: { item: SlideItem }) {
 
   return (
     <div ref={containerRef} className="relative z-[10] overflow-hidden w-full h-full">
-      <div className={isVideo ? "parallax-video" : "parallax-img"}>
-        {isVideo && mediaSrc ? (
-          <video
-            ref={videoRef}
-            src={mediaSrc}
-            loop
-            muted
-            playsInline
-            autoPlay
-            preload="auto"
-            style={{ pointerEvents: "none", display: "block" }}
-          />
-        ) : mediaSrc ? (
-          <Image src={mediaSrc} alt={item.title} width={900} height={600} />
-        ) : null}
-      </div>
+        <Link href={`/`}  className="reveal-card block h-full w-full outline-none">
+            <div className={isVideo ? "parallax-video" : "parallax-img"}>
+                {isVideo && mediaSrc ? (
+                <video
+                    ref={videoRef}
+                    src={mediaSrc}
+                    loop
+                    muted
+                    playsInline
+                    autoPlay
+                    preload="auto"
+                    style={{ pointerEvents: "none", display: "block" }}
+                />
+                ) : mediaSrc ? (
+                <Image src={mediaSrc} alt={item.title} width={900} height={600} />
+                ) : null}
+            </div>
 
-      <div className="absolute bottom-4 left-0 w-full bg-gradient-to-t from-black/40 to-transparent backdrop-blur-sm pt-4 pb-10 flex justify-center z-[20]">
-        <p className="text-white text-lg font-medium">{item.title}</p>
-      </div>
+            <div className="project-caption absolute bottom-4 left-0 w-full bg-gradient-to-t from-black/40 to-transparent backdrop-blur-sm pt-4 pb-10 px-4 flex justify-start z-20">
+                <p className="text-white text-p font-medium">{item.title}</p>
+                <div className="arrow-icon absolute right-6 z-10 h-9 w-9 flex items-center justify-center rounded-full bg-[#009FE3] overflow-hidden">
+                    <Image src="/images/productPage/arrow.svg" alt="arrow right" width={14} height={14} className="object-cover w-3! h-3!" />
+                </div>
+            </div>
+        </Link>
     </div>
   );
 }

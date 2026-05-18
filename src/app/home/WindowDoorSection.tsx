@@ -243,8 +243,7 @@ export default function PanoramaTabsSingle() {
         <div ref={sectionRef} className="w-full">
           <div
             ref={headingRef}
-            className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-3xl mx-auto"
-          >
+            className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-3xl mx-auto">
             <h2 className="text-h2 leading-none">
               Browse to find what <br /> feels right for{" "}
               <span className="font-subFont text-corinthiaHeading text-brown">
