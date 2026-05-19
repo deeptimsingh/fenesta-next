@@ -23,9 +23,9 @@ const SLIDE_CONFIG = [
 
 const TOTAL_SLIDES = SLIDE_CONFIG.length;
 
-/** Pause when less than 40% of hero is in viewport (~60% scrolled past) */
-const HERO_PAUSE_VISIBLE_RATIO = 0.4;
-const HERO_RESUME_VISIBLE_RATIO = 0.45;
+  /** Pause when less than 40% of hero is visible (= ~60% scrolled past) */
+  const HERO_PAUSE_VISIBLE_RATIO = 0.4;
+  const HERO_RESUME_VISIBLE_RATIO = 0.45;
 
 interface SwiperInstance {
   destroy: (deleteInstance?: boolean, cleanStyles?: boolean) => void;
@@ -86,7 +86,7 @@ export default function HeroSlider() {
     progressRafRef.current = null;
   }, []);
 
-  // ── Animate progress bar (supports resume from saved %) ───────────────────
+  // ── Animate progress bar (supports resume from a saved %) ─────────────────
   const animateProgress = useCallback(
     (duration: number, onComplete: () => void, startFromPct = 0) => {
       stopProgress();
@@ -158,6 +158,7 @@ export default function HeroSlider() {
         savedProgressRef.current = 0;
       }
 
+      // Off-screen: keep slide index but don't run timers / video
       if (!isHeroVisibleRef.current) {
         if (SLIDE_CONFIG[realIndex].type === "video") {
           video2Ref.current?.pause();
@@ -214,6 +215,7 @@ export default function HeroSlider() {
     [animateProgress, goNext, muted, stopProgress]
   );
 
+  // ── Pause / resume when hero leaves or re-enters the viewport ─────────────
   const pauseHeroSlider = useCallback(() => {
     if (!isHeroVisibleRef.current) return;
     isHeroVisibleRef.current = false;
@@ -222,14 +224,16 @@ export default function HeroSlider() {
     stopProgress();
     swiperRef.current?.autoplay.stop();
 
-    if (video2Ref.current && activeIndexRef.current === 1) {
-      video2Ref.current.pause();
+    const vid = video2Ref.current;
+    if (vid && activeIndexRef.current === 1) {
+      vid.pause();
     }
   }, [stopProgress]);
 
   const resumeHeroSlider = useCallback(() => {
     if (isHeroVisibleRef.current) return;
     isHeroVisibleRef.current = true;
+
     handleSlideChange(activeIndexRef.current, { resume: true });
   }, [handleSlideChange]);
 
@@ -321,11 +325,9 @@ export default function HeroSlider() {
     if (video2Ref.current) video2Ref.current.muted = next;
   };
 
-  // ── Lenis + ScrollTrigger parallax ─────────────────────────────────────────
+  // ── Lenis + ScrollTrigger sync (parallax) ───────────────────────────────────
   useEffect(() => {
     if (!sectionRef.current) return;
-
-    let cancelled = false;
 
     type LenisInstance = {
       scroll: number;
@@ -334,17 +336,14 @@ export default function HeroSlider() {
       off: (e: string, fn: () => void) => void;
     };
 
+    const lenis = (window as Window & { lenis?: LenisInstance }).lenis;
     let onLenisScroll: (() => void) | undefined;
     let onStRefresh: (() => void) | undefined;
-    let ctx: gsap.Context | undefined;
 
-    const bindLenis = () => {
-      const lenis = (window as Window & { lenis?: LenisInstance }).lenis;
-      if (!lenis || cancelled) return false;
-
+    if (lenis) {
       ScrollTrigger.scrollerProxy(document.documentElement, {
         scrollTop(value?: number) {
-          if (typeof value === "number") {
+          if (value !== undefined) {
             lenis.scrollTo(value, { immediate: true });
           }
           return lenis.scroll;
@@ -364,10 +363,9 @@ export default function HeroSlider() {
       lenis.on("scroll", onLenisScroll);
       ScrollTrigger.addEventListener("refresh", onStRefresh);
       ScrollTrigger.refresh();
-      return true;
-    };
+    }
 
-    ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {
       const medias = sectionRef.current?.querySelectorAll<HTMLElement>(
         "img, video"
       );
@@ -389,30 +387,14 @@ export default function HeroSlider() {
       }
     }, sectionRef);
 
-    if (!bindLenis()) {
-      const waitId = window.setInterval(() => {
-        if (bindLenis()) window.clearInterval(waitId);
-      }, 50);
-      return () => {
-        cancelled = true;
-        window.clearInterval(waitId);
-        const lenis = (window as Window & { lenis?: LenisInstance }).lenis;
-        if (lenis && onLenisScroll) lenis.off("scroll", onLenisScroll);
-        if (onStRefresh) ScrollTrigger.removeEventListener("refresh", onStRefresh);
-        ctx?.revert();
-      };
-    }
-
     return () => {
-      cancelled = true;
-      const lenis = (window as Window & { lenis?: LenisInstance }).lenis;
       if (lenis && onLenisScroll) lenis.off("scroll", onLenisScroll);
       if (onStRefresh) ScrollTrigger.removeEventListener("refresh", onStRefresh);
-      ctx?.revert();
+      ctx.revert();
     };
   }, []);
 
-  // ── Pause autoplay at ~80% scroll / resume on scroll back ───────────────────
+  // ── Pause at ~80% scroll / resume when scrolling back (works with Lenis) ───
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -432,9 +414,15 @@ export default function HeroSlider() {
     };
 
     const observer = new IntersectionObserver(
-      ([entry]) => updateFromVisibility(entry.intersectionRatio),
-      { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.45, 0.5, 0.75, 1] }
+      ([entry]) => {
+        updateFromVisibility(entry.intersectionRatio);
+      },
+      {
+        root: null,
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.45, 0.5, 0.75, 1],
+      }
     );
+
     observer.observe(section);
 
     const onScrollCheck = () => {
@@ -445,51 +433,27 @@ export default function HeroSlider() {
       const visibleTop = Math.max(rect.top, 0);
       const visibleBottom = Math.min(rect.bottom, window.innerHeight);
       const visibleHeight = Math.max(0, visibleBottom - visibleTop);
-      updateFromVisibility(visibleHeight / height);
+      const ratio = visibleHeight / height;
+
+      updateFromVisibility(ratio);
     };
 
-    let lenisBound = false;
-    const bindScroll = () => {
-      const lenis = (window as Window & {
-        lenis?: { on: (e: string, fn: () => void) => void; off: (e: string, fn: () => void) => void };
-      }).lenis;
-      if (lenis) {
-        lenis.on("scroll", onScrollCheck);
-        lenisBound = true;
-        return true;
-      }
+    const lenis = (window as Window & { lenis?: { on: (e: string, fn: () => void) => void; off: (e: string, fn: () => void) => void } }).lenis;
+    if (lenis) {
+      lenis.on("scroll", onScrollCheck);
+    } else {
       window.addEventListener("scroll", onScrollCheck, { passive: true });
-      return false;
-    };
+    }
 
-    bindScroll();
     onScrollCheck();
 
-    const waitId = window.setInterval(() => {
-      if (lenisBound) {
-        window.clearInterval(waitId);
-        return;
-      }
-      const lenis = (window as Window & {
-        lenis?: { on: (e: string, fn: () => void) => void; off: (e: string, fn: () => void) => void };
-      }).lenis;
-      if (lenis) {
-        window.removeEventListener("scroll", onScrollCheck);
-        lenis.on("scroll", onScrollCheck);
-        lenisBound = true;
-        onScrollCheck();
-        window.clearInterval(waitId);
-      }
-    }, 50);
-
     return () => {
-      window.clearInterval(waitId);
       observer.disconnect();
-      const lenis = (window as Window & {
-        lenis?: { off: (e: string, fn: () => void) => void };
-      }).lenis;
-      if (lenis) lenis.off("scroll", onScrollCheck);
-      window.removeEventListener("scroll", onScrollCheck);
+      if (lenis) {
+        lenis.off("scroll", onScrollCheck);
+      } else {
+        window.removeEventListener("scroll", onScrollCheck);
+      }
     };
   }, []);
 

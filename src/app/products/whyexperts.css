@@ -1,0 +1,9 @@
+.expert-icon path[stroke] {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.feature-card {
+  padding: 2rem 1rem;
+  border-radius: 12px;
+}

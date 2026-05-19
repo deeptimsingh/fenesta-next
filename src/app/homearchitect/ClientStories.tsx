@@ -1,3 +1,4 @@
+// components/home/ClientStories.tsx
 "use client";
 
 import Image from "next/image";
@@ -430,12 +431,12 @@ export default function ClientStories() {
              <FenestaButton>Hear from our customers</FenestaButton>      
           </div>
         </div>
-        </div> 
+        </div>
       </section>
 
       {activeClient && (
         <>
-        <div ref={overlayRef} className="custommodal fixed inset-0 bg-[#00000073] backdrop-blur-md z-[9998]" onClick={closeModal} aria-hidden />
+        <div ref={overlayRef} className="custommodal fixed inset-0 bg-[00000073] backdrop-blur-md z-[9998]" onClick={closeModal} aria-hidden />
         <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[9998]" aria-hidden>
           <div
             ref={revealCircleRef}

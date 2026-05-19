@@ -43,7 +43,7 @@ export default function LenisProvider({
     const raf = (time: number) => {
       lenis.raf(time);
       // Lenis animates scroll outside the native timeline — keep GSAP ScrollTrigger in sync
-     // ScrollTrigger.update();
+      ScrollTrigger.update();
       requestAnimationFrame(raf);
     };
 

@@ -1,13 +1,40 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
-import { useImageParallax } from "@/hooks/useImageParallax";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import "swiper/css";
 import "@/app/product-page/image-gallery.css";
+
+gsap.registerPlugin(ScrollTrigger);
+
+/** Image scale when off-center → scale at center (swiper progress 1 → 0). */
+const IMAGE_GALLERY_SCALE_FROM = 1.25;
+const IMAGE_GALLERY_SCALE_TO = 1;
+/** Vertical parallax range (px); smaller = subtler, less jerk. */
+const IMAGE_GALLERY_SCROLL_PARALLAX_Y = 28;
+/** Scrub lag (seconds): higher = smoother catch-up with Lenis, slightly more latency. */
+const IMAGE_GALLERY_SCROLL_SCRUB = 1.35;
+const IMAGE_GALLERY_REVEAL_Y = 40;
+
+function syncParallaxToScroll(
+  wrap: HTMLElement,
+  tween: gsap.core.Tween
+) {
+  const st = tween.scrollTrigger;
+  if (!st) return;
+  st.update();
+  const y = gsap.utils.interpolate(
+    -IMAGE_GALLERY_SCROLL_PARALLAX_Y,
+    IMAGE_GALLERY_SCROLL_PARALLAX_Y,
+    st.progress
+  );
+  gsap.set(wrap, { y, force3D: true });
+}
 
 export type ImageGallerySlide = {
   id: number;
@@ -37,232 +64,408 @@ const defaultGalleryData: ImageGallerySlide[] = [
   {
     id: 4,
     image:
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1400&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1400&auto=format&fit=crop",
     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
   },
- 
 ];
 
 type ImageGalleryProps = {
+  /** When omitted, built-in demo slides are used. */
   slides?: ImageGallerySlide[];
 };
 
-function GallerySlideCard({
-  item,
-  compact = false,
-  carousel = false,
-}: {
-  item: ImageGallerySlide;
-  compact?: boolean;
-  carousel?: boolean;
-}) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const imageWrapRef = useRef<HTMLDivElement>(null);
+/** More than three → Swiper; one → centered; two or three → static row (no slider). */
+const SWIPER_THRESHOLD = 3;
+const MOBILE_CENTER_MAX_WIDTH = 1023;
 
-  useImageParallax(containerRef, imageWrapRef, {
-    enabled: !carousel,
-    fromScale: 1.25,
-    toScale: 1.25,
-    fromY: -50,
-    toY: 50,
-    smooth: 0.08,
-  });
+/** Side offset so first/last slides can sit in the viewport center (mobile). */
+function applyMobileEdgeCentering(swiper: SwiperType) {
+  if (typeof window === "undefined") return;
+  if (window.innerWidth > MOBILE_CENTER_MAX_WIDTH) {
+    swiper.params.slidesOffsetBefore = 0;
+    swiper.params.slidesOffsetAfter = 0;
+    return;
+  }
 
-  const imageHeightClass = compact
-    ? "h-[220px] sm:h-[280px] lg:h-[360px]"
-    : "h-[280px] sm:h-[400px] md:h-[495px]";
+  const slide = swiper.slides[swiper.activeIndex] as HTMLElement | undefined;
+  if (!slide) return;
 
-  const mediaClass = carousel
-    ? "ig-card-media ig-card-media--carousel overflow-hidden rounded-2xl"
-    : "ig-card-media overflow-hidden rounded-xl";
+  const slideW = slide.offsetWidth;
+  const containerW = swiper.width;
+  if (!slideW || !containerW) return;
+
+  const offset = Math.max(0, (containerW - slideW) / 2);
+  swiper.params.slidesOffsetBefore = offset;
+  swiper.params.slidesOffsetAfter = offset;
+}
+
+export default function ImageGallery({ slides }: ImageGalleryProps) {
+  const data = slides ?? defaultGalleryData;
+  const count = data.length;
+  const sectionRef = useRef<HTMLElement>(null);
+  const swiperRef = useRef<SwiperType | null>(null);
+  const layoutReadyRef = useRef(false);
+  const slideScaleSettersRef = useRef(
+    new Map<HTMLElement, ReturnType<typeof gsap.quickSetter>>()
+  );
+  const captionOpacitySettersRef = useRef(
+    new Map<HTMLElement, ReturnType<typeof gsap.quickSetter>>()
+  );
+  const captionYSettersRef = useRef(
+    new Map<HTMLElement, ReturnType<typeof gsap.quickSetter>>()
+  );
+  const [swiperLayoutReady, setSwiperLayoutReady] = useState(false);
+
+  const showSwiper = count > SWIPER_THRESHOLD;
+  const showSingleCentered = count === 1;
+  const showStaticRow = count >= 2 && count <= SWIPER_THRESHOLD;
+
+  const updateSlideMotion = useCallback((swiper: SwiperType) => {
+    if (!layoutReadyRef.current || !swiper?.slides) return;
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    Array.from(swiper.slides as HTMLElement[]).forEach((slide) => {
+      if (slide.classList.contains("swiper-slide-duplicate")) return;
+
+      const progress = Math.min(
+        1,
+        Math.abs((slide as unknown as { progress?: number }).progress ?? 0)
+      );
+      const centered = reduceMotion ? 1 : 1 - progress;
+
+      const scaleEl = slide.querySelector<HTMLElement>(".ig-parallax-img-scale");
+      if (scaleEl) {
+        const isMoving = swiper.animating || Boolean(swiper.touches?.diff);
+        const scale =
+          reduceMotion || !isMoving
+            ? IMAGE_GALLERY_SCALE_TO
+            : IMAGE_GALLERY_SCALE_TO +
+              progress * (IMAGE_GALLERY_SCALE_FROM - IMAGE_GALLERY_SCALE_TO);
+
+        let scaleSetter = slideScaleSettersRef.current.get(scaleEl);
+        if (!scaleSetter) {
+          gsap.set(scaleEl, {
+            transformOrigin: "center center",
+            force3D: true,
+            scale: IMAGE_GALLERY_SCALE_TO,
+          });
+          scaleSetter = gsap.quickSetter(scaleEl, "scale");
+          slideScaleSettersRef.current.set(scaleEl, scaleSetter);
+        }
+        scaleSetter(scale);
+      }
+
+      const track = slide.querySelector<HTMLElement>(".ig-parallax-track");
+      if (track) {
+        gsap.set(track, { clipPath: "inset(0% round 14px)" });
+      }
+
+      const caption = slide.querySelector<HTMLElement>(".ig-card-text");
+      if (caption) {
+        let opacitySetter = captionOpacitySettersRef.current.get(caption);
+        let ySetter = captionYSettersRef.current.get(caption);
+        if (!opacitySetter || !ySetter) {
+          gsap.set(caption, {
+            opacity: 0,
+            y: IMAGE_GALLERY_REVEAL_Y,
+            force3D: true,
+          });
+          opacitySetter = gsap.quickSetter(caption, "opacity");
+          ySetter = gsap.quickSetter(caption, "y", "px");
+          captionOpacitySettersRef.current.set(caption, opacitySetter);
+          captionYSettersRef.current.set(caption, ySetter);
+        }
+        opacitySetter(centered);
+        ySetter(IMAGE_GALLERY_REVEAL_Y * (1 - centered));
+      }
+    });
+  }, []);
+
+  const revealActiveSlide = useCallback((swiper: SwiperType) => {
+    if (!layoutReadyRef.current) return;
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      updateSlideMotion(swiper);
+      return;
+    }
+
+    const activeSlide = swiper.slides[swiper.activeIndex] as
+      | HTMLElement
+      | undefined;
+    if (!activeSlide?.classList.contains("swiper-slide")) return;
+
+    const caption = activeSlide.querySelector<HTMLElement>(".ig-card-text");
+
+    if (caption) {
+      gsap.to(caption, {
+        opacity: 1,
+        y: 0,
+        duration: 0.55,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    }
+
+    updateSlideMotion(swiper);
+  }, [updateSlideMotion]);
+
+  const handleSwiperInit = useCallback(
+    (swiper: SwiperType) => {
+      swiperRef.current = swiper;
+      layoutReadyRef.current = false;
+      slideScaleSettersRef.current.clear();
+      captionOpacitySettersRef.current.clear();
+      captionYSettersRef.current.clear();
+      setSwiperLayoutReady(false);
+
+      const onMotion = () => updateSlideMotion(swiper);
+      const onReveal = () => revealActiveSlide(swiper);
+
+      swiper.on("progress", onMotion);
+      swiper.on("touchMove", onMotion);
+      swiper.on("sliderMove", onMotion);
+      swiper.on("slideChange", onMotion);
+      swiper.on("transitionEnd", () => {
+        onMotion();
+        onReveal();
+      });
+
+      const centerActiveSlide = (recenterSlide = false) => {
+        applyMobileEdgeCentering(swiper);
+        swiper.update();
+        if (recenterSlide) {
+          swiper.slideTo(swiper.activeIndex, 0, false);
+        }
+      };
+
+      const onResize = () =>
+        centerActiveSlide(window.innerWidth <= MOBILE_CENTER_MAX_WIDTH);
+      window.addEventListener("resize", onResize);
+
+      requestAnimationFrame(() => {
+        centerActiveSlide(false);
+        requestAnimationFrame(() => {
+          layoutReadyRef.current = true;
+          centerActiveSlide(
+            typeof window !== "undefined" &&
+              window.innerWidth <= MOBILE_CENTER_MAX_WIDTH
+          );
+          onMotion();
+          onReveal();
+          setSwiperLayoutReady(true);
+        });
+      });
+
+      swiper.on("destroy", () => {
+        window.removeEventListener("resize", onResize);
+      });
+    },
+    [updateSlideMotion, revealActiveSlide]
+  );
+
+  /** GSAP scroll parallax on carousel images after section enters viewport. */
+  useLayoutEffect(() => {
+    if (!showSwiper || !swiperLayoutReady) return;
+
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (reduceMotion) return;
+
+    const ctx = gsap.context(() => {
+      const wraps = section.querySelectorAll<HTMLElement>(".ig-parallax-img-wrap");
+      const tweens: gsap.core.Tween[] = [];
+
+      wraps.forEach((wrap) => {
+        gsap.set(wrap, { y: 0, force3D: true });
+
+        const tween = gsap.fromTo(
+          wrap,
+          { y: -IMAGE_GALLERY_SCROLL_PARALLAX_Y },
+          {
+            y: IMAGE_GALLERY_SCROLL_PARALLAX_Y,
+            ease: "none",
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: section,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: IMAGE_GALLERY_SCROLL_SCRUB,
+              invalidateOnRefresh: true,
+              fastScrollEnd: true,
+            },
+          }
+        );
+        tweens.push(tween);
+      });
+
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        tweens.forEach((tween, i) => {
+          const wrap = wraps[i];
+          if (wrap) syncParallaxToScroll(wrap, tween);
+        });
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, [showSwiper, swiperLayoutReady]);
+
+  if (count === 0) {
+    return null;
+  }
 
   return (
-    <div className={carousel ? "ig-card ig-card--carousel" : "ig-card"} data-lenis-prevent>
-      <div ref={containerRef} className={mediaClass}>
-        <div
-          ref={imageWrapRef}
-          className={`ig-card-media__parallax relative w-full overflow-hidden ${carousel ? "" : "will-change-transform"}`}
-          style={{ transformOrigin: "center" }}
-        >
+    <section
+      ref={sectionRef}
+      className="ImageGallery-slider mt-10 overflow-hidden w-full"
+    >
+      <div
+        className="ImageGallery-slider-inner container-fluid mx-auto !px-0"
+      >
+        {showSingleCentered && (
+          <div className="flex justify-center px-4">
+            <div className="ig-center-single w-full max-w-[min(92vw,760px)]">
+              <GalleryCard item={data[0]} />
+            </div>
+          </div>
+        )}
+
+        {showStaticRow && (
+          <div className="flex flex-col items-stretch justify-center gap-10 px-4 md:flex-row md:items-start md:justify-center md:gap-6 lg:gap-10">
+            {data.map((item) => (
+              <div
+                key={item.id}
+                className="ig-static-card mx-auto w-full shrink-0 max-w-[min(92vw,520px)] md:mx-0 md:max-w-[min(42vw,440px)]"
+              >
+                <GalleryCard item={item} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {showSwiper && (
+          <div className="image-gallery-swiper-outer w-full overflow-hidden">
+            <Swiper
+              className={`image-gallery-swiper image-gallery-swiper--many${swiperLayoutReady ? " is-layout-ready" : ""}`}
+              centeredSlides
+              loop={false}
+              slidesPerView="auto"
+              spaceBetween={16}
+              speed={1000}
+              grabCursor
+              initialSlide={0}
+              observer
+              observeParents={false}
+              watchSlidesProgress
+              touchEventsTarget="wrapper"
+              threshold={5}
+              touchAngle={45}
+              shortSwipes
+              longSwipesRatio={0.35}
+              followFinger
+              passiveListeners
+              touchMoveStopPropagation={false}
+              onSwiper={handleSwiperInit}
+              centerInsufficientSlides
+              breakpoints={{
+                0: {
+                  spaceBetween: 16,
+                  centeredSlides: true,
+                  centerInsufficientSlides: true,
+                },
+                640: {
+                  spaceBetween: 16,
+                  centeredSlides: true,
+                  centerInsufficientSlides: true,
+                },
+                1024: { spaceBetween: 16, centeredSlides: true },
+              }}
+            >
+              {data.map((item) => (
+                <SwiperSlide
+                  key={item.id}
+                  className="image-gallery-slide box-border shrink-0"
+                >
+                  <GalleryCard item={item} parallax />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        )}
+
+        {showSwiper && (
+          <div className="mt-10 flex items-center justify-center gap-4">
+            <button
+              type="button"
+              aria-label="Previous slide"
+              onClick={() => swiperRef.current?.slidePrev()}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-xl"
+            >
+              ←
+            </button>
+
+            <button
+              type="button"
+              aria-label="Next slide"
+              onClick={() => swiperRef.current?.slideNext()}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-xl"
+            >
+              →
+            </button>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function GalleryCard({
+  item,
+  parallax = false,
+}: {
+  item: ImageGallerySlide;
+  parallax?: boolean;
+}) {
+  return (
+    
+    <div className={`ig-card${parallax ? " h-full w-full" : ""}`} >
+      <div className="ig-card-media overflow-hidden rounded-[14px]">
+        {parallax ? (
+          <div className="ig-parallax-track relative w-full overflow-hidden">
+            <div className="ig-parallax-img-wrap relative h-full w-full will-change-transform">
+              <div className="ig-parallax-img-scale relative h-full w-full will-change-transform">
+                <Image
+                  src={item.image}
+                  alt=""
+                  width={1200}
+                  height={800}
+                  draggable={false}
+                  className="ig-parallax-img-el pointer-events-none h-full w-full select-none object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
           <Image
             src={item.image}
             alt=""
             width={1200}
             height={800}
             draggable={false}
-            className={`pointer-events-none w-full select-none object-cover ${imageHeightClass}`}
+            className="pointer-events-none h-[280px] w-full select-none object-cover sm:h-[360px] md:h-[420px]"
           />
-        </div>
-      </div>
-
-      <p
-        className={
-          carousel
-            ? "ig-card-text ig-card-text--carousel mt-4 text-center text-base  text-theme md:text-lg"
-            : "ig-card-text  mt-5 text-center text-xl! text-theme"
-        }
-      >
-        {carousel ? `\u201C${item.title}\u201D` : item.title}
-      </p>
-    </div>
-  );
-}
-
-export default function ImageGallery({ slides }: ImageGalleryProps) {
-  const items = useMemo(
-    () => (slides?.length ? slides : defaultGalleryData),
-    [slides]
-  );
-  const count = items.length;
-
-  /** 1 = centered static · 2–3 = column grid · >3 = side-peek carousel */
-  const isSingle = count === 1;
-  const isGrid = count > 1 && count <= 3;
-  const isCarousel = count > 3;
-  const showCarouselControls = count > 4;
-
-  const swiperRef = useRef<SwiperType | null>(null);
-
-  useEffect(() => {
-    if (isCarousel) return;
-
-    const lenis = (
-      window as Window & {
-        lenis?: {
-          on?: (event: string, fn: () => void) => void;
-          off?: (event: string, fn: () => void) => void;
-        };
-      }
-    ).lenis;
-    if (!lenis?.on) return;
-
-    let scrollRaf = 0;
-    const kick = () => {
-      if (scrollRaf) return;
-      scrollRaf = requestAnimationFrame(() => {
-        scrollRaf = 0;
-        window.dispatchEvent(new Event("scroll"));
-      });
-    };
-
-    lenis.on("scroll", kick);
-    return () => {
-      lenis.off?.("scroll", kick);
-      if (scrollRaf) cancelAnimationFrame(scrollRaf);
-    };
-  }, [isCarousel]);
-
-  if (count === 0) {
-    return null;
-  }
-
-  const viewportCenterWrap =
-    "relative left-1/2 w-screen max-w-[100vw] -translate-x-1/2 overflow-x-clip";
-
-  if (isSingle) {
-    return (
-      <section className="ImageGallery-slider mt-10 w-full overflow-x-clip">
-        <div className={`${viewportCenterWrap} px-4`}>
-          <div className="mx-auto w-full max-w-[min(92vw,850px)]">
-            <GallerySlideCard item={items[0]} />
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  if (isGrid) {
-    const gridCols =
-      count === 3
-        ? "md:grid-cols-3"
-        : "md:grid-cols-2 md:max-w-4xl md:mx-auto";
-
-    return (
-      <section className="ImageGallery-slider mt-10 w-full overflow-x-clip">
-        <div className="container-fluid px-4 md:px-6">
-          <div
-            className={`image-gallery-grid grid grid-cols-1 gap-6 sm:gap-8 ${gridCols}`}
-          >
-            {items.map((item) => (
-              <GallerySlideCard key={item.id} item={item} compact />
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  const swiperClassName = "image-gallery-swiper image-gallery-swiper--many";
-  const slideClassName = "image-gallery-slide !h-auto shrink-0";
-
-  return (
-    <section className="ImageGallery-slider mt-10 w-full overflow-x-clip overflow-y-visible">
-      <div className="w-full" data-lenis-prevent data-lenis-prevent-touch>
-        <div className={viewportCenterWrap}>
-          <Swiper
-            className={swiperClassName}
-            centeredSlides
-            loop={false}
-            slidesPerView="auto"
-            spaceBetween={24}
-            speed={700}
-            grabCursor
-            allowTouchMove
-            simulateTouch
-            watchOverflow
-            observer
-            observeParents
-            watchSlidesProgress
-            touchEventsTarget="wrapper"
-            threshold={5}
-            touchAngle={45}
-            passiveListeners={false}
-            touchMoveStopPropagation
-            onSwiper={(swiper) => {
-              swiperRef.current = swiper;
-              requestAnimationFrame(() => {
-                swiper.update();
-                requestAnimationFrame(() => swiper.update());
-              });
-            }}
-            onResize={(swiper) => swiper.update()}
-            breakpoints={{
-              0: { spaceBetween: 16 },
-              640: { spaceBetween: 20 },
-              1024: { spaceBetween: 24 },
-            }}
-          >
-            {items.map((item) => (
-              <SwiperSlide key={item.id} className={slideClassName}>
-                <GallerySlideCard item={item} carousel />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
-
-        {showCarouselControls && (
-          <>
-            <div className="image-gallery-controls mt-8 flex items-center justify-center gap-4 md:mt-10">
-              <button
-                type="button"
-                aria-label="Previous slide"
-                onClick={() => swiperRef.current?.slidePrev()}
-                className="image-gallery-controls__btn flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-xl shadow-sm transition hover:bg-gray-50"
-              >
-                ←
-              </button>
-              <button
-                type="button"
-                aria-label="Next slide"
-                onClick={() => swiperRef.current?.slideNext()}
-                className="image-gallery-controls__btn flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-xl shadow-sm transition hover:bg-gray-50"
-              >
-                →
-              </button>
-            </div>           
-          </>
         )}
       </div>
-    </section>
+
+      <p className="ig-card-text mt-5 text-center text-p">{item.title}</p>
+    </div>
   );
 }

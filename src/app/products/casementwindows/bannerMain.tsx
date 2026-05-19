@@ -63,7 +63,15 @@ export default function BannerMain({ animationReady = true }: { animationReady?:
                 height={12}
                 className="transform -rotate-90"
               />
-              <span className="text-white">uPVC Casement Windows</span>
+              <span className="text-white">uPVC Windows</span>
+              <Image
+                src="/images/down-arrow.svg"
+                alt="arrow"
+                width={12}
+                height={12}
+                className="transform -rotate-90"
+              />
+              <span className="text-white">Casement</span>
             </div> 
           </div>      
         </div>
