@@ -23,9 +23,9 @@ const SLIDE_CONFIG = [
 
 const TOTAL_SLIDES = SLIDE_CONFIG.length;
 
-/** Pause when less than 20% of hero is in viewport (~80% scrolled past) */
-const HERO_PAUSE_VISIBLE_RATIO = 0.2;
-const HERO_RESUME_VISIBLE_RATIO = 0.25;
+/** Pause when less than 40% of hero is in viewport (~60% scrolled past) */
+const HERO_PAUSE_VISIBLE_RATIO = 0.4;
+const HERO_RESUME_VISIBLE_RATIO = 0.45;
 
 interface SwiperInstance {
   destroy: (deleteInstance?: boolean, cleanStyles?: boolean) => void;
@@ -433,7 +433,7 @@ export default function HeroSlider() {
 
     const observer = new IntersectionObserver(
       ([entry]) => updateFromVisibility(entry.intersectionRatio),
-      { threshold: [0, 0.1, 0.2, 0.25, 0.3, 0.5, 0.75, 1] }
+      { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.45, 0.5, 0.75, 1] }
     );
     observer.observe(section);
 
