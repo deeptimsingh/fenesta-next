@@ -323,7 +323,7 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
 
         {showSwiper && (
           <div className="image-gallery-swiper-outer w-full overflow-hidden">
-            <Swiper
+            <Swiper 
               className={`image-gallery-swiper image-gallery-swiper--many${swiperLayoutReady ? " is-layout-ready" : ""}`}
               centeredSlides
               loop={false}
@@ -405,7 +405,8 @@ function GalleryCard({
   parallax?: boolean;
 }) {
   return (
-    <div className={`ig-card${parallax ? " h-full w-full" : ""}`}>
+    
+    <div className={`ig-card${parallax ? " h-full w-full" : ""}`} data-lenis-prevent>
       <div className="ig-card-media overflow-hidden rounded-[14px]">
         {parallax ? (
           <div className="ig-parallax-track relative w-full overflow-hidden">

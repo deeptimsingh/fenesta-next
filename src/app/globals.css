@@ -428,3 +428,103 @@ Intro Section
   .container { max-width: 75vw;}
 }
 
+/**BANNER**/
+.inside-page-banner h1{ display: inline-block !important;}
+
+/**INTRO **/
+.content-over-banner, .content-over-banner .content-inside{ position: relative; z-index: 1;}
+.content-over-banner .content-inside:before{ content: ""; z-index: -1; height:160px; position: absolute; top: -60px; left:-20px; right: -20px; box-shadow: 0 -40px 20px 10px #0000001a; width: calc(100% + 40px); background-color: #fff; border-top-left-radius: 20px; border-top-right-radius: 20px;} 
+.dark .content-over-banner .content-inside:before{ background-color:#131313!important;}
+
+
+/*PRESS CARD*/
+.press-card-outer{ margin:0 -10px; }
+.press-card-outer .press-card{ padding:0 10px 20px;  max-width: 25%; flex: 0 0 25%;}
+.press-card-outer .press-card .press-card-inner{ border-radius: 12px; height: 100%; overflow: hidden;}
+.press-card-inner img{width: inherit;height: auto;max-height: 100%;margin: 0 auto; max-width:inherit; object-fit: cover;min-height: 100%;border-radius: 12px;}
+.press-card-outer .press-card-image{padding: 20px; height: 220px;background-color: #F5F4F4;border-radius: 12px;} 
+.press-card-outer .press-card-text{ padding: 20px 20px; height: 100%; text-align: center;}
+.press-card-outer .press-card-text p{ font-weight: 400; line-height: 1.25; margin-bottom: 0; font-size: 1.375rem;}
+.press-card-outer .press-card-text span {font-size: 0.875rem; font-weight: 400;}
+
+
+.dark .press-card-outer .press-card-text{ background-color:#212121; color:#fff;}
+.dark .press-card-outer .press-card-image{padding: 20px;background-color:#555;}
+.dark .pressDescription{ color: #fff !important;}
+
+
+
+
+/**FILTER SECTION – responsive **/
+.filter-section .filter-submit-btn,
+.filter-section .filter-clear-btn { min-height: 42px; }
+
+/**FILTER SLIDER – Our Presence office cards carousel **/
+/* Outer: overflow hidden; can extend full-bleed on mobile via negative margin */
+.filter-slider-outer { overflow: hidden; }
+/* Wrapper: visible viewport; ref in JS for container width + CSS vars */
+.filter-slider-wrapper {padding-bottom: 72px;position: relative;}
+/* Track: flex row, translated by JS (slideOffsetPx); gap read in JS for step */
+.filter-slider-track {display: flex; gap: 1.5rem; transition: transform 0.5s ease; cursor: grab;}
+.filter-slider-track:active { cursor: grabbing; }
+
+/* Card: width from --filter-slider-card-width (set in JS) so step matches view */
+.filter-slider-card {flex-shrink: 0; border: 1px solid #D9D9D9;  border-radius: 8px;  overflow: hidden;  background: #fff;  box-sizing: border-box;  display: flex;
+  flex-direction: column;}
+.filter-slider-wrapper .filter-slider-card { min-width: var(--filter-slider-card-width, 100%);  width: var(--filter-slider-card-width, 100%);}
+/* Top image block: aspect ratio, overlay text at bottom */
+.filter-slider-card-image-wrap {  flex-shrink: 0;}
+/* Bottom contact block */
+.filter-slider-card-details { flex: 1; min-height: 0;}
+.filter-slider-card-details a { color: inherit;}
+.filter-slider-card-details p:not(:last-child) { margin-bottom: 10px;}
+
+.dark .filter-slider-card { border: 1px solid #222; background-color:#212121;}
+
+
+/**OUR JOURNEY**/
+.overlay-circle-shadow{
+  background: url('/images/about/circleShadow.svg') no-repeat center center;
+  background-size:cover; left: -5%; width: calc(100% + 10%);
+  background-position: center; opacity:1;
+}
+
+.circle-img-inner {
+  -webkit-mask-image: radial-gradient( circle, #0094DA 70%, #0094DA 80%, transparent 90%);
+  mask-image: radial-gradient( circle, #0094DA 70%, #0094DA 80%, transparent 90%);
+}
+
+.counter-odometer {display: inline-flex;align-items: baseline;gap: 0ch;font-variant-numeric: tabular-nums;line-height: 1;overflow: hidden;}
+.odometer-digit {overflow: hidden;display: inline-block;vertical-align: bottom;height: 1em;width: 1ch;text-align: center;font-family: inherit;font-weight: inherit;font-size: inherit;}
+.odometer-column {display: block;transform: translateY(0);will-change: transform; overflow: hidden;}
+.odometer-digit-line {display: block;height: 1em;line-height: 1em;box-sizing: border-box;}
+.counter-suffix {display: inline-block;margin-left: 0.35ch;font-family: inherit;font-size: inherit;line-height: 1; color: var(--color-primary);}
+.odometer-comma {display: inline-block; width: 0.4em; text-align: center;font-weight: inherit;vertical-align: bottom;}
+.counter-wrap .counter {font-size: 4.375rem;color: var(--color-brown);font-weight: 700;}
+.counter-outer-wrapper p {color: #1c1c1c; font-size: 1rem;}
+
+/* Mobile: full-bleed slider; 1 card per view */
+@media all and (max-width: 639px) {
+  .filter-slider-outer { margin-left: -1rem; margin-right: -1rem; width: calc(100% + 2rem); max-width: none; }
+  .filter-slider-wrapper { padding-bottom: 56px; padding-left: 1rem; padding-right: 1rem; }
+  .filter-slider-track { gap: 1rem; }
+  .slider-navigation { padding-bottom: 0.5rem; }
+  .counter-wrap .counter {font-size: 3.438rem;}
+}
+
+/* Tablet: 2 cards per view */
+@media all and (min-width: 640px) and (max-width: 1023px) {
+  .filter-slider-wrapper { padding-bottom: 64px; }
+  .filter-slider-track { gap: 1rem; }
+}
+
+@media all and (max-width: 990px) {
+  .press-card-outer .press-card{ flex: 0 0 50%; max-width: 50%;}
+}
+
+@media all and (max-width: 568px) {
+  .press-card-outer .press-card{ flex: 0 0 100%; max-width:300px;}
+}
+
+
+
