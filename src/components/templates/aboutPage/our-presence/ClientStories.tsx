@@ -430,7 +430,7 @@ export default function ClientStories() {
              <FenestaButton>Hear from our customers</FenestaButton>      
           </div>
         </div>
-        </div>
+        </div> 
       </section>
 
       {activeClient && (
