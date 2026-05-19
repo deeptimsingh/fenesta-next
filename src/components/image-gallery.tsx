@@ -21,6 +21,21 @@ const IMAGE_GALLERY_SCROLL_PARALLAX_Y = 28;
 const IMAGE_GALLERY_SCROLL_SCRUB = 1.35;
 const IMAGE_GALLERY_REVEAL_Y = 40;
 
+function syncParallaxToScroll(
+  wrap: HTMLElement,
+  tween: gsap.core.Tween
+) {
+  const st = tween.scrollTrigger;
+  if (!st) return;
+  st.update();
+  const y = gsap.utils.interpolate(
+    -IMAGE_GALLERY_SCROLL_PARALLAX_Y,
+    IMAGE_GALLERY_SCROLL_PARALLAX_Y,
+    st.progress
+  );
+  gsap.set(wrap, { y, force3D: true });
+}
+
 export type ImageGallerySlide = {
   id: number;
   image: string;
@@ -219,24 +234,29 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
         onReveal();
       });
 
-      const centerActiveSlide = () => {
+      const centerActiveSlide = (recenterSlide = false) => {
         applyMobileEdgeCentering(swiper);
         swiper.update();
-        swiper.slideTo(swiper.activeIndex, 0, false);
+        if (recenterSlide) {
+          swiper.slideTo(swiper.activeIndex, 0, false);
+        }
       };
 
-      const onResize = () => centerActiveSlide();
+      const onResize = () =>
+        centerActiveSlide(window.innerWidth <= MOBILE_CENTER_MAX_WIDTH);
       window.addEventListener("resize", onResize);
 
       requestAnimationFrame(() => {
-        centerActiveSlide();
+        centerActiveSlide(false);
         requestAnimationFrame(() => {
           layoutReadyRef.current = true;
-          centerActiveSlide();
+          centerActiveSlide(
+            typeof window !== "undefined" &&
+              window.innerWidth <= MOBILE_CENTER_MAX_WIDTH
+          );
           onMotion();
           onReveal();
           setSwiperLayoutReady(true);
-          ScrollTrigger.refresh();
         });
       });
 
@@ -261,13 +281,18 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
 
     const ctx = gsap.context(() => {
       const wraps = section.querySelectorAll<HTMLElement>(".ig-parallax-img-wrap");
+      const tweens: gsap.core.Tween[] = [];
+
       wraps.forEach((wrap) => {
-        gsap.fromTo(
+        gsap.set(wrap, { y: 0, force3D: true });
+
+        const tween = gsap.fromTo(
           wrap,
           { y: -IMAGE_GALLERY_SCROLL_PARALLAX_Y },
           {
             y: IMAGE_GALLERY_SCROLL_PARALLAX_Y,
             ease: "none",
+            immediateRender: false,
             scrollTrigger: {
               trigger: section,
               start: "top bottom",
@@ -278,10 +303,17 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
             },
           }
         );
+        tweens.push(tween);
+      });
+
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        tweens.forEach((tween, i) => {
+          const wrap = wraps[i];
+          if (wrap) syncParallaxToScroll(wrap, tween);
+        });
       });
     }, section);
-
-    ScrollTrigger.refresh();
 
     return () => ctx.revert();
   }, [showSwiper, swiperLayoutReady]);
@@ -297,8 +329,6 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
     >
       <div
         className="ImageGallery-slider-inner container-fluid mx-auto !px-0"
-        data-lenis-prevent={showSwiper || undefined}
-        data-lenis-prevent-touch={showSwiper || undefined}
       >
         {showSingleCentered && (
           <div className="flex justify-center px-4">
@@ -323,7 +353,7 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
 
         {showSwiper && (
           <div className="image-gallery-swiper-outer w-full overflow-hidden">
-            <Swiper 
+            <Swiper
               className={`image-gallery-swiper image-gallery-swiper--many${swiperLayoutReady ? " is-layout-ready" : ""}`}
               centeredSlides
               loop={false}
@@ -333,7 +363,7 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
               grabCursor
               initialSlide={0}
               observer
-              observeParents
+              observeParents={false}
               watchSlidesProgress
               touchEventsTarget="wrapper"
               threshold={5}
@@ -341,8 +371,8 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
               shortSwipes
               longSwipesRatio={0.35}
               followFinger
-              passiveListeners={false}
-              touchMoveStopPropagation
+              passiveListeners
+              touchMoveStopPropagation={false}
               onSwiper={handleSwiperInit}
               centerInsufficientSlides
               breakpoints={{
@@ -406,7 +436,7 @@ function GalleryCard({
 }) {
   return (
     
-    <div className={`ig-card${parallax ? " h-full w-full" : ""}`} data-lenis-prevent>
+    <div className={`ig-card${parallax ? " h-full w-full" : ""}`} >
       <div className="ig-card-media overflow-hidden rounded-[14px]">
         {parallax ? (
           <div className="ig-parallax-track relative w-full overflow-hidden">
