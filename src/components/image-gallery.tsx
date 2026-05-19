@@ -77,7 +77,7 @@ function GallerySlideCard({
     : "ig-card-media overflow-hidden rounded-xl";
 
   return (
-    <div className={carousel ? "ig-card ig-card--carousel" : "ig-card"}>
+    <div className={carousel ? "ig-card ig-card--carousel" : "ig-card"} data-lenis-prevent>
       <div ref={containerRef} className={mediaClass}>
         <div
           ref={imageWrapRef}
