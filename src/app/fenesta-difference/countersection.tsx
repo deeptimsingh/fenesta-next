@@ -1,8 +1,10 @@
 "use client";
 import { useEffect } from "react";
+import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 
 
 export default function Countersection() {
+   const { headingRef, sectionRef } = useHeadingAnimation();
 
 
  useEffect(() => {
@@ -246,123 +248,68 @@ export default function Countersection() {
 
   return (
     <section className='relative common-padding'>
+       {/* Heading */}
+                     <div className="container-fluid m-auto px-6 md:px-0 relative z-10">
+                         <div ref={sectionRef} className="w-full">
+                             <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-4xl mx-auto">
+                                 <h2 className="text-h2 leading-none">The Fenesta <span className="font-subFont text-corinthiaHeading text-brown">Edge</span></h2>
+                                 <p className="mt-10">Fenesta is committed to standing behind its products. Our category-leading coverage is also our seal of assurance in the quality of our products.</p>
+                                 
+                             </div>
+                         </div>
+                     </div> 
 
         <div className='container'>
-            <div className="flex flex-wrap justify-end space-y-5">
+            <div className="flex flex-wrap justify-center space-y-5 mt-14">
 
-                    {/* 01 */}
+                    {/* 20 year */}
                     <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper">
                         <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
                         <div className="counter-wrap flex items-center gap-2">
-                            <h2 className="text-brown counter" data-target="01" >
-                                01
+                            <h2 className="text-brown counter" data-target="20" >
+                                20
                             </h2>
+                                 <span><h2 className="text-brown text-[4.37rem] font-bold" >  years</h2></span>
                         </div>
 
 
                         <p>
-                            extrusion plant in
-                            <br />
-                            Kota, Rajasthan
+                               uPVC profiles
                         </p>
                     </div>
 
-                    {/* 08 */}
+                     {/* 20 year */}
                     <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper">
-                    <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
+                        <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
                         <div className="counter-wrap flex items-center gap-2">
-                            <h2 className="text-[71px] leading-none font-bold  text-brown counter" data-target="08">
-                                08
+                            <h2 className="text-brown counter" data-target="10" >
+                                10
                             </h2>
+                                <span><h2 className="text-brown text-[4.37rem] font-bold">  years</h2></span>
                         </div>
 
-                         <p>
-                            state-of-the-art factories with ISO 9000,
-                            14000 and 18000 certifications, located
-                            near strategic markets, all furnished with
-                            the world's most advanced and highly-
-                            efficient machines
+
+                        <p>
+                              Aluminium profiles
                         </p>
                     </div>
 
-                    {/* 09 */}
+                     {/* 20 year */}
                     <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper">
-                    <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
+                        <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
                         <div className="counter-wrap flex items-center gap-2">
-                            <h2 className="text-brown counter" data-target="09">
-                                09
+                            <h2 className="text-brown counter" data-target="5" >
+                                5
                             </h2>
+                                <span><h2 className="text-brown text-[4.37rem] font-bold">  years</h2></span>
                         </div>
 
-                         <p>
-                            first-of-their-kind Signature Studios in
-                            Noida, Gurgaon, Mumbai, Pune, Kolkata,
-                            Chennai, Hyderabad, Bengaluru and
-                            Ahmedabad that are designed to
-                            revolutionise the way consumers buy
-                            doors and windows
-                        </p>
-                    </div>
-
-                    {/* 20+ */}
-                    <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper">
-                    <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
-                    <div className="counter-wrap flex items-center gap-2">
-                        <h2 className="text-brown counter" data-target="20" data-suffix="+">
-                            20+
-                        </h2>
-                        </div>
 
                         <p>
-                            sales offices in every metro and Tier
-                            1 and Tier 2 cities help serve
-                            institutional and retail clients
+                               Hardware and doors
                         </p>
                     </div>
 
-                    {/* 400+ */}
-                    <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper">
-                    <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
-                    <div className="counter-wrap flex items-center gap-2">
-                        <h2 className="text-brown counter" data-target="400" data-suffix="+">
-                            400+
-                        </h2>
-                        </div>
-
-                        <p>
-                            authorised Channel Partner
-                            showrooms across India provide
-                            easy access to Fenesta products
-                        </p>
-                    </div>
-
-                    {/* 900+ */}
-                    <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper">
-                    <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
-                     <div className="counter-wrap flex items-center gap-2">
-                        <h2 className="text-brown counter" data-target="900" data-suffix="+">
-                            900+
-                        </h2>
-                        </div>
-
-                         <p>
-                            city sales presence
-                        </p>
-                    </div>
-
-                    {/* 2000+ */}
-                    <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper">
-                    <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
-                    <div className="counter-wrap flex items-center gap-2">
-                        <h2 className="text-brown counter" data-target="2000" data-suffix="+">
-                            2000+
-                        </h2>
-                        </div>
-
-                         <p>
-                            Direct Sales Representatives
-                        </p>
-                    </div>
 
             </div>
         </div>
