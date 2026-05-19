@@ -328,8 +328,8 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
               centeredSlides
               loop={false}
               slidesPerView="auto"
-              spaceBetween={32}
-              speed={700}
+              spaceBetween={16}
+              speed={1000}
               grabCursor
               initialSlide={0}
               observer
@@ -352,11 +352,11 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
                   centerInsufficientSlides: true,
                 },
                 640: {
-                  spaceBetween: 24,
+                  spaceBetween: 16,
                   centeredSlides: true,
                   centerInsufficientSlides: true,
                 },
-                1024: { spaceBetween: 32, centeredSlides: true },
+                1024: { spaceBetween: 16, centeredSlides: true },
               }}
             >
               {data.map((item) => (

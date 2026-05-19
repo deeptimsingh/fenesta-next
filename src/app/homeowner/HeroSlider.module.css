@@ -1,0 +1,330 @@
+
+/* ── Swiper Core Reset ── */
+.swiper {
+  position: relative;
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.swiperWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  transition-property: transform;
+  box-sizing: content-box;
+}
+
+.swiperSlide {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* ── Full Page Slider ── */
+.creativeFullpageSlider {
+  background-color: #000;
+  z-index: 2;
+  width: 100%;
+  position: relative;
+  flex-direction: column;
+  height: 100vh;
+  font-size: 16px;
+  display: flex;
+  font-family: "Inter", sans-serif;
+}
+
+.sliderInner {
+  background: #000;
+  height: 100vh;
+  position: relative;
+}
+
+.creativeFullpageSlider .swiperSlide {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  text-align: left;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Image fill ── */
+.creativeFullpageSlider .swiperSlide .sliderInner img {
+  object-fit: cover;
+  width: 100%;
+  height: 100vh;
+  display: block;
+}
+
+/* ── Video fill ── */
+.slideVideo {
+  object-fit: cover;
+  width: 100%;
+  height: 100vh;
+  display: block;
+  pointer-events: none;
+}
+
+.heroMedia {
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* ── Dark overlay ── */
+.sliderInner::after {
+  content: "";
+  position: absolute;
+  width: 101%;
+  height: 100%;
+  top: 0;
+  left: -1px;
+  background-image: radial-gradient(at center right, #ffffff00 50%, #00000096 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Slide content — sits inside Bootstrap/Tailwind container ── */
+/* FIX 3: content is inside .container so it's auto-centred with max-width */
+.swiperContent {
+  position: absolute;
+  top: 15vw;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  /* When used with .container the horizontal padding/centering is handled
+     by the container class itself. */
+}
+
+.titleArea {
+  margin-bottom: 32px; max-width:660px;
+}
+
+.tag {
+  color: #fff;
+  font-weight: 900;
+  font-size: 24px;
+  margin-bottom: 10px;
+  margin-top: 0; 
+  letter-spacing: 0.1em;
+}
+
+.title {
+  display: block;
+  color: #fff;
+  font-size: 8vw;
+  font-weight: 900;
+  line-height: 1.1;
+  text-decoration: none;
+}
+
+.title h1{ font-size:100px !important;}
+.caption-title .text-corinthiaHeading{font-size:145px !important;}
+
+
+.caption-title{ font-size: 8vw !important;}
+
+.disc {
+  font-size: 20px;
+  margin: 20px 0 40px 0;
+  font-weight: 400;
+  line-height: 32px;
+  color: #ffffffb0;
+}
+
+/* ── Mute button ── */
+.muteBtn {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.muteBtn:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.muteBtn svg {
+  width: 20px;
+  height: 20px;
+  stroke: #fff;
+}
+
+/* ── Nav Buttons ── */
+/* .nav-btn{ position: relative; max-width:160px; left: -160px;} */
+.swiperContainerH .swiperButtonNext,
+.swiperContainerH .swiperButtonPrev {
+  position: absolute;
+  bottom: 10px;
+  top: unset;
+  background-color: #1090d7;
+  backdrop-filter: blur(20px);
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.4s;
+  border: none;
+}
+
+.swiperContainerH .swiperButtonNext { right:-50px; }
+.swiperContainerH .swiperButtonPrev { left: -50px; }
+
+.swiperContainerH .swiperButtonNext svg,
+.swiperContainerH .swiperButtonPrev svg {
+  width: 20px;
+  height:20px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.swiperContainerH .swiperButtonNext:hover,
+.swiperContainerH .swiperButtonPrev:hover {
+  background: #ffffff1a;
+}
+
+/* ── FIX 4: Custom Progress Pagination ─────────────────────────────────────
+   Replaces Swiper's built-in progressbar. Width of .progressFill is driven
+   by inline style set from `progress` state (0–100 %).
+   ── */
+
+
+.sliderPaginationArea {
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  flex-wrap: wrap;
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  z-index: 10;
+  gap: 0; 
+}
+
+.slideRange {
+  font-size: 30px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  line-height: 1;
+  position: relative;  
+}
+
+/* .slideRange.one { left: -50px; }
+.slideRange.three { right: -50px; } */
+
+/* Track */
+.progressTrack {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.28);
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  box-sizing: border-box;
+  /* Reserve space for the absolute counter on the right */
+ 
+}
+
+.swiperContainerH .counter{position: absolute;  top:20px; left: 50%; transform: translateX(-50%); display: flex; flex-wrap: wrap; gap: 20px; color: #fff; font-size:30px; line-height: 1;}
+.swiperContainerH .navbtn{ position: absolute; width: 100%; top:50%; transform: translateY(-50%); top:25px}
+
+
+
+
+/* Fill — width set via inline style from state */
+.progressFill {
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  width: 100%;
+  transform-origin: left center;
+  transition: none; 
+  border-radius: 4px;
+  will-change: transform;
+}
+
+
+.progressWrapper {
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 11;
+}
+
+.progressSegment {
+  display: none;
+}
+
+.progressSegment:hover .progressTrack {
+  background: rgba(255,255,255,0.5);
+}
+
+
+
+
+/* ── Tablet ── */
+@media (max-width: 991px) {
+  .swiperContent {
+    top: 50%;
+    left: 0;
+    right: 0;
+  }
+
+  .swiperContainerH .swiperButtonNext,
+  .swiperContainerH .swiperButtonPrev {
+    height: 50px;
+    width: 50px;
+    background: #ffffff3b;
+  }
+
+  .swiperContainerH .swiperButtonNext svg,
+  .swiperContainerH .swiperButtonPrev svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* .sliderPaginationArea { width: 200px; } */
+  .progressTrack { width: 100%; }
+}
+
+/* ── Mobile ── */
+@media screen and (max-width: 767px) {
+  .title { font-size: 48px; }
+  .tag { margin-bottom: 0; }
+  .disc { margin: 20px auto; font-size: 16px; width: 95%; }
+  /* .sliderPaginationArea { display: none; } */
+  .disc br { display: none; }
+
+  .muteBtn {
+    bottom: 20px;
+    right: 20px;
+    width: 38px;
+    height: 38px;
+  }
+}
