@@ -438,7 +438,7 @@ export default function ProjectsSlider() {
                     </div>
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
-                      <div className="mt-8"><FenestaButton>Get inspired</FenestaButton></div>
+                      <div className="mt-8"><FenestaButton href="#">Get inspired</FenestaButton></div>
                     </div>
                   </div>
                 </div>
@@ -467,7 +467,7 @@ export default function ProjectsSlider() {
                     </div>
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
-                      <div className="mt-8"><FenestaButton>Get inspired</FenestaButton></div>
+                      <div className="mt-8"><FenestaButton href="#">Get inspired</FenestaButton></div>
                     </div>
                   </div>
                 </div>
@@ -502,7 +502,7 @@ export default function ProjectsSlider() {
                     </div>
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
-                      <div className="mt-8"><FenestaButton>Get inspired</FenestaButton></div>
+                      <div className="mt-8"><FenestaButton href="#">Get inspired</FenestaButton></div>
                     </div>
                   </div>
                 </div>
@@ -531,7 +531,7 @@ export default function ProjectsSlider() {
                     </div>
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
-                      <div className="mt-8"><FenestaButton>Get inspired</FenestaButton></div>
+                      <div className="mt-8"><FenestaButton href="#">Get inspired</FenestaButton></div>
                     </div>
                   </div>
                 </div>
@@ -560,7 +560,7 @@ export default function ProjectsSlider() {
                     </div>
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
-                      <div className="mt-8"><FenestaButton>Get inspired</FenestaButton></div>
+                      <div className="mt-8"><FenestaButton href="#">Get inspired</FenestaButton></div>
                     </div>
                   </div>
                 </div>
@@ -592,7 +592,7 @@ export default function ProjectsSlider() {
                 </div>
                 <div className="bottom-figcaption w-full max-w-[350px]">
                   <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
-                  <div className="mt-8"><FenestaButton>Get inspired</FenestaButton></div>
+                  <div className="mt-8"><FenestaButton href="#">Get inspired</FenestaButton></div>
                 </div>
               </div>
             </div>

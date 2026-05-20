@@ -149,7 +149,7 @@ export default function TrustedPartners() {
         
 
         <div className="flex flex-col justify-center items-center flex-wrap">
-          <FenestaButton>See who builds with us</FenestaButton>
+          <FenestaButton href="#">See who builds with us</FenestaButton>
         </div>
       </div>
     </section>

@@ -445,7 +445,7 @@ export default function PanoramaTabsSingle() {
       </div>
 
       <div className="mt-5 sm:-mt-10  z-[1]">
-        <FenestaButton>Explore our range</FenestaButton>
+        <FenestaButton href="#">Explore our range</FenestaButton>
       </div>
     </section>
   );
