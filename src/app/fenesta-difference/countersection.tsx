@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 
 
+
+
 export default function Countersection() {
    const { headingRef, sectionRef } = useHeadingAnimation();
 
@@ -247,13 +249,13 @@ export default function Countersection() {
 
 
   return (
-    <section className='relative common-padding'>
+    <section className='relative common-pt'>
        {/* Heading */}
                      <div className="container-fluid m-auto px-6 md:px-0 relative z-10">
                          <div ref={sectionRef} className="w-full">
                              <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-4xl mx-auto">
                                  <h2 className="text-h2 leading-none">The Fenesta <span className="font-subFont text-corinthiaHeading text-brown">Edge</span></h2>
-                                 <p className="mt-10">Fenesta is committed to standing behind its products. Our category-leading coverage is also our seal of assurance in the quality of our products.</p>
+                                 <p className="mt-10 ">Fenesta is committed to standing behind its products. Our category-leading coverage is also our seal of assurance in the quality of our products.</p>
                                  
                              </div>
                          </div>
@@ -263,29 +265,27 @@ export default function Countersection() {
             <div className="flex flex-wrap justify-center space-y-5 mt-14">
 
                     {/* 20 year */}
-                    <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper">
-                        <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
+                    <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper items-center md:items-start">
+                        <div className="absolute  rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
                         <div className="counter-wrap flex items-center gap-2">
                             <h2 className="text-brown counter" data-target="20" >
                                 20
                             </h2>
-                                 <span><h2 className="text-brown text-[4.37rem] font-bold" >  years</h2></span>
+                                 <span><h2 className="text-brown year-style " >  years</h2></span>
                         </div>
-
-
                         <p>
-                               uPVC profiles
+                           uPVC profiles
                         </p>
                     </div>
 
                      {/* 20 year */}
-                    <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper">
-                        <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
+                    <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper items-center md:items-start">
+                        <div className="absolute  rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
                         <div className="counter-wrap flex items-center gap-2">
                             <h2 className="text-brown counter" data-target="10" >
                                 10
                             </h2>
-                                <span><h2 className="text-brown text-[4.37rem] font-bold">  years</h2></span>
+                                <span><h2 className="text-brown year-style "> years</h2></span>
                         </div>
 
 
@@ -295,18 +295,16 @@ export default function Countersection() {
                     </div>
 
                      {/* 20 year */}
-                    <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col justify-between counter-outer-wrapper">
-                        <div className="absolute w-[215px] h-[190px] rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
+                    <div className="w-full sm:w-1/2 md:w-1/4 relative after:content-[''] after:absolute after:top-0 after:left-[6px] after:w-[calc(100%-6px)] after:border-t after:border-[#ddd7cf] before:content-[''] before:absolute before:right-0 before:top-[8px] before:bottom-0 before:border-r before:border-[#ddd7cf] px-[15px] pt-[18px] pb-[18px] sm:px-[28px] sm:pt-[22px] sm:pb-[18px] min-h-[155px] flex flex-col  counter-outer-wrapper items-center md:items-start">
+                        <div className="absolute  rounded-full bg-[#F6F0D1] opacity-60 blur-[117px] top-0 right-0" />
                         <div className="counter-wrap flex items-center gap-2">
                             <h2 className="text-brown counter" data-target="5" >
                                 5
                             </h2>
-                                <span><h2 className="text-brown text-[4.37rem] font-bold">  years</h2></span>
+                                <span><h2 className="text-brown year-style "> years</h2></span>
                         </div>
-
-
                         <p>
-                               Hardware and doors
+                          Hardware and doors
                         </p>
                     </div>
 

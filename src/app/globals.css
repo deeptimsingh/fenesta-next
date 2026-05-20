@@ -503,6 +503,9 @@ Intro Section
 .counter-wrap .counter {font-size: 4.375rem;color: var(--color-brown);font-weight: 700;}
 .counter-outer-wrapper p {color: #1c1c1c; font-size: 1rem;}
 
+.year-style { font-size: 4.37rem; font-weight: 700; color: var(--color-brown); margin-left: 0.4ch;}
+
+
 /* Mobile: full-bleed slider; 1 card per view */
 @media all and (max-width: 639px) {
   .filter-slider-outer { margin-left: -1rem; margin-right: -1rem; width: calc(100% + 2rem); max-width: none; }
@@ -510,6 +513,7 @@ Intro Section
   .filter-slider-track { gap: 1rem; }
   .slider-navigation { padding-bottom: 0.5rem; }
   .counter-wrap .counter {font-size: 3.438rem;}
+  .year-style { font-size: 3.438rem; }
 }
 
 /* Tablet: 2 cards per view */
