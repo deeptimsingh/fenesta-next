@@ -92,11 +92,11 @@ function ContentBlock({ title, titleHighlight, description, ctaLabel, ctaHref }:
   // CTA: link if ctaHref provided, else plain button
   const cta = ctaHref ? (
     <Link href={ctaHref} className="flex flex-col justify-start mt-5 max-w-max">
-      <FenestaButton>{ctaLabel}</FenestaButton>
+      <FenestaButton href="#">{ctaLabel}</FenestaButton>
     </Link>
   ) : (
     <div className="flex flex-col justify-start mt-5 max-w-max">
-      <FenestaButton>{ctaLabel}</FenestaButton>
+      <FenestaButton href="#">{ctaLabel}</FenestaButton>
     </div>
   );
   return (

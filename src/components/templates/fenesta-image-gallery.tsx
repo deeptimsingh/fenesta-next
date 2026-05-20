@@ -46,7 +46,7 @@ function GalleryCardButton({ href, label }: { href: string; label: string }) {
 
   return (
     <div className="fenesta-gallery-card__cta ">
-      <FenestaButton onClick={() => router.push(href)}>{label}</FenestaButton>
+      <FenestaButton href={href}>{label}</FenestaButton>
     </div>
   );
 }

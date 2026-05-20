@@ -6,15 +6,15 @@ import { gsap } from "gsap";
 type CommonButtonProps = {
   children: React.ReactNode;
   className?: string;
-  onClick?: () => void;
+  href?: string;
 };
 
-export default function CommonButton({
+export default function FenestaButton({
   children,
   className = "",
-  onClick,
+  href = "#",
 }: CommonButtonProps) {
-  const btnRef = useRef<HTMLButtonElement>(null);
+  const btnRef = useRef<HTMLAnchorElement>(null);
   const leftArrowRef = useRef<HTMLSpanElement>(null);
   const rightArrowRef = useRef<HTMLSpanElement>(null);
 
@@ -33,7 +33,6 @@ export default function CommonButton({
         x: -12,
         opacity: 0,
         duration: 0.25,
-        
         ease: "power3.in",
       });
 
@@ -41,7 +40,7 @@ export default function CommonButton({
         x: 0,
         opacity: 1,
         duration: 0.3,
-         delay: 0.05,
+        delay: 0.05,
         ease: "power3.out",
       });
     };
@@ -51,7 +50,6 @@ export default function CommonButton({
         x: 12,
         opacity: 0,
         duration: 0.25,
-        
         ease: "power3.in",
       });
 
@@ -59,7 +57,7 @@ export default function CommonButton({
         x: 0,
         opacity: 1,
         duration: 0.3,
-         delay: 0.05,
+        delay: 0.05,
         ease: "power3.out",
       });
     };
@@ -75,13 +73,12 @@ export default function CommonButton({
   }, []);
 
   return (
-    <button
+    <a
       ref={btnRef}
-      type="button"
-      onClick={onClick}
-      className={`common-btn relative inline-flex items-center overflow-hidden  ${className}`}
+      href={href}
+      className={`common-btn relative inline-flex items-center overflow-hidden ${className}`}
     >
-      {/* LEFT ARROW (default) */}
+      {/* LEFT ARROW */}
       <span
         ref={leftArrowRef}
         className="absolute left-5 text-lg pointer-events-none"
@@ -89,18 +86,18 @@ export default function CommonButton({
         →
       </span>
 
-      {/* TEXT (defines width) */}
+      {/* TEXT */}
       <span className="relative z-10 whitespace-nowrap uppercase">
         {children}
       </span>
 
-      {/* RIGHT ARROW (hover) */}
+      {/* RIGHT ARROW */}
       <span
         ref={rightArrowRef}
         className="absolute right-5 text-lg pointer-events-none"
       >
         →
       </span>
-    </button>
+    </a>
   );
 }

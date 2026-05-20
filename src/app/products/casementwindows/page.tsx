@@ -75,7 +75,7 @@ export default function Casementwindows() {
         <ProductStyles id="ideal-for-use-in" />
 
         <div className="mt-5 z-1">
-          <FenestaButton>Explore Our Gallery</FenestaButton>
+          <FenestaButton href="#">Explore Our Gallery</FenestaButton>
         </div>
       </section>
 

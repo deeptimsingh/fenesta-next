@@ -1,7 +1,9 @@
 "use client";
 import { useEffect } from "react";
 
+
 export default function Countersection() {
+
 
  useEffect(() => {
 
@@ -244,6 +246,7 @@ export default function Countersection() {
 
   return (
     <section className='relative common-padding'>
+
         <div className='container'>
             <div className="flex flex-wrap justify-end space-y-5">
 

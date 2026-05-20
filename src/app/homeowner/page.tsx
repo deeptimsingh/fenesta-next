@@ -37,7 +37,7 @@ export default function HomeownerPage() {
         <ImageGallery/> 
 
         <div className="mt-5  z-1">
-          <FenestaButton>Explore our Gallery</FenestaButton>
+          <FenestaButton href="#">Explore our Gallery</FenestaButton>
         </div>       
       </section>
 

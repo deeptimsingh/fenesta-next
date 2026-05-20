@@ -59,7 +59,7 @@ export default function WindowsPage() {
         <ProductStyles id="product-styles" />
 
         <div className="mt-5 sm:-mt-10 z-1">
-          <FenestaButton>Explore our range</FenestaButton>
+          <FenestaButton href="#">Explore our range</FenestaButton>
         </div>
       </section>    
 
@@ -91,7 +91,7 @@ export default function WindowsPage() {
         <ImageGallery/> 
 
         <div className="mt-5  z-1">
-          <FenestaButton>Explore our Gallery</FenestaButton>
+          <FenestaButton href="#">Explore our Gallery</FenestaButton>
         </div>       
       </section>
 
@@ -114,7 +114,7 @@ export default function WindowsPage() {
         <ProductStyles id="ideal-for-use-in" />
 
         <div className="mt-5 z-1">
-          <FenestaButton>Explore Our Gallery</FenestaButton>
+          <FenestaButton href="#">Explore Our Gallery</FenestaButton>
         </div>
       </section>
 

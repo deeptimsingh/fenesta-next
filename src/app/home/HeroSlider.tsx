@@ -518,7 +518,7 @@ export default function HeroSlider() {
                       </h1>
                     </Link>
                   </div>
-                  <FenestaButton>Take A Look</FenestaButton>
+                  <FenestaButton href="#">Take A Look</FenestaButton>
                 </div>
               </div>
             </div>
@@ -554,7 +554,7 @@ export default function HeroSlider() {
                       </h1>
                     </Link>
                   </div>
-                  <FenestaButton>See More</FenestaButton>
+                  <FenestaButton href="#">See More</FenestaButton>
                 </div>
               </div>
             </div>
@@ -579,7 +579,7 @@ export default function HeroSlider() {
                       </h1>
                     </Link>
                   </div>
-                  <FenestaButton>Read More</FenestaButton>
+                  <FenestaButton href="#">Read More</FenestaButton>
                 </div>
               </div>
             </div>
