@@ -428,7 +428,7 @@ useLayoutEffect(() => {
                 </p> */}
 
                 <div className="caption-btn mt-4 md:mt-6">
-                  <FenestaButton>FIND THE PERFECT FIT</FenestaButton>
+                  <FenestaButton href="#">FIND THE PERFECT FIT</FenestaButton>
                 </div>
               </div>
             </div>
@@ -465,7 +465,7 @@ useLayoutEffect(() => {
                 </p> */}
 
                 <div className="caption-btn mt-6">
-                  <FenestaButton>FIND THE PERFECT FIT</FenestaButton>
+                  <FenestaButton href="#">FIND THE PERFECT FIT</FenestaButton>
                 </div>
               </div>
             </div>
@@ -500,7 +500,7 @@ useLayoutEffect(() => {
                 </p> */}
 
                 <div className="caption-btn mt-6">
-                  <FenestaButton>FIND THE PERFECT FIT</FenestaButton>
+                  <FenestaButton href="#">FIND THE PERFECT FIT</FenestaButton>
                 </div>
               </div>
             </div>
@@ -533,7 +533,7 @@ useLayoutEffect(() => {
                 </p> */}
 
                 <div className="caption-btn mt-6">
-                  <FenestaButton>FIND THE PERFECT FIT</FenestaButton>
+                  <FenestaButton href="#">FIND THE PERFECT FIT</FenestaButton>
                 </div>
               </div>
             </div>

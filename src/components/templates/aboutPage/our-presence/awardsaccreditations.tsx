@@ -90,7 +90,7 @@ export default function Awardsaccreditations() {
                     </div>
           
                   <div className="mt-5  z-1 text-center">
-                    <FenestaButton>view more</FenestaButton>
+                    <FenestaButton href="#">view more</FenestaButton>
                   </div>    
                 </div>   
           </section>

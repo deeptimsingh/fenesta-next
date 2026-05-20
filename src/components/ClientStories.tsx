@@ -429,7 +429,7 @@ export default function ClientStories() {
 
           <div ref={sectionRef} className="w-full">
           <div ref={headingRef}  className="relative md:absolute left-1/2 -translate-x-1/2 max-w-full md:max-w-3xl inset-0 flex flex-col justify-center items-center z-40 px-6 md:px-0 title-section">           
-             <FenestaButton>Hear from our customers</FenestaButton>      
+             <FenestaButton href="#">Hear from our customers</FenestaButton>      
           </div>
         </div>
         </div>

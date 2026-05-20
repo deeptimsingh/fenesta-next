@@ -360,7 +360,7 @@ useHeadingAnimation({
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
                       <div className="mt-8">
-                        <FenestaButton>Get inspired</FenestaButton>
+                        <FenestaButton href="#">Get inspired</FenestaButton>
                       </div>
                     </div>  
                 </div>             
@@ -398,7 +398,7 @@ useHeadingAnimation({
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
                       <div className="mt-8">
-                        <FenestaButton>Get inspired</FenestaButton>
+                        <FenestaButton href="#">Get inspired</FenestaButton>
                       </div>
                     </div>  
                 </div>                
@@ -439,7 +439,7 @@ useHeadingAnimation({
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
                       <div className="mt-8">
-                        <FenestaButton>Get inspired</FenestaButton>
+                        <FenestaButton href="#">Get inspired</FenestaButton>
                       </div>
                     </div>  
                 </div>             
@@ -476,7 +476,7 @@ useHeadingAnimation({
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
                       <div className="mt-8">
-                        <FenestaButton>Get inspired</FenestaButton>
+                        <FenestaButton href="#">Get inspired</FenestaButton>
                       </div>
                     </div>  
                 </div>          
@@ -513,7 +513,7 @@ useHeadingAnimation({
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
                       <div className="mt-8">
-                        <FenestaButton>Get inspired</FenestaButton>
+                        <FenestaButton href="#">Get inspired</FenestaButton>
                       </div>
                     </div>  
                 </div>              
@@ -546,7 +546,7 @@ useHeadingAnimation({
                     <div className="bottom-figcaption w-full max-w-[350px]">
                       <p className="text-base leading-tight text-white underline underline-offset-8">Lotus Esplendito, Hyderabad</p>
                       <div className="mt-8">
-                        <FenestaButton>Get inspired</FenestaButton>
+                        <FenestaButton href="#">Get inspired</FenestaButton>
                       </div>
                     </div>  
                 </div>    
