@@ -23,9 +23,9 @@ const SLIDE_CONFIG = [
 
 const TOTAL_SLIDES = SLIDE_CONFIG.length;
 
-/** Pause when less than 20% of hero is visible (= ~80% scrolled past) */
-const HERO_PAUSE_VISIBLE_RATIO = 0.50;
-const HERO_RESUME_VISIBLE_RATIO = 0.55;
+  /** Pause when less than 40% of hero is visible (= ~60% scrolled past) */
+  const HERO_PAUSE_VISIBLE_RATIO = 0.4;
+  const HERO_RESUME_VISIBLE_RATIO = 0.45;
 
 interface SwiperInstance {
   destroy: (deleteInstance?: boolean, cleanStyles?: boolean) => void;
@@ -419,7 +419,7 @@ export default function HeroSlider() {
       },
       {
         root: null,
-        threshold: [0, 0.1, 0.2, 0.25, 0.3, 0.5, 0.75, 1],
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.45, 0.5, 0.75, 1],
       }
     );
 
