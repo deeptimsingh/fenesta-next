@@ -9,6 +9,7 @@ import "swiper/css";
 
 import { useMediaQuery } from "react-responsive";
 import { useRef, useState, useLayoutEffect, useEffect } from "react";
+import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -366,7 +367,7 @@ export default function ClientStories() {
         {/* Desktop/Tablet View - Hidden on mobile; scroll reveal on desktop only */}
         <div
           ref={desktopSectionRef}
-          className="hidden md:flex relative w-full h-full items-center justify-center min-h-[480px]"
+          className="hidden md:flex relative w-full h-full items-center justify-center min-h-[480px] client-stories-desktop"
           suppressHydrationWarning
         >
           {clients.map((client, i) => {
@@ -374,7 +375,7 @@ export default function ClientStories() {
             return (
               <div
                 key={client.id}
-                className="absolute z-50"
+                className="absolute z-50 client-stories-desktop-item"
                 style={{ transform: `translate(${style.offsetX}, ${style.offsetY})` }}
               >
                 <div
@@ -434,40 +435,37 @@ export default function ClientStories() {
         </div>
       </section>
 
-      {activeClient && (
+      {mounted && activeClient && createPortal(
         <>
-        <div ref={overlayRef} className="custommodal fixed inset-0 bg-[00000073] backdrop-blur-md z-[9998]" onClick={closeModal} aria-hidden />
-        <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[9998]" aria-hidden>
-          <div
-            ref={revealCircleRef}
-            className="w-[50px] h-[50px] rounded-full bg-black/70  backdrop-blur-lg"
-            style={{ transformOrigin: "center center" }}
-          />
-        </div>
-          <div
-            ref={modalRef}
+        {/* Modal overlay: use bracketed z-index so Tailwind generates the class */} 
+        <div ref={overlayRef} className="custommodal fixed inset-0 backdrop-blur-md z-[9998]"  onClick={closeModal} aria-hidden />
+        
+          <div className="fixed inset-0 flex items-center justify-center pointer-events-none z-[9998] opacity-90" aria-hidden>
+            <div
+              ref={revealCircleRef}
+              className="w-[50px] h-[50px] rounded-full bg-theme/75  backdrop-blur-lg"
+              style={{ transformOrigin: "center center" }}
+            />
+          </div>
+
+          <div ref={modalRef}
             className="custommodal-in fixed inset-0 z-[9999] text-gray h-screen overflow-y-auto overscroll-contain scroll-smooth" data-lenis-prevent
-            onWheel={(e) => e.stopPropagation()}
-          >
+            onWheel={(e) => e.stopPropagation()}>
             <div className="container-fluid min-h-screen">
-              <div ref={modalPanelRef} className="flex items-start justify-center min-h-screen max-w-5xl mx-auto flex-wrap">
+              <div ref={modalPanelRef} className="flex items-center justify-center min-h-screen max-w-5xl mx-auto flex-wrap">
                 <div ref={videoContainerRef} className="w-full p-6 sm:p-8">
-                  <video
-                    ref={videoRef}
-                    src={activeClient.video}
-                    controls
+                  <video ref={videoRef} src={activeClient.video}  controls
                     muted
                     playsInline
-                    className="w-full h-[360px] sm:h-[400px] rounded-2xl object-cover"
-                  />
+                    className="w-full h-[360px] sm:h-[600px] max-h-[75vh] rounded-2xl object-cover" />
                 </div>
 
-                <div ref={contentRef} className="text-center px-6 pb-12  mx-auto">
+                {/*<div ref={contentRef} className="text-center px-6 pb-12  mx-auto">
                   <h3 >{activeClient.name}</h3>
                   <p >When you land on a sample web page or open an email template and see content beginning with "lorem ipsum," the page creator placed that apparent gibberish there on purpose.</p>
                   <p >Page layouts look better with something in each section. Web page designers, content writers, and layout artists use lorem ipsum, also known as placeholder copy, to distinguish which areas on a page will hold advertisements, editorials, and filler before the final written content and website designs receive client approval.</p>
                   <p >Fun Lorem Ipsum text may appear in any size and font to simulate everything you create for your campaigns.</p>
-                   <p >When you land on a sample web page or open an email template and see content beginning with "lorem ipsum," the page creator placed that apparent gibberish there on purpose.</p>
+                  <p >When you land on a sample web page or open an email template and see content beginning with "lorem ipsum," the page creator placed that apparent gibberish there on purpose.</p>
                   <p>Page layouts look better with something in each section. Web page designers, content writers, and layout artists use lorem ipsum, also known as placeholder copy, to distinguish which areas on a page will hold advertisements, editorials, and filler before the final written content and website designs receive client approval.</p>
                   <p>Fun Lorem Ipsum text may appear in any size and font to simulate everything you create for your campaigns.</p>
 
@@ -477,7 +475,7 @@ export default function ClientStories() {
                   <p>The use of the lorem ipsum passage dates back to the 1500s. When printing presses required painstaking hand-setting of type, workers needed something to show clients how their pages would look. To save time, they turned to Cicero's words, creating sample books filled with preset paragraphs.</p>
 
                   <p>However, it wasn't until the 1960s that the passage became common when Letraset revolutionized the advertising industry with its transfer sheets. These innovative sheets allowed designers to apply pre-printed lorem ipsum text in various fonts and formats directly onto their mockups and prototypes.</p>
-                </div>
+                </div>*/}
 
               <button ref={closeBtnRef} onClick={closeModal} className="fixed top-6 right-6 z-[10000] pointer-events-auto flex items-center text-white h-10 px-3 bg-blue   hover:bg-blueLight  rounded-full overflow-hidden transition-all duration-300 ease-out group">
                 {/* X ICON */}
@@ -487,9 +485,9 @@ export default function ClientStories() {
 
               </div>
             </div>
-          </div>
-        
-        </>
+          </div>        
+        </>,
+        document.body
       )}
     </>
   );

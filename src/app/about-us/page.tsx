@@ -9,7 +9,7 @@ import BannerMain from "@/components/templates/aboutPage/bannerMain";
 import JourneyTimeline from "@/components/templates/aboutPage/ourJourney";
 import VisitQuick from "@/components/templates/aboutPage/visitquick";
 import OnlyBgimageCaption from "@/components/templates/aboutPage/only-bgimage-caption";
-import OurClients from "@/components/ClientStories";
+import OurClients from "@/components/ClientStories-old";
 import LeftRightStructure from "@/components/templates/aboutPage/LeftRightStructure";
 
 

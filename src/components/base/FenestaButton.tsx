@@ -6,11 +6,13 @@ import { gsap } from "gsap";
 type CommonButtonProps = {
   children: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 };
 
 export default function CommonButton({
   children,
   className = "",
+  onClick,
 }: CommonButtonProps) {
   const btnRef = useRef<HTMLButtonElement>(null);
   const leftArrowRef = useRef<HTMLSpanElement>(null);
@@ -75,6 +77,8 @@ export default function CommonButton({
   return (
     <button
       ref={btnRef}
+      type="button"
+      onClick={onClick}
       className={`common-btn relative inline-flex items-center overflow-hidden  ${className}`}
     >
       {/* LEFT ARROW (default) */}

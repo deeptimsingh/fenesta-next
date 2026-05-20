@@ -1,0 +1,53 @@
+/* CTA wrapper: slides up on card hover (-100px → 40px) */
+.fenesta-gallery-card__cta {
+  position: absolute;  
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  transition: bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fenesta-gallery-card:hover .fenesta-gallery-card__cta,
+.fenesta-gallery-card:focus-within .fenesta-gallery-card__cta {
+  bottom: 40px;
+}
+
+.fenesta-gallery-card--mobile .fenesta-gallery-card__cta {
+  bottom: -100px;
+}
+
+.product-gallery-swiper .swiper-slide-active .fenesta-gallery-card--mobile .fenesta-gallery-card__cta {
+  bottom: 40px;
+}
+
+.product-gallery-swiper {
+  overflow: visible;
+  padding-bottom: 35px;
+}
+
+.product-gallery-swiper .swiper-slide {
+  transform: scale(0.88);
+  transition: all 0.45s ease;
+  opacity: 0.5;
+}
+
+.product-gallery-swiper .swiper-slide-active {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.product-gallery-swiper .swiper-pagination {
+  bottom: 0px !important;
+}
+
+.product-gallery-swiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: #000;
+  opacity: 0.2;
+}
+
+.product-gallery-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+}

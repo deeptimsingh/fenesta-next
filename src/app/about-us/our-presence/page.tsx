@@ -11,7 +11,7 @@ import Image from "next/image";
 import BannerMain from "@/components/templates/aboutPage/our-presence/bannerMain";
 import Countersection from "./countersection";
 import Visitquick from "./visitquick";
-import ClientStories from "./ClientStories";
+import ClientStories from "@/components/ClientStories-old";
 import FenestaEdit from "./FenestaEdit";
 import Locateus from "./locateus";
 import Awardsaccreditations from "./awardsaccreditations";
