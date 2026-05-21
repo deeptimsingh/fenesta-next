@@ -3,7 +3,7 @@
 import BannerMain from "@/components/templates/blogPage/bannerMain";
 import BlogSidebar from "@/components/templates/blogPage/BlogSidebar";
 import CategoryFilter from "@/components/templates/blogPage/CategoryFilter";
-import ClientStories from "@/components/ClientStories";
+import ClientStories from "@/components/ClientStories-old";
 
 export default function BlogListingLayout({ children }: { children: React.ReactNode }) {
   return (
