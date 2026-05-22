@@ -1,21 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Corinthia:wght@400;700&display=swap');
 @import "tailwindcss";
 
 /* Tailwind v4: dark mode via .dark class (next-themes) */
 @variant dark (&:where(.dark, .dark *));
 
 
-
-/* Primary font: helvetica_ce_55_romanregular (so it shows by name in dev tools) */
-@font-face {
-  font-family: "helvetica_ce_55_romanregular";
-  src:
-    url("../fonts/helvetica_neue_ce_55_roman-webfont.woff2") format("woff2"),
-    url("../fonts/helvetica_neue_ce_55_roman-webfont.woff") format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
 
 :root {
   --background: #ffffff;
@@ -229,6 +217,9 @@
 /* Footer spacing - footer appears when main ends */
 main {padding-bottom: 0;}
 .text-corinthiaHeading{ line-height:0.65 !important;}
+
+.title-section h2 span {font-family: var(--font-subFont); font-size: var(--text-corinthiaHeading); line-height: .65 !important; color: var(--color-brown);}
+
 
 
 
@@ -532,6 +523,7 @@ Intro Section
 .edits-date  {display: inline-block;color: #121212;margin-bottom: 10px;}
 .edit-card { background: #fff; border: 1px solid #d8d8d8; border-radius: 16px; overflow: hidden; height: 100%;transition: 0.3s ease;}
 
+.title-section h2 span.text-white {color: #fff !important;}
 
 @media all and (max-width: 767px) {
 .blur-rounded-full {top: -5vw;left: -10vw;}
