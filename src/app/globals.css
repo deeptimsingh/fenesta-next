@@ -489,6 +489,7 @@ Intro Section
   background-position: center; opacity:1;
 }
 
+
 .circle-img-inner {
   -webkit-mask-image: radial-gradient( circle, #0094DA 70%, #0094DA 80%, transparent 90%);
   mask-image: radial-gradient( circle, #0094DA 70%, #0094DA 80%, transparent 90%);
@@ -527,6 +528,9 @@ Intro Section
 .blue-bg-wrapper {background: #0094DA;  position: relative;}
 .blue-bg-wrapper::before {content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0094DA;border-radius: 3190px;filter: blur(183.434px); }
 .blur-rounded-full {width: 115%; height: 100%;position: absolute; top:-2vw;left:-4vw;z-index: 1;}
+
+.edits-date  {display: inline-block;color: #121212;margin-bottom: 10px;}
+.edit-card { background: #fff; border: 1px solid #d8d8d8; border-radius: 16px; overflow: hidden; height: 100%;transition: 0.3s ease;}
 
 
 @media all and (max-width: 767px) {
