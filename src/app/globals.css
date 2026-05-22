@@ -523,6 +523,7 @@ Intro Section
 .edits-date  {display: inline-block;color: #121212;margin-bottom: 10px;}
 .edit-card { background: #fff; border: 1px solid #d8d8d8; border-radius: 16px; overflow: hidden; height: 100%;transition: 0.3s ease;}
 
+.text-white {color: #fff;}
 
 @media all and (max-width: 767px) {
 .blur-rounded-full {top: -5vw;left: -10vw;}
