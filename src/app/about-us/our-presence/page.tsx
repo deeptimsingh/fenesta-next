@@ -15,6 +15,7 @@ import ClientStories from "@/components/ClientStories-old";
 import FenestaEdit from "./FenestaEdit";
 import Locateus from "./locateus";
 import Awardsaccreditations from "./awardsaccreditations";
+import Sciencework from "./sciencework";
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 

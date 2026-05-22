@@ -15,27 +15,12 @@ export default function ResearchSlider() {
     const totalSlides = 4;
 
     return (
-        <section className="w-full common-padding relative ">
-
-              {/* Background Pattern Image */}
-              <div className="absolute  top-[28vw] right-[-13vw] md:top-0 md:right-0 z-[1]  pointer-events-none">
-                  <Image
-                      src="/images/about/our-presence/edit-bg-icon.png"
-                      alt="pattern"
-                      width={500}
-                      height={500}
-                      className="w-[180px] sm:w-[180px] md:w-[450px] h-auto object-contain"
-                  />
-              </div>
-
-            {/* background-gradient */}
-               <div className="absolute top-[0vw] right-[22vw] w-[1096px] h-[320px] rounded-[1096px] bg-[rgba(237,232,208,0.91)] blur-[117px] z-[1]"></div>
-               
+        <section className="w-full common-padding">
             {/* Heading */}
             <div className="container-fluid m-auto px-6 md:px-0 relative z-10">
                          <div ref={sectionRef} className="w-full">
                              <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-4xl mx-auto mb-6">
-                                 <h2 className="text-h2 leading-none ">The Fenesta  <span className="font-subFont text-corinthiaHeading text-brown">Edit</span></h2>
+                                 <h2 className="text-h2 leading-none">The Fenesta  <span className="font-subFont text-corinthiaHeading text-brown">Edit</span></h2>
                                   <p className="mt-3  max-w-3xl text-base">A curated collection of ideas and stories for homes that value design and style</p>
                                  
                              </div>
@@ -66,7 +51,7 @@ export default function ResearchSlider() {
                             
                             <div className="overflow-hidden rounded-xl">
                                 <Image
-                                    src="/images/about/our-presence/window-design-ideas.png"
+                                    src="/images/fenesta-difference/material-science.png"
                                     alt="Materials Science"
                                     width={500}
                                     height={300}
@@ -96,7 +81,7 @@ export default function ResearchSlider() {
 
                             <div className="overflow-hidden rounded-xl">
                                 <Image
-                                    src="/images/about/our-presence/indian-homeowners.png"
+                                    src="/images/fenesta-difference/engineering.png"
                                     alt="Engineering & Simulation"
                                     width={500}
                                     height={300}
@@ -125,7 +110,7 @@ export default function ResearchSlider() {
 
                             <div className="overflow-hidden rounded-xl">
                                 <Image
-                                    src="/images/about/our-presence/doors-impact-vastu.png"
+                                    src="/images/about-us/our-presence/doors-impact-vastu.png"
                                     alt="Testing & Validation"
                                     width={500}
                                     height={300}
@@ -169,7 +154,7 @@ export default function ResearchSlider() {
 
 
                     <div className="mt-5 z-1 text-center">
-                      <FenestaButton>View all blogs</FenestaButton>
+                      <FenestaButton>View accreditations</FenestaButton>
                     </div>    
             </div>
  
