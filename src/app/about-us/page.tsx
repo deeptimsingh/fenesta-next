@@ -4,7 +4,6 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 
-
 import { useInsidePageBlurLoad } from "@/hooks/useInsidePageBlurLoad";
 import BannerMain from "@/components/templates/aboutPage/bannerMain";
 import JourneyTimeline from "@/components/templates/aboutPage/ourJourney";
@@ -139,14 +138,13 @@ if (visionLineRef.current && visionRef.current) {
 
   return (
     <section className={`about-page inside-page w-full ${pageBlurClass}`}>
+
        {/* Banner Main */}
       <BannerMain />
 
-  
       {/* INTRO SECTION */}
-          {/* INTRO SECTION */}
       <section className="intro-section relative ">
-      <div className="container">
+        <div className="container">
 
         <div className="intro-heightlight mx-auto flex flex-col sm:flex-row gap-y-10 gap-x-10 items-start -mt-[60px] rounded-sm bg-white p-6 relative z-20">   
 
@@ -180,8 +178,8 @@ if (visionLineRef.current && visionRef.current) {
 
         </div>
 
-      </div>
-    </section>
+        </div>
+     </section>
 
       {/* MISSION & VISION */}
       <section ref={missionVisionSectionRef} className="w-full bg-white  mission-vision relative mt-4 common-padding overflow-hidden">
@@ -272,7 +270,6 @@ if (visionLineRef.current && visionRef.current) {
       {/* Sustainability */}
       <VisitQuick />
 
-     
 
       {/*In This News*/}            
       <OnlyBgimageCaption />

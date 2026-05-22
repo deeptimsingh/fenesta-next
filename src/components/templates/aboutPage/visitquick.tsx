@@ -129,9 +129,9 @@ export default function ParallaxSection() {
 
           <div className=" flex-col justify-center items-center flex mt-5 mx-auto">
             {/* <FenestaButton label="Start my estimate" href="#" theme="orange" />         */}
-            <Link href="/contact-us">
-                <FenestaButton >BookStart my estimate A Visit</FenestaButton>
-            </Link>
+           
+                <FenestaButton href="/contact-us">BookStart my estimate A Visit</FenestaButton>
+           
           </div>
         </div>
       </div>

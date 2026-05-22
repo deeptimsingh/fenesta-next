@@ -90,15 +90,13 @@ function ContentBlock({ title, titleHighlight, description, ctaLabel, ctaHref }:
   }, [sectionRef]);
 
   // CTA: link if ctaHref provided, else plain button
-  const cta = ctaHref ? (
-    <Link href={ctaHref} className="flex flex-col justify-start mt-5 max-w-max">
-      <FenestaButton href="#">{ctaLabel}</FenestaButton>
-    </Link>
-  ) : (
-    <div className="flex flex-col justify-start mt-5 max-w-max">
-      <FenestaButton href="#">{ctaLabel}</FenestaButton>
-    </div>
-  );
+const cta = (
+  <div className="flex flex-col justify-start mt-5 max-w-max">
+    <FenestaButton href={ctaHref || "#"}>
+      {ctaLabel}
+    </FenestaButton>
+  </div>
+);
   return (
     <>
       {/* headingOuter (sectionRef): observed and animated translateY -20 → 0 when this block enters viewport */}

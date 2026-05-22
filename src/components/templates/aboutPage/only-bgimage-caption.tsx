@@ -64,9 +64,9 @@ export default function OnlyBgImageCaption(props: OnlyBgImageCaptionProps) {
                   <p className=" max-w-full">{description}</p>  
                    
                   <div className="flex flex-col justify-start items-start flex-wrap">
-                    <Link href={ctaHref}>
-                        <FenestaButton > {ctaLabel}t</FenestaButton>
-                    </Link>                   
+                  
+                        <FenestaButton  href={ctaHref}> {ctaLabel}t</FenestaButton>
+                                     
                   </div>  
                 </div>         
               </div>           
