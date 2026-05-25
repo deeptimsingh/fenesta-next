@@ -7,7 +7,7 @@ export default function Awardsaccreditations() {
             const { headingRef, sectionRef } = useHeadingAnimation();
 
   return (
-    <section className="common-padding w-full flex flex-col items-center ImageGallery-section">
+    <section className="common-pt w-full flex flex-col items-center ImageGallery-section">
                   {/* Heading */}
                   <div className="container-fluid m-auto px-6 md:px-0 relative z-10">
                       <div ref={sectionRef} className="w-full">
@@ -90,7 +90,7 @@ export default function Awardsaccreditations() {
                     </div>
           
                   <div className="mt-5  z-1 text-center">
-                    <FenestaButton href="#">view more</FenestaButton>
+                    <FenestaButton>view more</FenestaButton>
                   </div>    
                 </div>   
           </section>

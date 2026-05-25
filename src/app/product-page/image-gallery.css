@@ -2,33 +2,17 @@
    ImageGallery — center mode with bilateral peek
    ═══════════════════════════════════════════════════════════════════ */
 
-/* ── 0. Lenis compat ─────────────────────────────────────────────── */
-html.lenis,
-html.lenis body              { height: auto; }
-.lenis.lenis-smooth          { scroll-behavior: auto !important; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped         { overflow: hidden; }
-
-/* ── 1. Swiper shell ─────────────────────────────────────────────── */
-
-/*
-  KEY: .image-gallery-swiper-outer clips horizontal bleed.
-  .image-gallery-swiper.swiper must be overflow:visible so adjacent
-  slides can peek, but the outer wrapper hides what escapes the viewport.
-*/
 .image-gallery-swiper-outer {
   width: 100%;
   overflow: hidden;
-  /* Horizontal padding creates the "peek" channel on both sides.
-     centeredSlides will center the active slide within the full swiper
-     width (including this padding), so adjacent slides show in the gap. */
+
   padding-left: 0;
   padding-right: 0;
 }
 
 .image-gallery-swiper.swiper {
   width: 100%;
-  overflow: visible;          /* let adjacent slides bleed outside */
+  overflow: visible;   
   touch-action: pan-y pinch-zoom;
   overscroll-behavior-x: contain;
   /* opacity: 0; */
@@ -61,13 +45,7 @@ html.lenis body              { height: auto; }
 }
 
 /* ── 2. Slide widths ─────────────────────────────────────────────── */
-/*
-  Rule: active slide fills ~75% of viewport so ~12.5% peeks each side.
-  This guarantees both neighbours are always visible regardless of viewport.
 
-  Formula: slideWidth ≤ (viewportWidth - 2 × peekWidth - 2 × gap)
-  We use vw so it scales automatically.
-*/
 .image-gallery-slide.swiper-slide {
   width: 74vw !important;  
   max-width: 480px !important;
