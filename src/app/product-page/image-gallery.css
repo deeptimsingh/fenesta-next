@@ -1,68 +1,44 @@
-/**---------------------------------------------------
-Image Gallery
----------------------------------------------------**/
-/* .ImageGallery-section {
-  background-color: #f5f5f5;
-} */
+/* ═══════════════════════════════════════════════════════════════════
+   ImageGallery — center mode with bilateral peek
+   ═══════════════════════════════════════════════════════════════════ */
 
-/* Avoid opacity/scale/text transitions until Swiper has measured (prevents jerk in view). */
-.image-gallery-swiper:not(.is-layout-ready) .swiper-slide .ig-card,
-.image-gallery-swiper:not(.is-layout-ready) .swiper-slide .ig-card-media,
-.image-gallery-swiper:not(.is-layout-ready) .ig-card-text {
-  transition: none !important;
-}
+/* ── 0. Lenis compat ─────────────────────────────────────────────── */
+html.lenis,
+html.lenis body              { height: auto; }
+.lenis.lenis-smooth          { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped         { overflow: hidden; }
 
-.image-gallery-swiper .swiper-slide .ig-card {
-  opacity: 0.45;
-  transition: opacity 0.35s ease-out;
-}
+/* ── 1. Swiper shell ─────────────────────────────────────────────── */
 
-.image-gallery-swiper .swiper-slide-active .ig-card {
-  opacity: 1;
-}
-
-.image-gallery-swiper .swiper-slide .ig-card-media {
-  transform: scale(0.96);
-  transform-origin: center center;
-  transition:
-    transform 0.4s ease-out,
-    opacity 0.4s ease-out;
-}
-
-.image-gallery-swiper .swiper-slide-active .ig-card-media {
-  transform: scale(1);
-}
-
-.image-gallery-swiper .ig-card-text {
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.image-gallery-swiper .swiper-slide-active .ig-card-text {
-  opacity: 1;
-  transform: translateY(0);
+/*
+  KEY: .image-gallery-swiper-outer clips horizontal bleed.
+  .image-gallery-swiper.swiper must be overflow:visible so adjacent
+  slides can peek, but the outer wrapper hides what escapes the viewport.
+*/
+.image-gallery-swiper-outer {
+  width: 100%;
+  overflow: hidden;
+  /* Horizontal padding creates the "peek" channel on both sides.
+     centeredSlides will center the active slide within the full swiper
+     width (including this padding), so adjacent slides show in the gap. */
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .image-gallery-swiper.swiper {
-  /* pan-y: page scrolls vertically; Swiper still handles horizontal swipes */
+  width: 100%;
+  overflow: visible;          /* let adjacent slides bleed outside */
   touch-action: pan-y pinch-zoom;
   overscroll-behavior-x: contain;
-  overflow: visible;
-}
-/* Carousel: clip horizontal overflow (prevents page scrollbar) */
-.image-gallery-swiper.image-gallery-swiper--many.swiper,
-.image-gallery-swiper-outer {
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
+  /* opacity: 0; */
+  transition: opacity 0.25s ease;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.image-gallery-swiper .swiper-slide {
-  touch-action: pan-y pinch-zoom;
-  box-sizing: border-box;
+.image-gallery-swiper.is-layout-ready {
+  opacity: 1;
 }
 
 .image-gallery-swiper .swiper-wrapper {
@@ -71,205 +47,11 @@ Image Gallery
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Active slide width (centered layouts) */
-.image-gallery-slide--centered,
-.image-gallery-slide--solo {
-  width: min(92vw, 850px) !important;
-  max-width: 850px !important;
-}
-
-/* Solo (1 slide): always full opacity, no scale */
-.image-gallery-slide--solo .ig-card,
-.image-gallery-slide--solo .ig-card-media,
-.image-gallery-slide--solo .ig-card-text {
-  opacity: 1;
-  transform: none;
-}
-
-/* 2–3 slides: one at a time, centered, active width */
-.image-gallery-swiper--centered .swiper-slide .ig-card {
-  opacity: 1;
-}
-
-.image-gallery-swiper--centered .swiper-slide:not(.swiper-slide-active) .ig-card-media {
-  transform: scale(0.96);
-  opacity: 0.85;
-}
-
-.image-gallery-swiper--centered .swiper-slide-active .ig-card-media {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.image-gallery-swiper--centered .image-gallery-slide--centered {
-  width: min(92vw, 850px) !important;
-  max-width: 850px !important;
-}
-
-/* >3 slides: uniform slide + card dimensions (GSAP scale is visual only inside media) */
-.image-gallery-swiper--many {
-  --ig-slide-media-h: 280px;
-  --ig-slide-caption-h: 72px;
-}
-
-@media (min-width: 640px) {
-  .image-gallery-swiper--many {
-    --ig-slide-media-h: 360px;
-  }
-}
-
-@media (min-width: 768px) {
-  .image-gallery-swiper--many {
-    --ig-slide-media-h: 420px;
-  }
-}
-
-.image-gallery-swiper--many .image-gallery-slide.swiper-slide {
-  height: calc(var(--ig-slide-media-h) + var(--ig-slide-caption-h) + 1.25rem) !important;
-  box-sizing: border-box;
-}
-
-.image-gallery-swiper--many .swiper-slide .ig-card,
-.image-gallery-swiper--many .swiper-slide-active .ig-card {
-  opacity: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.image-gallery-swiper--many .ig-card-media,
-.image-gallery-swiper--many .ig-parallax-track {
-  width: 100% !important;
-  height: var(--ig-slide-media-h) !important;
-  min-height: var(--ig-slide-media-h) !important;
-  max-height: var(--ig-slide-media-h) !important;
-  flex-shrink: 0;
-}
-
-
-.ig-parallax-img-scale,
-.ig-card-text,
-.swiper-slide,
-.swiper-wrapper {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* Do not set transform on .ig-parallax-img-wrap — GSAP scroll parallax owns `y` */
-.ig-parallax-img-wrap {
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.image-gallery-swiper--many .ig-parallax-img-wrap {
-  height: 100% !important;
-  min-height: 100% !important;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.image-gallery-swiper--many .ig-card-text {
-  min-height: var(--ig-slide-caption-h);
-  flex-shrink: 0;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: none !important;
-}
-
-.image-gallery-swiper--many .swiper-slide .ig-card-media,
-.image-gallery-swiper--many .swiper-slide-active .ig-card-media {
-  transform: none !important;
-  transition: none !important;
-}
-
-.image-gallery-swiper--many .ig-parallax-img-scale {
-  transform-origin: center center;
-}
-
-.image-gallery-swiper--many .ig-parallax-track {
-  clip-path: inset(0% round 14px);
-}
-
-.image-gallery-swiper--many .ig-card-media--carousel {
-  position: relative;
-}
-
-.image-gallery-swiper--many .swiper-slide:not(.swiper-slide-active) .ig-card-media--carousel::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  border-radius: inherit;
-  background: rgba(255, 255, 255, 0.35);
-  pointer-events: none;
-  transition: opacity 0.3s ease-out;
-}
-
-.image-gallery-swiper--many .swiper-slide-active .ig-card-media--carousel::after {
-  opacity: 0;
-}
-
-.image-gallery-swiper--many .swiper-slide:not(.swiper-slide-active) .ig-card-media {
-  transform: scale(1);
-  filter: saturate(0.85);
-}
-
-.image-gallery-swiper--many .swiper-slide-active .ig-card-media {
-  transform: scale(1);
-  filter: none;
-}
-
-.image-gallery-swiper--many .ig-card-text--carousel {
-  opacity: 0.4;
-  transform: translateY(0);
-  transition:
-    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.image-gallery-swiper--many .swiper-slide-active .ig-card-text--carousel {
-  opacity: 1;
-}
-
-.image-gallery-cta {
-  position: relative;
-  z-index: 2;
-}
-
-/* -----------------------------
-LENIS + SWIPER PERFORMANCE FIX
------------------------------ */
-
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-.image-gallery-swiper,
-.image-gallery-swiper * {
-  user-select: none;
-  -webkit-user-select: none;
-}
-
 .image-gallery-swiper .swiper-slide {
+  touch-action: pan-y pinch-zoom;
+  box-sizing: border-box;
   contain: paint;
+  will-change: transform;
 }
 
 .image-gallery-swiper img {
@@ -278,43 +60,200 @@ html.lenis body {
   -webkit-user-drag: none;
 }
 
-@media (max-width: 1023px) {
-  .image-gallery-swiper--many .swiper-slide.swiper-slide-active {
-    z-index: 5;
+/* ── 2. Slide widths ─────────────────────────────────────────────── */
+/*
+  Rule: active slide fills ~75% of viewport so ~12.5% peeks each side.
+  This guarantees both neighbours are always visible regardless of viewport.
+
+  Formula: slideWidth ≤ (viewportWidth - 2 × peekWidth - 2 × gap)
+  We use vw so it scales automatically.
+*/
+.image-gallery-slide.swiper-slide {
+  width: 74vw !important;  
+  max-width: 480px !important;
+}
+
+@media (min-width: 640px) {
+  .image-gallery-slide.swiper-slide {
+    width: 68vw !important;   
+    max-width: 600px !important;
   }
 }
 
 @media (min-width: 1024px) {
-  .image-gallery-swiper--many .image-gallery-slide.swiper-slide {
-    width: min(850px, 70vw) !important;
-    max-width: min(850px, 70vw) !important;
-    min-width: min(850px, 70vw) !important;
+  .image-gallery-slide.swiper-slide {
+    width: 56vw !important;  
+    max-width: 800px !important;
   }
 }
 
-/* Mobile (>3 slides): equal slide width + centered active slide */
-@media (max-width: 1023px) {
-  .ImageGallery-slider-inner {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  .image-gallery-swiper--many .image-gallery-slide.swiper-slide {
-    width: min(88vw, 420px) !important;
-    max-width: min(88vw, 420px) !important;
-    min-width: min(88vw, 420px) !important;
-    flex-shrink: 0;
-  }
+/* ── 3. Card layout ──────────────────────────────────────────────── */
+.ig-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.image-gallery-swiper--single.swiper {
-  touch-action: auto;
+/* ── 4. Media container — CSS owns scale + filter ───────────────── */
+.ig-card-media {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  transform: scale(0.93);
+  transform-origin: center center;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              filter  0.5s ease-out;
+  filter: saturate(0.6) brightness(0.88);
 }
 
-/* 2–3 slides: static column grid (no Swiper) */
-.image-gallery-grid .ig-card,
-.image-gallery-grid .ig-card-media,
-.image-gallery-grid .ig-card-text {
+.swiper-slide-active .ig-card-media {
+  transform: scale(1);
+  filter: saturate(1) brightness(1);
+}
+
+/* dim overlay on non-active slides */
+.ig-card-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+  transition: opacity 0.5s ease-out;
+  z-index: 2;
+}
+.swiper-slide-active .ig-card-media::after {
+  opacity: 0;
+}
+
+/* suppress transitions before layout measurement */
+.image-gallery-swiper:not(.is-layout-ready) .ig-card-media,
+.image-gallery-swiper:not(.is-layout-ready) .ig-card-media::after {
+  transition: none !important;
+}
+
+/* ── 5. Parallax layers ──────────────────────────────────────────── */
+.ig-parallax-track {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  overflow: hidden;
+  clip-path: inset(0% round 14px);
+  position: relative;
+}
+
+@media (min-width: 640px) {
+  .ig-parallax-track { aspect-ratio: 16 / 10; }
+}
+
+.ig-parallax-img-wrap {
+  position: absolute;
+  inset: 0;
+  top: -28px;
+  bottom: -28px;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.ig-parallax-img-scale {
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.ig-parallax-img-el {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── 6. Caption ──────────────────────────────────────────────────── */
+.ig-card-text {
+  margin-top: 1.25rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.image-gallery-swiper:not(.is-layout-ready) .ig-card-text {
+  transition: none !important;
+}
+
+.swiper-slide-active .ig-card-text {
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
 }
+
+/* ── 7. Card opacity ─────────────────────────────────────────────── */
+.image-gallery-swiper .ig-card {
+  opacity: 0.55;
+  transition: opacity 0.45s ease-out;
+}
+.image-gallery-swiper:not(.is-layout-ready) .ig-card {
+  transition: none !important;
+}
+.image-gallery-swiper .swiper-slide-active .ig-card {
+  opacity: 1;
+}
+
+/* ── 8. Static row (2–3 slides) ──────────────────────────────────── */
+.ig-static-card .ig-card,
+.ig-static-card .ig-card-media,
+.ig-static-card .ig-card-text {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  filter: none !important;
+}
+.ig-static-card .ig-card-media::after { display: none; }
+
+/* ── 9. Single centered card ─────────────────────────────────────── */
+.ig-center-single .ig-card,
+.ig-center-single .ig-card-media,
+.ig-center-single .ig-card-text {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+  filter: none !important;
+}
+.ig-center-single .ig-card-media::after { display: none; }
+
+.ig-center-single .ig-card-media img,
+.ig-static-card   .ig-card-media img {
+  display: block;
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 14px;
+}
+@media (min-width: 640px) {
+  .ig-center-single .ig-card-media img,
+  .ig-static-card   .ig-card-media img { height: 360px; }
+}
+@media (min-width: 768px) {
+  .ig-center-single .ig-card-media img,
+  .ig-static-card   .ig-card-media img { height: 420px; }
+}
+
+/* ── 10. Nav buttons ─────────────────────────────────────────────── */
+.ig-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: background 0.2s, border-color 0.2s;
+}
+.ig-nav-btn:hover { background: #f5f5f5; border-color: rgba(0,0,0,0.2); }

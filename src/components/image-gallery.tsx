@@ -1,7 +1,11 @@
 "use client";
 
+/**
+ * ImageGallery 
+ */
+
 import Image from "next/image";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState, useCallback } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import gsap from "gsap";
@@ -10,31 +14,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "swiper/css";
 import "@/app/product-page/image-gallery.css";
 
+
 gsap.registerPlugin(ScrollTrigger);
 
-/** Image scale when off-center → scale at center (swiper progress 1 → 0). */
-const IMAGE_GALLERY_SCALE_FROM = 1.25;
-const IMAGE_GALLERY_SCALE_TO = 1;
-/** Vertical parallax range (px); smaller = subtler, less jerk. */
-const IMAGE_GALLERY_SCROLL_PARALLAX_Y = 28;
-/** Scrub lag (seconds): higher = smoother catch-up with Lenis, slightly more latency. */
-const IMAGE_GALLERY_SCROLL_SCRUB = 1.35;
-const IMAGE_GALLERY_REVEAL_Y = 40;
-
-function syncParallaxToScroll(
-  wrap: HTMLElement,
-  tween: gsap.core.Tween
-) {
-  const st = tween.scrollTrigger;
-  if (!st) return;
-  st.update();
-  const y = gsap.utils.interpolate(
-    -IMAGE_GALLERY_SCROLL_PARALLAX_Y,
-    IMAGE_GALLERY_SCROLL_PARALLAX_Y,
-    st.progress
-  );
-  gsap.set(wrap, { y, force3D: true });
-}
+const PARALLAX_Y    = 28;
+const SCROLL_SCRUB  = 1.35;
+const SWIPER_THRESHOLD = 3;
 
 export type ImageGallerySlide = {
   id: number;
@@ -42,304 +27,128 @@ export type ImageGallerySlide = {
   title: string;
 };
 
-const defaultGalleryData: ImageGallerySlide[] = [
+const defaultSlides: ImageGallerySlide[] = [
   {
     id: 1,
-    image:
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1400&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1400&auto=format&fit=crop",
     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
   },
   {
     id: 2,
-    image:
-      "https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1400&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1400&auto=format&fit=crop",
     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
   },
   {
     id: 3,
-    image:
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1400&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1400&auto=format&fit=crop",
     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
   },
   {
     id: 4,
-    image:
-      "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1400&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1400&auto=format&fit=crop",
+    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+  },
+  {
+    id: 5,
+    image: "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1400&auto=format&fit=crop",
     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
   },
 ];
 
-type ImageGalleryProps = {
-  /** When omitted, built-in demo slides are used. */
-  slides?: ImageGallerySlide[];
-};
+type Props = { slides?: ImageGallerySlide[] };
 
-/** More than three → Swiper; one → centered; two or three → static row (no slider). */
-const SWIPER_THRESHOLD = 3;
-const MOBILE_CENTER_MAX_WIDTH = 1023;
-
-/** Side offset so first/last slides can sit in the viewport center (mobile). */
-function applyMobileEdgeCentering(swiper: SwiperType) {
-  if (typeof window === "undefined") return;
-  if (window.innerWidth > MOBILE_CENTER_MAX_WIDTH) {
-    swiper.params.slidesOffsetBefore = 0;
-    swiper.params.slidesOffsetAfter = 0;
-    return;
-  }
-
-  const slide = swiper.slides[swiper.activeIndex] as HTMLElement | undefined;
-  if (!slide) return;
-
-  const slideW = slide.offsetWidth;
-  const containerW = swiper.width;
-  if (!slideW || !containerW) return;
-
-  const offset = Math.max(0, (containerW - slideW) / 2);
-  swiper.params.slidesOffsetBefore = offset;
-  swiper.params.slidesOffsetAfter = offset;
-}
-
-export default function ImageGallery({ slides }: ImageGalleryProps) {
-  const data = slides ?? defaultGalleryData;
+export default function ImageGallery({ slides }: Props) {
+  const data  = slides ?? defaultSlides;
   const count = data.length;
+
   const sectionRef = useRef<HTMLElement>(null);
-  const swiperRef = useRef<SwiperType | null>(null);
-  const layoutReadyRef = useRef(false);
-  const slideScaleSettersRef = useRef(
-    new Map<HTMLElement, ReturnType<typeof gsap.quickSetter>>()
-  );
-  const captionOpacitySettersRef = useRef(
-    new Map<HTMLElement, ReturnType<typeof gsap.quickSetter>>()
-  );
-  const captionYSettersRef = useRef(
-    new Map<HTMLElement, ReturnType<typeof gsap.quickSetter>>()
-  );
-  const [swiperLayoutReady, setSwiperLayoutReady] = useState(false);
+  const swiperRef  = useRef<SwiperType | null>(null);
+  const [layoutReady, setLayoutReady] = useState(false);
 
+  const showSingle = count === 1;
+  const showStatic = count >= 2 && count <= SWIPER_THRESHOLD;
   const showSwiper = count > SWIPER_THRESHOLD;
-  const showSingleCentered = count === 1;
-  const showStaticRow = count >= 2 && count <= SWIPER_THRESHOLD;
 
-  const updateSlideMotion = useCallback((swiper: SwiperType) => {
-    if (!layoutReadyRef.current || !swiper?.slides) return;
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* ── Swiper init ──────────────────────────────────────────────── */
+  const handleSwiperInit = useCallback((swiper: SwiperType) => {
+    swiperRef.current = swiper;
 
-    Array.from(swiper.slides as HTMLElement[]).forEach((slide) => {
-      if (slide.classList.contains("swiper-slide-duplicate")) return;
-
-      const progress = Math.min(
-        1,
-        Math.abs((slide as unknown as { progress?: number }).progress ?? 0)
-      );
-      const centered = reduceMotion ? 1 : 1 - progress;
-
-      const scaleEl = slide.querySelector<HTMLElement>(".ig-parallax-img-scale");
-      if (scaleEl) {
-        const isMoving = swiper.animating || Boolean(swiper.touches?.diff);
-        const scale =
-          reduceMotion || !isMoving
-            ? IMAGE_GALLERY_SCALE_TO
-            : IMAGE_GALLERY_SCALE_TO +
-              progress * (IMAGE_GALLERY_SCALE_FROM - IMAGE_GALLERY_SCALE_TO);
-
-        let scaleSetter = slideScaleSettersRef.current.get(scaleEl);
-        if (!scaleSetter) {
-          gsap.set(scaleEl, {
-            transformOrigin: "center center",
-            force3D: true,
-            scale: IMAGE_GALLERY_SCALE_TO,
-          });
-          scaleSetter = gsap.quickSetter(scaleEl, "scale");
-          slideScaleSettersRef.current.set(scaleEl, scaleSetter);
-        }
-        scaleSetter(scale);
-      }
-
-      const track = slide.querySelector<HTMLElement>(".ig-parallax-track");
-      if (track) {
-        gsap.set(track, { clipPath: "inset(0% round 14px)" });
-      }
-
-      const caption = slide.querySelector<HTMLElement>(".ig-card-text");
-      if (caption) {
-        let opacitySetter = captionOpacitySettersRef.current.get(caption);
-        let ySetter = captionYSettersRef.current.get(caption);
-        if (!opacitySetter || !ySetter) {
-          gsap.set(caption, {
-            opacity: 0,
-            y: IMAGE_GALLERY_REVEAL_Y,
-            force3D: true,
-          });
-          opacitySetter = gsap.quickSetter(caption, "opacity");
-          ySetter = gsap.quickSetter(caption, "y", "px");
-          captionOpacitySettersRef.current.set(caption, opacitySetter);
-          captionYSettersRef.current.set(caption, ySetter);
-        }
-        opacitySetter(centered);
-        ySetter(IMAGE_GALLERY_REVEAL_Y * (1 - centered));
-      }
+    /*
+      Two rAF passes so Swiper measures real CSS slide widths before
+      running centeredSlides offset maths.
+      No manual slidesOffsetBefore/After — centeredSlides owns this.
+    */
+    requestAnimationFrame(() => {
+      swiper.update();
+      requestAnimationFrame(() => {
+        swiper.update();
+        setLayoutReady(true);
+      });
     });
+
+    const onResize = () => {
+      swiper.update();
+      swiper.slideTo(swiper.activeIndex, 0, false);
+    };
+    window.addEventListener("resize", onResize);
+    swiper.on("destroy", () => window.removeEventListener("resize", onResize));
   }, []);
 
-  const revealActiveSlide = useCallback((swiper: SwiperType) => {
-    if (!layoutReadyRef.current) return;
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) {
-      updateSlideMotion(swiper);
-      return;
-    }
-
-    const activeSlide = swiper.slides[swiper.activeIndex] as
-      | HTMLElement
-      | undefined;
-    if (!activeSlide?.classList.contains("swiper-slide")) return;
-
-    const caption = activeSlide.querySelector<HTMLElement>(".ig-card-text");
-
-    if (caption) {
-      gsap.to(caption, {
-        opacity: 1,
-        y: 0,
-        duration: 0.55,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-    }
-
-    updateSlideMotion(swiper);
-  }, [updateSlideMotion]);
-
-  const handleSwiperInit = useCallback(
-    (swiper: SwiperType) => {
-      swiperRef.current = swiper;
-      layoutReadyRef.current = false;
-      slideScaleSettersRef.current.clear();
-      captionOpacitySettersRef.current.clear();
-      captionYSettersRef.current.clear();
-      setSwiperLayoutReady(false);
-
-      const onMotion = () => updateSlideMotion(swiper);
-      const onReveal = () => revealActiveSlide(swiper);
-
-      swiper.on("progress", onMotion);
-      swiper.on("touchMove", onMotion);
-      swiper.on("sliderMove", onMotion);
-      swiper.on("slideChange", onMotion);
-      swiper.on("transitionEnd", () => {
-        onMotion();
-        onReveal();
-      });
-
-      const centerActiveSlide = (recenterSlide = false) => {
-        applyMobileEdgeCentering(swiper);
-        swiper.update();
-        if (recenterSlide) {
-          swiper.slideTo(swiper.activeIndex, 0, false);
-        }
-      };
-
-      const onResize = () =>
-        centerActiveSlide(window.innerWidth <= MOBILE_CENTER_MAX_WIDTH);
-      window.addEventListener("resize", onResize);
-
-      requestAnimationFrame(() => {
-        centerActiveSlide(false);
-        requestAnimationFrame(() => {
-          layoutReadyRef.current = true;
-          centerActiveSlide(
-            typeof window !== "undefined" &&
-              window.innerWidth <= MOBILE_CENTER_MAX_WIDTH
-          );
-          onMotion();
-          onReveal();
-          setSwiperLayoutReady(true);
-        });
-      });
-
-      swiper.on("destroy", () => {
-        window.removeEventListener("resize", onResize);
-      });
-    },
-    [updateSlideMotion, revealActiveSlide]
-  );
-
-  /** GSAP scroll parallax on carousel images after section enters viewport. */
+  /* ── GSAP scroll-parallax ─────────────────────────────────────── */
   useLayoutEffect(() => {
-    if (!showSwiper || !swiperLayoutReady) return;
-
+    if (!showSwiper || !layoutReady) return;
     const section = sectionRef.current;
     if (!section) return;
 
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (reduceMotion) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      const wraps = section.querySelectorAll<HTMLElement>(".ig-parallax-img-wrap");
-      const tweens: gsap.core.Tween[] = [];
-
-      wraps.forEach((wrap) => {
-        gsap.set(wrap, { y: 0, force3D: true });
-
-        const tween = gsap.fromTo(
+      section.querySelectorAll<HTMLElement>(".ig-parallax-img-wrap").forEach((wrap) => {
+        gsap.fromTo(
           wrap,
-          { y: -IMAGE_GALLERY_SCROLL_PARALLAX_Y },
+          { y: -PARALLAX_Y },
           {
-            y: IMAGE_GALLERY_SCROLL_PARALLAX_Y,
+            y: PARALLAX_Y,
             ease: "none",
             immediateRender: false,
             scrollTrigger: {
               trigger: section,
               start: "top bottom",
               end: "bottom top",
-              scrub: IMAGE_GALLERY_SCROLL_SCRUB,
+              scrub: SCROLL_SCRUB,
               invalidateOnRefresh: true,
               fastScrollEnd: true,
             },
           }
         );
-        tweens.push(tween);
       });
-
-      requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-        tweens.forEach((tween, i) => {
-          const wrap = wraps[i];
-          if (wrap) syncParallaxToScroll(wrap, tween);
-        });
-      });
+      requestAnimationFrame(() => ScrollTrigger.refresh());
     }, section);
 
     return () => ctx.revert();
-  }, [showSwiper, swiperLayoutReady]);
+  }, [showSwiper, layoutReady]);
 
-  if (count === 0) {
-    return null;
-  }
+  if (count === 0) return null;
 
   return (
     <section
       ref={sectionRef}
-      className="ImageGallery-slider mt-10 overflow-hidden w-full"
+      className="ImageGallery-slider mt-10 w-full overflow-hidden"
     >
-      <div
-        className="ImageGallery-slider-inner container-fluid mx-auto !px-0"
-      >
-        {showSingleCentered && (
+      <div className="ImageGallery-slider-inner mx-auto w-full">
+
+        {/* 1 slide */}
+        {showSingle && (
           <div className="flex justify-center px-4">
             <div className="ig-center-single w-full max-w-[min(92vw,760px)]">
-              <GalleryCard item={data[0]} />
+              <GalleryCard item={data[0]!} />
             </div>
           </div>
         )}
 
-        {showStaticRow && (
-          <div className="flex flex-col items-stretch justify-center gap-10 px-4 md:flex-row md:items-start md:justify-center md:gap-6 lg:gap-10">
+        {/* 2–3 slides: static row */}
+        {showStatic && (
+          <div className="flex flex-col items-stretch justify-center gap-10 px-4 md:flex-row md:items-start md:gap-6 lg:gap-10">
             {data.map((item) => (
               <div
                 key={item.id}
@@ -351,76 +160,70 @@ export default function ImageGallery({ slides }: ImageGalleryProps) {
           </div>
         )}
 
+        {/* 4+ slides: center-mode carousel */}
         {showSwiper && (
-          <div className="image-gallery-swiper-outer w-full overflow-hidden">
-            <Swiper
-              className={`image-gallery-swiper image-gallery-swiper--many${swiperLayoutReady ? " is-layout-ready" : ""}`}
-              centeredSlides
-              loop={false}
-              slidesPerView="auto"
-              spaceBetween={16}
-              speed={1000}
-              grabCursor
-              initialSlide={0}
-              observer
-              observeParents={false}
-              watchSlidesProgress
-              touchEventsTarget="wrapper"
-              threshold={5}
-              touchAngle={45}
-              shortSwipes
-              longSwipesRatio={0.35}
-              followFinger
-              passiveListeners
-              touchMoveStopPropagation={false}
-              onSwiper={handleSwiperInit}
-              centerInsufficientSlides
-              breakpoints={{
-                0: {
-                  spaceBetween: 16,
-                  centeredSlides: true,
-                  centerInsufficientSlides: true,
-                },
-                640: {
-                  spaceBetween: 16,
-                  centeredSlides: true,
-                  centerInsufficientSlides: true,
-                },
-                1024: { spaceBetween: 16, centeredSlides: true },
-              }}
-            >
-              {data.map((item) => (
-                <SwiperSlide
-                  key={item.id}
-                  className="image-gallery-slide box-border shrink-0"
-                >
-                  <GalleryCard item={item} parallax />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        )}
+          <>
+            {/*
+              image-gallery-swiper-outer: overflow:hidden clips the horizontal bleed.
+              Do NOT add horizontal padding here — it would shift the centering axis.
+            */}
+            <div className="image-gallery-swiper-outer">
+              <Swiper
+                className={`image-gallery-swiper${layoutReady ? " is-layout-ready" : ""}`}
+                centeredSlides={true}
+                slidesPerView={"auto"}
+                loop={true}
+                speed={800}
+                 grabCursor={true}
+                initialSlide={0}
+                  watchSlidesProgress={true}
+                 observer={true}
+                observeParents={true}
+                touchEventsTarget="wrapper"
+                threshold={5}
+                touchAngle={45}
+                shortSwipes
+                longSwipesRatio={0.35}
+                followFinger
+                passiveListeners
+                touchMoveStopPropagation={false}
+                onSwiper={handleSwiperInit}
+                breakpoints={{
+                  0:    { spaceBetween: 12 },
+                  640:  { spaceBetween: 16 },
+                  1024: { spaceBetween: 24 },
+                }}
+              >
+                {data.map((item) => (
+                  <SwiperSlide
+                    key={item.id}
+                    className="image-gallery-slide box-border shrink-0"
+                  >
+                    <GalleryCard item={item} parallax />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
 
-        {showSwiper && (
-          <div className="mt-10 flex items-center justify-center gap-4">
-            <button
-              type="button"
-              aria-label="Previous slide"
-              onClick={() => swiperRef.current?.slidePrev()}
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-xl"
-            >
-              ←
-            </button>
-
-            <button
-              type="button"
-              aria-label="Next slide"
-              onClick={() => swiperRef.current?.slideNext()}
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-black/10 bg-white text-xl"
-            >
-              →
-            </button>
-          </div>
+            <div className="mt-8 flex items-center justify-center gap-4">
+              <button
+                type="button"
+                aria-label="Previous slide"
+                className="ig-nav-btn"
+                onClick={() => swiperRef.current?.slidePrev()}
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                aria-label="Next slide"
+                className="ig-nav-btn"
+                onClick={() => swiperRef.current?.slideNext()}
+              >
+                →
+              </button>
+            </div>
+          </>
         )}
       </div>
     </section>
@@ -435,20 +238,19 @@ function GalleryCard({
   parallax?: boolean;
 }) {
   return (
-    
-    <div className={`ig-card${parallax ? " h-full w-full" : ""}`} >
-      <div className="ig-card-media overflow-hidden rounded-[14px]">
+    <div className="ig-card">
+      <div className="ig-card-media">
         {parallax ? (
-          <div className="ig-parallax-track relative w-full overflow-hidden">
-            <div className="ig-parallax-img-wrap relative h-full w-full will-change-transform">
-              <div className="ig-parallax-img-scale relative h-full w-full will-change-transform">
+          <div className="ig-parallax-track">
+            <div className="ig-parallax-img-wrap">
+              <div className="ig-parallax-img-scale">
                 <Image
                   src={item.image}
                   alt=""
-                  width={1200}
-                  height={800}
+                  fill
+                  sizes="(max-width: 639px) 74vw, (max-width: 1023px) 68vw, 56vw"
                   draggable={false}
-                  className="ig-parallax-img-el pointer-events-none h-full w-full select-none object-cover"
+                  className="ig-parallax-img-el"
                 />
               </div>
             </div>
@@ -460,12 +262,11 @@ function GalleryCard({
             width={1200}
             height={800}
             draggable={false}
-            className="pointer-events-none h-[280px] w-full select-none object-cover sm:h-[360px] md:h-[420px]"
+            className="pointer-events-none h-[280px] w-full select-none rounded-[14px] object-cover sm:h-[360px] md:h-[420px]"
           />
         )}
       </div>
-
-      <p className="ig-card-text mt-5 text-center text-p">{item.title}</p>
+      <p className="ig-card-text text-p">{item.title}</p>
     </div>
   );
 }
