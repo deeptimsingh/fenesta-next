@@ -1,0 +1,14 @@
+.filter-row {padding:80px 100px}
+.filter-row .label { font-size: 1rem; font-weight: 400;color: #121212;}
+.content-inside {padding:0px 0px 80px 0;}
+.red-star {color: #ED1C24}
+.studio-card-wrapper .studio-card .image-caption {position: absolute; bottom: 0;   left: 0; padding: 1rem; color: #fff;}
+.image-caption p {font-size: 0.875rem;font-weight: 400;   margin-bottom: 0.25rem;opacity: 0.9;}
+.image-caption h3 {font-size: 1.125rem;font-weight: 700;line-height: 1.25;}
+.card-caption-wrapper {display: flex; flex-direction: column; gap: 0.625rem; padding: 1rem;}
+.card-caption-wrapper .card-caption {display: flex;align-items: start;gap: 0.5rem; font-size: 0.875rem;}
+.contact-person-name {font-size: 0.875rem; font-weight: 700; color: #121212;}
+
+@media screen and (max-width: 768px) {
+    .filter-row {padding: 44px 0px;}
+}

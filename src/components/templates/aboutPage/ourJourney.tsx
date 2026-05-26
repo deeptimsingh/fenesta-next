@@ -137,8 +137,8 @@ export default function JourneySection() {
     if (media) {
       tl.fromTo(
         media,
-        { opacity: 0, scale:0.5 },
-        { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" },
+       { opacity: 0.8, scale: 0.96 },
+        { opacity: 1, scale: 1, duration: 0.8, ease: "power2.out" },
         1
       );
     }
@@ -326,7 +326,7 @@ export default function JourneySection() {
             <div className="relative w-screen md:w-[80vw] max-w-[90vw] md:max-w-[35vw] aspect-square flex items-center justify-center me-20">
               <div className="absolute inset-0 rounded-full z-10 overlay-circle-shadow" />
               <div className="relative w-full h-full rounded-full overflow-hidden circle-img-inner " >
-                <div ref={mediaRef} key={activeIndex} className="w-full h-full">
+                <div ref={mediaRef}  className="w-full h-full">
                   {activeContent.type === "video" ? (
                     <video
                       src={activeContent.media}
