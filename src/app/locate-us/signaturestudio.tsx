@@ -5,6 +5,7 @@ import Image from "next/image";
 import { initCardReveal } from "@/components/base/cardReveal";
 import Link from "next/link";
 import FenestaButton from "@/components/base/FenestaButton";
+import EnquiryButton from "@/components/base/EnquiryButton";
 import "./locateus.css";
 
 
@@ -212,7 +213,7 @@ export default function SignatureStudio() {
 
 
                   {/* Card 1 */}
-                  <Link href="/studios/noida-1" className="group block cursor-pointer studio-card">
+                  <div className="group block cursor-pointer studio-card">
                     <article className="bg-white rounded-xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-lg transition-all duration-500">
                       <div className="relative overflow-hidden rounded-t-xl">
                         <Image
@@ -247,10 +248,10 @@ export default function SignatureStudio() {
                         </div>
                       </div>
                     </article>
-                  </Link>
+                  </div>
 
                   {/* Card 2 */}
-                  <Link href="/studios/noida-1" className="group block cursor-pointer studio-card">
+                  <div className="group block cursor-pointer studio-card">
                     <article className="bg-white rounded-xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-lg transition-all duration-500">
                       <div className="relative overflow-hidden rounded-t-xl">
                         <Image
@@ -285,10 +286,10 @@ export default function SignatureStudio() {
                         </div>
                       </div>
                     </article>
-                  </Link>
+                  </div>
 
                   {/* Card 3 */}
-                  <Link href="/studios/noida-1" className="group block cursor-pointer studio-card">
+                  <div className="group block cursor-pointer studio-card">
                     <article className="bg-white rounded-xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-lg transition-all duration-500">
                       <div className="relative overflow-hidden rounded-t-xl">
                         <Image
@@ -323,10 +324,10 @@ export default function SignatureStudio() {
                         </div>
                       </div>
                     </article>
-                  </Link>
+                  </div>
 
                   {/* Card 4 */}
-                  <Link href="/studios/noida-1" className="group block cursor-pointer studio-card">
+                  <div className="group block cursor-pointer studio-card">
                     <article className="bg-white rounded-xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-lg transition-all duration-500">
                       <div className="relative overflow-hidden rounded-t-xl">
                         <Image
@@ -361,7 +362,7 @@ export default function SignatureStudio() {
                         </div>
                       </div>
                     </article>
-                  </Link>
+                  </div>
 
         
 
@@ -378,7 +379,7 @@ export default function SignatureStudio() {
               >
 
                   {/* Card 1 */}
-                  <Link href="/studios/noida-1" className="group block cursor-pointer studio-card">
+                  <div className="group block cursor-pointer studio-card">
                     <article className="bg-white rounded-xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-lg transition-all duration-500">
                       <div className="relative overflow-hidden rounded-t-xl">
                         <Image
@@ -410,14 +411,14 @@ export default function SignatureStudio() {
                        </div>  
                             {/* Submit */}
                         <div className=" z-1 ">
-                         <FenestaButton>Enquire now</FenestaButton>
+                         <EnquiryButton>Enquire now</EnquiryButton>
                       </div>  
                       </div>
                     </article>
-                  </Link>
+                  </div>
 
                   {/* Card 2 */}
-                  <Link href="/studios/noida-1" className="group block cursor-pointer studio-card">
+                  <div className="group block cursor-pointer studio-card">
                     <article className="bg-white rounded-xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-lg transition-all duration-500">
                       <div className="relative overflow-hidden rounded-t-xl">
                         <Image
@@ -449,14 +450,14 @@ export default function SignatureStudio() {
                        </div>  
                             {/* Submit */}
                         <div className=" z-1 ">
-                         <FenestaButton>Enquire now</FenestaButton>
-                      </div>  
+                         <EnquiryButton>Enquire now</EnquiryButton>
+                      </div>    
                       </div>
                     </article>
-                  </Link>
+                  </div>
 
                   {/* Card 3 */}
-                  <Link href="/studios/noida-1" className="group block cursor-pointer studio-card">
+                  <div className="group block cursor-pointer studio-card">
                     <article className="bg-white rounded-xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-lg transition-all duration-500">
                       <div className="relative overflow-hidden rounded-t-xl">
                         <Image
@@ -488,14 +489,14 @@ export default function SignatureStudio() {
                        </div>  
                             {/* Submit */}
                         <div className=" z-1 ">
-                         <FenestaButton>Enquire now</FenestaButton>
+                         <EnquiryButton>Enquire now</EnquiryButton>
                       </div>  
                       </div>
                     </article>
-                  </Link>
+                  </div>
 
                   {/* Card 4 */}
-                  <Link href="/studios/noida-1" className="group block cursor-pointer studio-card">
+                  <div className="group block cursor-pointer studio-card">
                     <article className="bg-white rounded-xl overflow-hidden shadow-sm border border-theme/10 hover:shadow-lg transition-all duration-500">
                       <div className="relative overflow-hidden rounded-t-xl">
                         <Image
@@ -527,11 +528,11 @@ export default function SignatureStudio() {
                        </div>  
                             {/* Submit */}
                         <div className=" z-1 ">
-                         <FenestaButton>Enquire now</FenestaButton>
+                         <EnquiryButton>Enquire now</EnquiryButton>
                       </div>  
                       </div>
                     </article>
-                  </Link>
+                  </div >
 
 
               </div>

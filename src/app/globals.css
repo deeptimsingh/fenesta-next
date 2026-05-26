@@ -525,6 +525,8 @@ Intro Section
 
 .title-section h2 span.text-white {color: #fff !important;}
 
+.research-slider .swiper-slide{height: auto;}
+
 @media all and (max-width: 767px) {
 .blur-rounded-full {top: -5vw;left: -10vw;}
 }

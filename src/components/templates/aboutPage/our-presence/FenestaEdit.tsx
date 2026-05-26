@@ -76,9 +76,8 @@ export default function ResearchSlider() {
 
                             <div className="p-4 edits-contain">
 
-                                 <span className="edits-date mb-3">21 January, 2026</span>
-
-                                <p className="font-bold mb-2 ">
+                                <h4 className="text-22 font-semibold">A platform to exhibit skills and due recognition for work</h4>
+                                <p className=" mb-2 ">
                                     Window Design Ideas for North-Facing Vs South-Facing Homes
                                 </p>
 
@@ -105,8 +104,9 @@ export default function ResearchSlider() {
                             </div>
 
                             <div className="p-4 edits-contain">
-                                 <span className="edits-date">21 January, 2026</span>
-                                <p className="font-bold mb-2 ">
+
+                                <h4 className="text-22 font-semibold">A culture that fosters innovative thinking</h4>
+                                <p className=" mb-2 ">
                                     Luxury Door Design Trends That Indian Homeowners Love (2026 Guide)
                                 </p>
 
@@ -135,8 +135,8 @@ export default function ResearchSlider() {
 
                             <div className="p-4 edits-contain">
 
-                                 <span className="edits-date">21 January, 2026</span>
-                                <p className="font-bold mb-2 ">
+                                  <h4 className="text-22 font-semibold">Each Employee can "be the change"</h4>  
+                                <p className=" mb-2 ">
                                     How Windows and Doors Impact Vastu and Feng Shui (2026 Guide)
                                 </p>
 
@@ -148,9 +148,7 @@ export default function ResearchSlider() {
 
                     </SwiperSlide>
 
-                
 
-                  
 
                 </Swiper>
                       {totalSlides > 3 && (
