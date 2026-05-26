@@ -1,4 +1,5 @@
-import React from 'react'
+"use client";
+import React, { use } from 'react'
 import FenestaButton from "@/components/base/FenestaButton";
 import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 import ProductStyles from "@/app/products/ProductStyles";

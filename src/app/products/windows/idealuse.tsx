@@ -1,3 +1,4 @@
+"use client";
 import React from 'react'
 import FenestaButton from "@/components/base/FenestaButton";
 import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";

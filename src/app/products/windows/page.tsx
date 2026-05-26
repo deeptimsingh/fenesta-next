@@ -1,6 +1,3 @@
-"use client";
-
-
 import BannerMain from "./bannerMain";
 import "../allproducts-style.css";
 
