@@ -27,7 +27,7 @@ import Awardsaccreditations from "@/components/templates/aboutPage/awardsaccredi
 
 export default function About() {
 
-  const missionRef = useRef<HTMLDivElement | null>(null);
+const missionRef = useRef<HTMLDivElement | null>(null);
 const visionRef = useRef<HTMLDivElement | null>(null);
 
 const missionLineRef = useRef<SVGSVGElement | null>(null);
@@ -265,11 +265,11 @@ if (visionLineRef.current && visionRef.current) {
       {/* Our Journey*/}
       <JourneyTimeline />    
 
-       <Awardsaccreditations />
+      {/* Awards and Accreditations */}
+      <Awardsaccreditations />
 
       {/* Sustainability */}
       <VisitQuick />
-
 
       {/*In This News*/}            
       <OnlyBgimageCaption />

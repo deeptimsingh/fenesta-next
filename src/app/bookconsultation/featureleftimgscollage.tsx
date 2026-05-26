@@ -66,7 +66,7 @@ useImageParallax(containerRef, imageWrapRef, {
                 <div className="container-fluid m-auto px-6 md:px-0 relative z-10">
                         <div ref={sectionRef} className="w-full">
                             <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-4xl mx-auto">
-                                <h2 className="text-h2 leading-none">Responsible <span className="font-subFont text-corinthiaHeading text-brown">manufacturing</span></h2>
+                                <h2 className="text-h2 leading-none">More about <span className="font-subFont text-corinthiaHeading text-brown">Fenesta </span></h2>
                             </div>
                         </div> 
                 </div>  
@@ -144,11 +144,8 @@ useImageParallax(containerRef, imageWrapRef, {
                                 ref={contentRef}
                                 className="overflow-hidden transition-all duration-500 ease-in-out">
                                 <p>
-                                Sustainable design begins with the choice of materials that
-                                shape the frame. Fenesta’s energy-efficient windows and doors are
-                                built using carefully selected sustainable materials that
-                                prioritize durability, longevity, and environmental
-                                responsibility.
+                                Fenesta is India's largest windows and doors brand, and a part of the Rs 12,741 crore, 1889 Est. DCM Shriram Group acknowledged for its transparent work culture and diversity. Fenesta today boasts of Pan India sales and service presence through 20 sales offices, 8 factories, 9 Signature Studios, 400+ Channel Partner showrooms, a strong direct sales force and also has an International presence in Maldives, Nepal and Bhutan.
+                                Empowered with knowledge of extreme weather conditions, Fenesta has designed uPVC and System Aluminium Windows and Doors, Solid Panel Doors, and now Facades capable of withstanding extreme tropical conditions. Fenesta's high performance products add an architectural dimension to your 
                                 </p>
 
                                 <p className="mt-5">
@@ -187,60 +184,7 @@ useImageParallax(containerRef, imageWrapRef, {
                         </button>
                         )}
 
-                             {/* Features */}
-                        <div className="mt-8 space-y-5">
-
-                            {/* Item 1 */}
-                            <div className="flex items-center gap-3">
-                                <div className="flex items-center justify-center mt-1">
-                                <Image
-                                    src="/images/about/sustainability/ai-book.svg"
-                                    alt=""
-                                    width={40}
-                                    height={40}
-                                    className="w-10 h-10 object-contain"
-                                />
-                                </div>
-
-                                <p className="font-bold">
-                               Waste reduction across fabrication
-                                </p>
-                            </div>
-
-                            {/* Item 2 */}
-                            <div className="flex items-center gap-3">
-                                <div className="flex items-center justify-center mt-1">
-                                <Image
-                                    src="/images/about/sustainability/plant.svg"
-                                    alt=""
-                                    width={40}
-                                    height={40}
-                                    className="w-10 h-10 object-contain"
-                                />
-                                </div>
-
-                                <p className="font-bold">
-                               Optimised energy use in production
-                                </p>
-                            </div>
-
-                             <div className="flex items-center gap-3">
-                                <div className="flex items-center justify-center mt-1">
-                                <Image
-                                    src="/images/about/sustainability/ripple.svg"
-                                    alt=""
-                                    width={40}
-                                    height={40}
-                                    className="w-10 h-10 object-contain"
-                                />
-                                </div>
-
-                                <p className="font-bold">
-                               Clean and standardised processes guided by environmental management principles
-                                </p>
-                            </div>
-
-                        </div>
+ 
 
                         
                     </div>
