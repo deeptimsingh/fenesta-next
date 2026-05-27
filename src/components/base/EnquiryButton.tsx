@@ -9,7 +9,7 @@ type CommonButtonProps = {
   href?: string;
 };
 
-export default function FenestaButton({
+export default function EnquiryButton({
   children,
   className = "",
   href = "#",
