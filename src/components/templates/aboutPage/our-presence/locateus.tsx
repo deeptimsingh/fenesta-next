@@ -16,7 +16,7 @@ export default function Locateus() {
                       </div>
                   </div>
               </div> 
-              <ImageGallery/> 
+              <ImageGallery/>
       
               <div className="mt-5  z-1">
                 <FenestaButton>Explore our gallery</FenestaButton>
