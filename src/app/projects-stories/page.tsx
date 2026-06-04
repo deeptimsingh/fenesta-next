@@ -4,8 +4,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 
 import BannerMain from "./bannerMain";
-import Customizeliking from "./ourprojects";
-
 import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 
 import CertificationSlider from "./certificationslider";

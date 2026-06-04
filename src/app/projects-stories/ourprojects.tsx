@@ -174,9 +174,16 @@ export default function OurProjects() {
                                 </h3>
                                 
 
-                                <p >
-                                  📍 Bengaluru, Karnataka
-                                </p>
+                              <div className="flex items-center gap-2 mt-2 ">
+                                <img
+                                  src="/images/projects-stories/location.svg"
+                                  alt="location"
+                                  className=""
+                                />
+                                  <p>Bengaluru, Karnataka</p>   
+                              </div>
+
+                        
 
                             </div>
 
@@ -215,10 +222,15 @@ export default function OurProjects() {
                                   Prestige Jindal City
                                 </h3>
                                 
+                               <div className="flex items-center gap-2 mt-2 ">
+                                <img
+                                  src="/images/projects-stories/location.svg"
+                                  alt="location"
+                                  className=""
+                                />
+                                  <p>Bengaluru, Karnataka</p>   
+                              </div>
 
-                                <p >
-                                  📍 Bengaluru, Karnataka
-                                </p>
 
                             </div>
 
@@ -256,11 +268,17 @@ export default function OurProjects() {
                                 <h3>
                                   Prestige Jindal City
                                 </h3>
-                                
 
-                                <p >
-                                  📍 Bengaluru, Karnataka
-                                </p>
+                               <div className="flex items-center gap-2 mt-2 ">
+                                <img
+                                  src="/images/projects-stories/location.svg"
+                                  alt="location"
+                                  className=""
+                                />
+                                  <p>Bengaluru, Karnataka</p>   
+                              </div>
+
+                                  
 
                             </div>
 
@@ -300,9 +318,16 @@ export default function OurProjects() {
                                 </h3>
                                 
 
-                                <p >
-                                  📍 Bengaluru, Karnataka
-                                </p>
+                              <div className="flex items-center gap-2 mt-2 ">
+                                <img
+                                  src="/images/projects-stories/location.svg"
+                                  alt="location"
+                                  className=""
+                                />
+                                  <p>Bengaluru, Karnataka</p>   
+                              </div>
+
+
 
                             </div>
 
