@@ -18,7 +18,7 @@ const toggleAccordion = (accordion: string) => {
 
 
   return (
-    <section className="productspecifications-section w-full bg-white overflow-hidden transition-colors duration-200 common-padding relative bg-darkbase">
+    <section className="productspecifications-section w-full bg-white overflow-hidden transition-colors duration-200 padding-pb md:common-padding relative bg-darkbase">
        
         <div className="container m-auto px-6 md:px-0"> 
           <div ref={sectionRef} className="w-full">

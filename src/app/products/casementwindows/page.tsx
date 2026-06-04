@@ -14,6 +14,8 @@ import { useHeadingAnimation } from "@/hooks/useHeadingAnimation";
 import FenestaButton from "@/components/base/FenestaButton";
 
 import "../allproducts-style.css";
+import Customizeliking from "./customizeliking";
+
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
@@ -53,6 +55,9 @@ export default function Casementwindows() {
         </div>     
         <ProductStyles id="available-designs" />        
       </section>  
+
+      {/* Customize to your liking */}
+      <Customizeliking/>
 
      <Productspecifications/>
 

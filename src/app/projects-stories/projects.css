@@ -1,0 +1,50 @@
+.content-section h3{
+font-weight: 600;
+font-size: 18px;
+}
+.content-section p{
+font-size: 16px;
+}
+.mid-content{
+    padding-bottom: 20px;
+}
+
+.content-wrapper .top-content p{
+  display: inline-flex;
+  width: fit-content;
+  font-size: 0.875rem; 
+  padding: 0.25rem 0.75rem; 
+  border: 1px solid #BEB8A4;
+  border-radius: 9999px; 
+  color: #374151; }
+
+  .bottom-content p:first-child {
+  font-weight: 600;
+  color: #000;
+}
+
+.project-image-slider {
+  height: 100%;
+}
+
+.project-image-slider .swiper-pagination {
+  bottom: 12px !important;
+}
+
+.project-image-slider .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  opacity: 0.6;
+}
+
+.project-image-slider .swiper-pagination-bullet-active {
+  width: 24px;
+  border-radius: 20px;
+  background: #0094d9;
+  opacity: 1;
+}
+
+.testimonial-content p{
+    font-size: 14px;
+}
