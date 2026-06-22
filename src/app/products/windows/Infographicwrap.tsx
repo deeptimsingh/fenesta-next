@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -188,7 +186,7 @@ export default function FeaturesSection() {
     title: string;
     icon: string;
     arrow?: boolean;
-    isBottom?: boolean;
+    arrowVariant?: "mobile" | "desktop-top" | "desktop-bottom";
     animateIndex: number;
   };
 
@@ -196,10 +194,10 @@ export default function FeaturesSection() {
     title,
     icon,
     arrow = false,
-    isBottom = false,
+    arrowVariant = "desktop-top",
     animateIndex,
   }: FeatureCardProps) => (
-    <div className="infographic-card-slot relative w-[8vw] h-[8vw] md:w-[10vw] md:h-[10vw] xl:w-[12vw] xl:h-[12vw] shrink-0">
+    <div className="infographic-card-slot relative w-[160px] h-[160px] md:w-[10vw] md:h-[10vw] xl:w-[12vw] xl:h-[12vw] shrink-0">
       <div
         className="infographic-card absolute inset-0"
         data-animate-index={animateIndex}
@@ -207,16 +205,18 @@ export default function FeaturesSection() {
         {arrow && (
           <div
             className={`infographic-arrow absolute z-10 w-0 h-0 ${
-              isBottom
-                ? "top-[0%] right-[24%] border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-t-[14px] border-t-[#A89D80] -rotate-[144deg]"
-                : "top-[93%] right-[24%] border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-b-[14px] border-b-[#A89D80] rotate-[144deg]"
+              arrowVariant === "mobile"
+                ? "left-1/2 -translate-x-1/2 top-[100%] border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-b-[14px] border-b-[#A89D80] -rotate-[180deg]"
+                : arrowVariant === "desktop-bottom"
+                  ? "top-[0%] right-[24%] border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-t-[14px] border-t-[#A89D80] -rotate-[144deg]"
+                  : "top-[93%] right-[24%] border-l-[9px] border-l-transparent border-r-[9px] border-r-transparent border-b-[14px] border-b-[#A89D80] rotate-[144deg]"
             }`}
           />
         )}
 
         <div className="absolute inset-0 rounded-full bg-[#e7ddbf]" />
 
-        <div className="infographic-card__inner absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full w-[6vw] h-[6vw] md:w-[8vw] md:h-[8vw] xl:w-[10vw] xl:h-[10vw] shadow-[15px_15px_14px_rgba(0,0,0,0.30)]">
+        <div className="infographic-card__inner absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full w-[130px] h-[130px] md:w-[8vw] md:h-[8vw] xl:w-[10vw] xl:h-[10vw] shadow-[15px_15px_14px_rgba(0,0,0,0.30)]">
           <Image
             src="/images/icon-circle.png"
             alt=""
@@ -227,7 +227,7 @@ export default function FeaturesSection() {
         </div>
 
         <div className="absolute inset-[12px] rounded-full flex flex-col items-center justify-center text-center px-4">
-          <div className="relative w-[3vw] h-[3vw] xl:w-[4vw] xl:h-[4vw] mb-2">
+          <div className="relative w-[50px] h-[50px] xl:w-[4vw] xl:h-[4vw] mb-2">
             <Image src={icon} alt={title} fill className="object-contain" />
           </div>
 
@@ -251,6 +251,8 @@ export default function FeaturesSection() {
               key={index}
               title={item.title}
               icon={item.icon}
+              arrow={index < features.length - 1}
+              arrowVariant="mobile"
               animateIndex={index}
             />
           ))}
@@ -264,7 +266,7 @@ export default function FeaturesSection() {
                 title={item.title}
                 icon={item.icon}
                 arrow={index < topRow.length - 1}
-                isBottom={false}
+                arrowVariant="desktop-top"
                 animateIndex={topRowAnimIndex[index]}
               />
             ))}
@@ -277,7 +279,7 @@ export default function FeaturesSection() {
                 title={item.title}
                 icon={item.icon}
                 arrow
-                isBottom={true}
+                arrowVariant="desktop-bottom"
                 animateIndex={bottomRowAnimIndex[index]}
               />
             ))}
