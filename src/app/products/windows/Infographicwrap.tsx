@@ -199,7 +199,7 @@ export default function FeaturesSection() {
     isBottom = false,
     animateIndex,
   }: FeatureCardProps) => (
-    <div className="infographic-card-slot relative w-[160px] h-[160px] md:w-[180px] md:h-[180px] xl:w-[220px] xl:h-[220px] shrink-0">
+    <div className="infographic-card-slot relative w-[8vw] h-[8vw] md:w-[10vw] md:h-[10vw] xl:w-[12vw] xl:h-[12vw] shrink-0">
       <div
         className="infographic-card absolute inset-0"
         data-animate-index={animateIndex}
@@ -216,7 +216,7 @@ export default function FeaturesSection() {
 
         <div className="absolute inset-0 rounded-full bg-[#e7ddbf]" />
 
-        <div className="infographic-card__inner absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full w-[130px] h-[130px] md:w-[145px] md:h-[145px] xl:w-[175px] xl:h-[175px] shadow-[15px_15px_14px_rgba(0,0,0,0.30)]">
+        <div className="infographic-card__inner absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full w-[6vw] h-[6vw] md:w-[8vw] md:h-[8vw] xl:w-[10vw] xl:h-[10vw] shadow-[15px_15px_14px_rgba(0,0,0,0.30)]">
           <Image
             src="/images/icon-circle.png"
             alt=""
@@ -227,7 +227,7 @@ export default function FeaturesSection() {
         </div>
 
         <div className="absolute inset-[12px] rounded-full flex flex-col items-center justify-center text-center px-4">
-          <div className="relative w-[60px] h-[60px] xl:w-[80px] xl:h-[80px] mb-3">
+          <div className="relative w-[3vw] h-[3vw] xl:w-[4vw] xl:h-[4vw] mb-2">
             <Image src={icon} alt={title} fill className="object-contain" />
           </div>
 
