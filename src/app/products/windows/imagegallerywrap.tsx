@@ -20,6 +20,7 @@ const { headingRef, sectionRef } = useHeadingAnimation();
                 </div>
             </div>
         </div> 
+        
         <ImageGallery/> 
 
         <div className="mt-5  z-1">
