@@ -205,28 +205,28 @@ export default function JourneySection() {
         }}
       >
         <div
-          className="flex items-center gap-2 transition-all duration-300"
-          style={{
-            transform:
-              isMobile && isActive
-                ? `rotate(${-currentRotation}deg)`
-                : "none",
-          }}
-        >
-          {isActive && (
-            <span className="w-3 h-3 bg-white rotate-45 shrink-0" />
-          )}
-  
-          <span
-            className={`whitespace-nowrap ${
-              isActive
-                ? "text-white text-lg sm:text-xl font-semibold"
-                : "text-white/70 text-xs sm:text-sm"
-            }`}
-          >
-            {label}
-          </span>
-        </div>
+  className="flex items-center gap-2 transition-all duration-300"
+  style={{
+    transform:
+      isMobile && isActive
+        ? `rotate(${-pos.rotation - currentRotation}deg)`
+        : "none",
+  }}
+>
+  {isActive && (
+    <span className="w-3 h-3 bg-white rotate-45 shrink-0" />
+  )}
+
+  <span
+    className={`whitespace-nowrap ${
+      isActive
+        ? "text-white text-lg sm:text-xl font-semibold"
+        : "text-white/70 text-xs sm:text-sm"
+    }`}
+  >
+    {label}
+  </span>
+</div>
       </div>
     );
   };
@@ -289,9 +289,9 @@ export default function JourneySection() {
             </div>
           </div>
            
-          <div className="circle-content flex flex-1 items-center gap-10 lg:gap-10 xl:gap-30 2xl:gap-30">
+          <div className="circle-content flex flex-1 items-center gap-30 lg:gap-10 xl:gap-30 2xl:gap-30 ">
             {/* ===== CONTENT TEXT ===== */}
-            <div className="text-white w-full lg:w-[20vw] max-w-[20vw] px-6 md:px-0">
+            <div className="text-white w-full lg:w-[20vw] max-w-[80vw] px-6 md:px-0">
               <div className="headingTitle mb-6 xl:mb-6 px-0 md:px-0 hidden md:flex">
                   <div className="title-section  md:flex flex-col w-full">
                     <h2 className="font-mainFont text-h2 leading-none text-white flex  justify-start flex-wrap">Our  <span className="font-subFont text-corinthiaHeading text-cream leading-none">Journey</span></h2>
@@ -323,7 +323,7 @@ export default function JourneySection() {
             </div>
 
             {/* ===== IMAGE / VIDEO ===== */}
-            <div className="relative w-screen md:w-[80vw] max-w-[90vw] md:max-w-[35vw] aspect-square flex items-center justify-center me-20">
+            <div className="relative w-screen md:w-[80vw] max-w-[60vw] md:max-w-[35vw] aspect-square flex items-center justify-center me-20">
               <div className="absolute inset-0 rounded-full z-10 overlay-circle-shadow" />
               <div className="relative w-full h-full rounded-full overflow-hidden circle-img-inner " >
                 <div ref={mediaRef}  className="w-full h-full">

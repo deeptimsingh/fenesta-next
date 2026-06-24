@@ -42,9 +42,9 @@ export default function OnlyBgImageCaption(props: OnlyBgImageCaptionProps) {
 
   return (
     <section ref={sectionRefBgImageCaption} className="relative w-full only-bgimage-caption-outer bg-white dark:bg-theme/15">
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div className="sticky top-0 !h-[120vw] md:h-screen w-full overflow-hidden">
         <div className="h-full w-full flex items-center justify-center overflow-hidden">
-          <div ref={frameRef} className="relative overflow-hidden w-screen h-screen rounded-[80px] will-change-transform">
+          <div ref={frameRef} className="relative overflow-hidden w-screen !h-[120vw] md:h-screen rounded-[80px] will-change-transform">
             <div ref={bgRef} className="absolute inset-0 will-change-transform scale-[1.5]">
               <Image src={image} alt="" fill className="object-cover" />
             </div>

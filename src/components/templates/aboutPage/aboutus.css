@@ -70,9 +70,9 @@ svg { vector-effect: non-scaling-stroke; }
 .handSvg svg { width:100%; height:auto;}
 .year-item.active {transform-origin: 0 50%; z-index: 20;}
 
-.year-item.active span{ font-weight: 600;         rotate: -49deg;}
+.year-item.active span{ font-weight: 600;         rotate: 0deg;}
 .year-item.active span:nth-child(1) {font-weight: 600; rotate: -0deg; top:-20px; position: absolute;}
-.year-item.active span:nth-child(2) {font-weight: 600; rotate: -49deg;}
+.year-item.active span:nth-child(2) {font-weight: 600; rotate: 0deg;}
 }
 
 @media all and (max-width:660px){

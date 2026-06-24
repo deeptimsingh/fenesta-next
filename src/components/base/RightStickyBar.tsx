@@ -72,19 +72,19 @@ export default function RightStickyBar() {
           suppressHydrationWarning
         >
           <Image
-            src="/images/slider-arrow-next-white.svg"
-            alt="Open"
-            width={20}
-            height={20}
-            
-          />
+              src="/images/three-dots-vertical.svg"
+              alt="Open"
+              width={30}
+              height={18}
+              className="pointer-events-none"
+            />
         </button>
       )}
       
       {isMobile && isOpen && (
         <button
           onClick={() => setIsOpen(false)}
-          className="fixed top-1/2 -translate-y-1/2 right-[80px] z-50  rounded-[10px_0px_0px_10px] h-14 w-14 bg-[#1212127D] hover:bg-theme transition-colors flex items-center justify-center backdrop-blur-lg"  aria-label="Close menu" >
+          className="fixed top-1/2 -translate-y-1/2 right-[88px] z-50  rounded-[10px_0px_0px_10px] h-14 w-14 bg-[#1212127D] hover:bg-theme transition-colors flex items-center justify-center backdrop-blur-lg"  aria-label="Close menu" >
           <svg width="30" height="24" viewBox="0 0 30 24" fill="none" className="text-white">
             <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>

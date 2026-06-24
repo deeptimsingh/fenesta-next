@@ -476,7 +476,7 @@ Intro Section
 /**OUR JOURNEY**/
 .overlay-circle-shadow{
   background: url('/images/about/circleShadow.svg') no-repeat center center;
-  background-size:cover; left: -5%; width: calc(100% + 10%);
+  background-size:cover; left: -4%; width: calc(100% + 10%);
   background-position: center; opacity:1;
 }
 
@@ -540,7 +540,15 @@ Intro Section
   .slider-navigation { padding-bottom: 0.5rem; }
   .counter-wrap .counter {font-size: 3.438rem;}
   .year-style { font-size: 3.438rem; }
+.circle-content {
+  display: flex;
+  flex-direction: column-reverse;
+  position: absolute;
+  top: 31%;
+  left: 19%;
 }
+
+} 
 
 /* Tablet: 2 cards per view */
 @media all and (min-width: 640px) and (max-width: 1023px) {

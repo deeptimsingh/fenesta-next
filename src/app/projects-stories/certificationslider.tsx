@@ -11,22 +11,19 @@ export default function CertificationSlider() {
       const { sectionRef, headingRef } = useHeadingAnimation();
   return (
     <section className="py-16 bg-[#f5f5f5] overflow-hidden">
-            {/* Heading */}
-       <div className="container-fluid m-auto px-6 md:px-0 relative z-10 mb-10 md:mb-20">
-                <div ref={sectionRef} className="w-full">
-                    <div
-                        ref={headingRef}
-                        className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-4xl mx-auto"
-                    >
-                        <h2 className="text-h2 leading-none">
-                           Our  {" "}
-                            <span className="font-subFont text-corinthiaHeading text-brown">
-                                Certification
-                            </span>
-                        </h2>
 
-                    </div>
-                </div>
+      {/* Heading */}
+       <div className="container-fluid m-auto px-6 md:px-0 relative z-10 mb-10 md:mb-20">
+           <div ref={sectionRef} className="w-full">
+              <div ref={headingRef} className="title-section text-center flex flex-col justify-center w-full max-w-full md:max-w-4xl mx-auto">
+                  <h2 className="text-h2 leading-none">
+                       Our  {" "}
+                      <span className="font-subFont text-corinthiaHeading text-brown">
+                        Certification
+                      </span>
+                  </h2>
+              </div>
+          </div>
       </div>
 
       <div className="container mx-auto px-4 relative">
@@ -189,7 +186,7 @@ export default function CertificationSlider() {
           </SwiperSlide>
 
           {/* Slide 5 */}
-          <SwiperSlide>
+           <SwiperSlide>
             <div className="group">
 
               <div className="bg-white border border-[#dddddd] rounded-[10px] p-6 transition-all duration-500 hover:shadow-xl">
@@ -206,16 +203,11 @@ export default function CertificationSlider() {
 
               <div className="pt-5">
 
-                <p className="text-[18px] leading-[28px] mb-4">
-                  Curabitur blandit tellus id luctus hendrerit. Ut laoreet orci.
+                <p className="text-center mb-4">
+                  Project-prestige group
                 </p>
 
-                <a
-                  href="#"
-                  className="relative inline-flex items-center gap-2 text-[#00AEEF] text-[14px] uppercase pb-1 after:absolute after:left-0 after:bottom-0 after:h-[1px] after:w-0 after:bg-[#00AEEF] hover:after:w-full after:transition-all after:duration-500"
-                >
-                  Download PDF →
-                </a>
+
 
               </div>
 
@@ -230,7 +222,7 @@ export default function CertificationSlider() {
 
                 <div className="flex items-center justify-center min-h-[350px]">
                   <img
-                    src="/images/projects-stories/Project-prestige group.png"
+                    src="/images/projects-stories/prestige-jindal-City-bengaluru.png  "
                     alt=""
                     className="max-w-full h-auto transition-transform duration-500 group-hover:scale-105 drop-shadow-[0_30px_40px_rgba(0,0,0,0.52)]"
                   />
@@ -240,16 +232,11 @@ export default function CertificationSlider() {
 
               <div className="pt-5">
 
-                <p className="text-[18px] leading-[28px] mb-4">
-                  Curabitur blandit tellus id luctus hendrerit. Ut laoreet orci.
+                <p className="text-center mb-4">
+                  Prestige Jindal City, Bengaluru
                 </p>
 
-                <a
-                  href="#"
-                  className="relative inline-flex items-center gap-2 text-[#00AEEF] text-[14px] uppercase pb-1 after:absolute after:left-0 after:bottom-0 after:h-[1px] after:w-0 after:bg-[#00AEEF] hover:after:w-full after:transition-all after:duration-500"
-                >
-                  Download PDF →
-                </a>
+
 
               </div>
 
@@ -259,7 +246,6 @@ export default function CertificationSlider() {
         </Swiper>
 
       </div>
-
     </section>
   );
 }

@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function ParallaxSection() {
   const leftSection = useRef<HTMLDivElement | null>(null);
   const rightSection = useRef<HTMLDivElement | null>(null);
-  const leftBg = useRef<HTMLDivElement | null>(null);
+  const leftBg = useRef<HTMLVideoElement | null>(null);
   const rightBg = useRef<HTMLDivElement | null>(null);
   const leftCaption = useRef<HTMLDivElement | null>(null);
   const rightCaption = useRef<HTMLDivElement | null>(null);
@@ -93,18 +93,25 @@ export default function ParallaxSection() {
   }, []);
 
   return (
-    <section className="visitquick flex flex-col md:flex-row w-full h-auto xl:h-screen bg-[white] overflow-hidden">
+    <section className="visitquick flex flex-col md:flex-row w-full h-auto xl:h-screen  max-h-auto md:max-h-[630px] bg-[white] overflow-hidden">
       {/* LEFT SECTION */}
       <div
         ref={leftSection}
-        className="relative flex-1 flex items-center justify-center overflow-hidden min-h-141.25 md:min-h-auto"
+        className="relative flex-1 flex items-center justify-center overflow-hidden min-h-[100vw] md:min-h-auto"
       >
-        <div
+        <video
           ref={leftBg}
-          className="absolute inset-0 bg-[url('/images/home/signatureStudio.webp')] bg-center bg-cover will-change-transform scale-110"
-        ></div>     
-
-       
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source
+            src="/images/about/sustainability/video/sustainability-video.mp4"
+            type="video/mp4"
+          />
+        </video>
       </div>
 
       {/* RIGHT SECTION */}
